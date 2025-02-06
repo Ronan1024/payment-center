@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baosight.payment.mapper.PayWayMapper">
+
+    <select id="page" resultType="com.baosight.payment.pojo.vo.PayWayPageVO">
+        select
+        id,
+        pay_code,
+        pay_name,
+        disable,
+        create_by,
+        update_by
+        from pay_way
+        <where>
+            <if test="payWayDTO.payWayCode != null and payWayCode.payWayCode != ''">
+                and pay_code = #{payWayDTO.payWayCode}
+            </if>
+            <if test="payWayDTO.payWayName != null and payWayDTO.payWayName != ''">
+                and pay_name like concat('%',#{payWayDTO.payWayName}, '%')
+            </if>
+        </where>
+    </select>
+</mapper>

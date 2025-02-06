@@ -1,0 +1,33 @@
+server:
+  port: 27001
+spring:
+  project:
+    info:
+      version: @project.version@
+  application:
+    name: payment-center
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_HOST:}:${NACOS_PORT:}
+        username: nacos
+        password: nacos
+        namespace: ${NACOS_NAMESPACE:}
+        ip: ${NACOS_IP:}
+      config:
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        file-extension: yml
+        shared-configs:
+          - application.${spring.cloud.nacos.config.file-extension}
+        username: ${spring.cloud.nacos.discovery.username}
+        password: ${spring.cloud.nacos.discovery.password}
+        namespace: ${spring.cloud.nacos.discovery.namespace}
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.137.209:13306/pay?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+  data:
+    redis:
+      database: 2
+      host: 192.168.137.209

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baosight.payment.mapper.PayInterfaceDefineMapper">
+
+    <resultMap id="BaseResultMap" type="com.baosight.payment.pojo.entity.PayInterfaceDefine">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="hasMch" column="has_mch" jdbcType="BIT"/>
+            <result property="hasSubMch" column="has_sub_mch" jdbcType="BIT"/>
+            <result property="type" column="type" jdbcType="CHAR"/>
+            <result property="facilitatorParams" column="facilitator_params" jdbcType="OTHER"/>
+            <result property="subMchParams" column="sub_mch_params" jdbcType="OTHER"/>
+            <result property="normalMchParams" column="normal_mch_params" jdbcType="OTHER"/>
+            <result property="remark" column="remark" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="createBy" column="create_by" jdbcType="BIGINT"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="updateBy" column="update_by" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,has_mch,
+        has_sub_mch,type,facilitator_params,
+        sub_mch_params,normal_mch_params,remark,
+        create_time,create_by,update_time,
+        update_by
+    </sql>
+<!--    <select id="page" resultType="com.baosight.payment.pojo.vo.PayInterfaceDefinePageVO">-->
+<!--        select-->
+<!--        id,-->
+<!--        `name`,-->
+<!--        remark-->
+<!--        from pay_interface_define-->
+<!--        <where>-->
+<!--            <if test="pageDTO != null and pageDTO != ''">-->
+<!--                and `name` like concat('%',#{pageDTO.name}, '%')-->
+<!--            </if>-->
+<!--        </where>-->
+<!--    </select>-->
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baosight.payment.mapper.PayIsvInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.baosight.payment.pojo.entity.PayIsvInfo">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="shortName" column="short_name" jdbcType="INTEGER"/>
+        <result property="contactName" column="contact_name" jdbcType="VARCHAR"/>
+        <result property="contactTel" column="contact_tel" jdbcType="VARCHAR"/>
+        <result property="contactEmail" column="contact_email" jdbcType="VARCHAR"/>
+        <result property="enable" column="enable" jdbcType="BIT"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <result property="createBy" column="create_by" jdbcType="BIGINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateBy" column="update_by" jdbcType="BIGINT"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,short_name,
+        contact_name,contact_tel,contact_email,
+        enable,remark,create_by,
+        create_time,update_by,update_time
+    </sql>
+    <select id="page" resultType="com.baosight.payment.pojo.vo.PayIsvPageVO">
+        select
+        id,
+        name,
+        short_name as shortName,
+        enable,
+        create_by as createBy,
+        update_by as updateBy,
+        create_time,
+        update_time
+        from pay_isv_info
+        <where>
+            <if test="isvPageDTO.id != null">
+                and id = #{isvPageDTO.id}
+            </if>
+            <if test="isvPageDTO.name != null and isvPageDTO.name != ''">
+                and `name` like concat('%',#{isvPageDTO.name}, '%')
+            </if>
+        </where>
+    </select>
+</mapper>
