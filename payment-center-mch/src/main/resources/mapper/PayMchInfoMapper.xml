@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baosight.payment.mch.mapper.PayMchInfoMapper">
+
+    <select id="page" resultType="com.baosight.payment.mch.pojo.vo.PayMchListVO">
+        select id,
+        mch_name as name,
+        mch_short_name as shortName,
+        contact_name as contactName,
+        contact_tel as contactTel,
+        contact_email as contactEmail,
+        state,
+        remark,
+        create_by as createBy,
+        create_time as createTime,
+        update_by as updateBy,
+        update_time as updateTime,
+        create_time as createByName,
+        update_by_name as updateByName,
+        isv_id as isvId,
+        `type`
+        from pay_mch_info
+        <where>
+            <if test="mchPage.mchId != null">
+                and id = #{mchPage.mchId}
+            </if>
+            <if test="mchPage.name != null and mchPage.name != ''">
+                and `name` = #{mchPage.name}
+            </if>
+            <if test="mchPage.isvId !=null">
+                and isv_id = #{mchPage.isvId}
+            </if>
+            <if test="mchPage.type != null">
+                and `type` = #{mchPage.type}
+            </if>
+        </where>
+
+    </select>
+</mapper>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baosight.payment.system.mapper.PayTongLianRelevanceMapper">
+
+    <resultMap id="BaseResultMap" type="com.baosight.payment.system.pojo.entity.PayTongLianRelevance">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="sybMerchantCode" column="syb_merchant_code" jdbcType="VARCHAR"/>
+            <result property="hasBindPhone" column="has_bind_phone" jdbcType="BIT"/>
+            <result property="phone" column="phone" jdbcType="VARCHAR"/>
+            <result property="hasBindSyb" column="has_bind_syb" jdbcType="BIT"/>
+            <result property="mchId" column="mch_id" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,syb_merchant_code,has_bind_phone,
+        phone,has_bind_syb,mch_id
+    </sql>
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baosight.payment.mapper.CallbackHandlerLogMapper">
+
+    <resultMap id="BaseResultMap" type="com.baosight.payment.pojo.entity.CallbackHandlerLog">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="hasHandler" column="has_handler" jdbcType="BIT"/>
+            <result property="handlerError" column="handler_error" jdbcType="VARCHAR"/>
+            <result property="payingAgency" column="paying_agency" jdbcType="TINYINT"/>
+            <result property="payType" column="pay_type" jdbcType="TINYINT"/>
+            <result property="callbackContext" column="callback_context" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="mchNo" column="mch_no" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,has_handler,handler_error,
+        paying_agency,pay_type,callback_context,
+        create_time,update_time,mch_no
+    </sql>
+</mapper>
