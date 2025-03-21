@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baosight.payment.isv.mapper.PayIsvInfoMapper">
+
+
+    <select id="page" resultType="com.baosight.payment.isv.pojo.vo.PayIsvPageVO">
+        select
+        id,
+        name,
+        short_name as shortName,
+        state,
+        create_by as createBy,
+        update_by as updateBy,
+        create_time,
+        update_time,
+        contact_name,
+        contact_tel,
+        contact_email
+        from pay_isv_info
+        <where>
+            <if test="isvPageDTO.id != null">
+                and id = #{isvPageDTO.id}
+            </if>
+            <if test="isvPageDTO.name != null and isvPageDTO.name != ''">
+                and `name` like concat('%',#{isvPageDTO.name}, '%')
+            </if>
+        </where>
+    </select>
+</mapper>

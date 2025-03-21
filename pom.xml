@@ -12,6 +12,14 @@
         <module>payment-center-system</module>
         <module>payment-center-service</module>
         <module>payment-center-common</module>
+        <module>payment-center-mch</module>
+        <module>payment-center-access</module>
+        <module>payment-center-pay</module>
+        <module>payment-center-api</module>
+        <module>pay</module>
+        <module>payment-center-isv</module>
+        <module>payment-center-order</module>
+        <module>payment-center-notify</module>
     </modules>
 
     <properties>
@@ -54,11 +62,6 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>com.baosight.payment</groupId>
-                <artifactId>payment-center-common</artifactId>
-                <version>1.0.0</version>
-            </dependency>
-            <dependency>
                 <groupId>com.baosight.saas</groupId>
                 <artifactId>saas-common-auth</artifactId>
                 <version>${common-auth.version}</version>
@@ -76,6 +79,37 @@
             <dependency>
                 <groupId>com.baosight.payment</groupId>
                 <artifactId>payment-center-common</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baosight.saas.oauth</groupId>
+                <artifactId>saas-oauth-feign</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baosight.payment</groupId>
+                <artifactId>payment-center-mch</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baosight.payment</groupId>
+                <artifactId>payment-center-system</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baosight.saas</groupId>
+                <artifactId>saas-common-web</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baosight.utils</groupId>
+                <artifactId>common-util-validation</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baosight.distributedid</groupId>
+                <artifactId>distributed-id-spring-boot-starter</artifactId>
                 <version>1.0.0</version>
             </dependency>
         </dependencies>
@@ -108,6 +142,25 @@
                     <configuration>
                         <encoding>${project.build.sourceEncoding}</encoding>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>versions-maven-plugin</artifactId>
+                    <version>2.18.0</version>
+                </plugin>
+                <!-- 解析版本号 -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>3.3.0</version>
+                    <executions>
+                        <execution>
+                            <id>parse-version</id>
+                            <goals>
+                                <goal>parse-version</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

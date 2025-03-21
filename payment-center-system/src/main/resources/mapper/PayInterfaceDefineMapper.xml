@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.baosight.payment.mapper.PayInterfaceDefineMapper">
+<mapper namespace="com.baosight.payment.system.mapper.PayInterfaceDefineMapper">
 
-    <resultMap id="BaseResultMap" type="com.baosight.payment.pojo.entity.PayInterfaceDefine">
+    <resultMap id="BaseResultMap" type="com.baosight.payment.system.pojo.entity.PayInterfaceDefine">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
             <result property="hasMch" column="has_mch" jdbcType="BIT"/>

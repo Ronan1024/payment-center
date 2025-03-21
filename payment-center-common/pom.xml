@@ -30,7 +30,10 @@
         <dependency>
             <groupId>com.baosight.utils</groupId>
             <artifactId>common-util-validation</artifactId>
-            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baosight.distributedid</groupId>
+            <artifactId>distributed-id-spring-boot-starter</artifactId>
         </dependency>
     </dependencies>
 

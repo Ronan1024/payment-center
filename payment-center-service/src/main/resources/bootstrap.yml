@@ -5,7 +5,7 @@ spring:
     info:
       version: @project.version@
   application:
-    name: payment-center
+    name: pay-service
   cloud:
     nacos:
       discovery:
@@ -22,12 +22,10 @@ spring:
         username: ${spring.cloud.nacos.discovery.username}
         password: ${spring.cloud.nacos.discovery.password}
         namespace: ${spring.cloud.nacos.discovery.namespace}
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.137.209:13306/pay?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-    username: root
-    password: 123456
-  data:
-    redis:
-      database: 2
-      host: 192.168.137.209
+rocketmq:
+  name-server: 192.168.137.209:9876
+  producer:
+    group: pay-center-common-message-execute-cg
+    send-message-timeout: 2000
+    retry-times-when-send-failed: 1
+    retry-times-when-send-async-failed: 1

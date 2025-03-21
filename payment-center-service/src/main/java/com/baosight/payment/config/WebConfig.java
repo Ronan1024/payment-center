@@ -1,7 +1,7 @@
 package com.baosight.payment.config;
 
-import com.baosight.saas.auth.api.ResourceApi;
 import com.baosight.saas.interceptor.SystemInterceptor;
+import com.baosight.saas.oauth.api.ResourceApi;
 import com.baosight.saas.properties.IgnoreProperties;
 import jakarta.annotation.Resource;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -15,6 +15,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
+
+import static com.baosight.saas.constant.BaseUrlConstant.SYSTEM;
 
 @Configuration
 @EnableConfigurationProperties(IgnoreProperties.class)
@@ -34,7 +36,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(systemInterceptor()).addPathPatterns("/system/**").order(10);
+        registry.addInterceptor(systemInterceptor()).addPathPatterns(SYSTEM + "/**").order(10);
         WebMvcConfigurer.super.addInterceptors(registry);
     }
 }

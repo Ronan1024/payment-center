@@ -2,6 +2,9 @@ package com.baosight.payment.enums;
 
 import com.baosight.utils.enums.IBaseEnum;
 
+/**
+ * @author L.J.Rab
+ */
 public enum PayClientType implements IBaseEnum<Integer> {
     /**
      * 服务商
@@ -19,4 +22,6 @@ public enum PayClientType implements IBaseEnum<Integer> {
     PayClientType(Integer code, String msg) {
         initEnum(code, msg);
     }
+
+
 }

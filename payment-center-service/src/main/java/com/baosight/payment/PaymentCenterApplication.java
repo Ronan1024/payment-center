@@ -6,10 +6,13 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 
+/**
+ * @author L.J.Ran
+ */
 @EnableDiscoveryClient
-@SpringBootApplication
+@ComponentScan({"com.baosight"})
 @EnableFeignClients("com.baosight.saas")
-@ComponentScan({"com.baosight.saas", "com.baosight.payment"})
+@SpringBootApplication(scanBasePackages = "com.baosight.payment")
 public class PaymentCenterApplication {
     public static void main(String[] args) {
         SpringApplication.run(PaymentCenterApplication.class, args);

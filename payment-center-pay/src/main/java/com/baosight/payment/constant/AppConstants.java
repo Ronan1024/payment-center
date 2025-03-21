@@ -1,0 +1,24 @@
+package com.baosight.payment.constant;
+
+public class AppConstants {
+    public static final String CHARSET = "UTF-8";
+    public static final String CUSID = "990521082996000";
+    public static final String APPID = "00010398";
+    public static final String APPKEY = "a0ea3fa20dbd7bb4d5abf1d59d63bae8";
+
+    public static final String TRXCODE_QUERYORDER = "T001";
+    public static final String SIGN_TYPE = "RSA";
+    /**
+     * 商户RSA私钥,用于向通联发起请求前进行签名
+     **/
+    public static final String SYB_RSACUSPRIKEY = "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC8HqqVagWuxKaHys01Y4NjJbvsLd0Z2nkUXycqJuJWjlFigb0TT7JLvjWm1GPQE2ofsVeA3WgaSFUJYZEUHg8XtMcTAIVJqZ4UxOta0HtMdC8c9Jpl1TV19cHcpY1cFAeslNd9TjQQCUCTkGNCznaDNDjC0sJLf8Zoiqvh6n5/Bv99fayDWgjZRJEG6aiVK6qgLovRKi1cGg8YRhAerFp79TZilNPeczovNNApu0wHWO5nfhBLm8dZSvmHWRCySlSJilTRGreOr1Dof9N71bqPSDc15DPXNteT7R45DIi4c4ien5bGIpS2gp2EeCQbH9pProaqGQDyBbPxBbQXoDu9AgMBAAECggEAGwJmKIyv4y9d35pJC1TN3PLif97340ngX4Hn7B/oGFhXrAaHoJmtNj3JkznkWNAoyQMb1qczVq6y8uVcwKAuN4+fk4VcHb7qMP4y8neDdG8sAoLGFj/d7KFL48OrP6Cql2dJZzbOt8y0RluRPNrK3jylt6ct+UwPrxvV4Npbrh4SjZlkx0/ZxmhXJXceimctQagzfwdcliOK3vOMwFytJoaOPb+kxJD8CE/tzBceXOKAdILH6ynsit4UHd62Tc4+ZYvz8rQqXV86mvCONKNL3YPn7Je+/J8mmoKq2sxrP8za7lGLjIWM2Ier21BKT6Bjg7yI3xp7UgOcPfC+04RkMQKBgQDia0te1YmnkE76lq6dmbhio1pP8zGMBT0vpwzou+DU405FYvTlKT7op2emYSaaN+pp5a9MYm4wOnqLURquVBt0nxb+80BbwpUkrNpYqEDbcSV4NulU0gnIf2O+uv5UvNKF81zQ/z4yz8KTIdwNsWe4GsrlRY1uvxhSHDz5W2HQ9QKBgQDUsm5PkHDlcocdLyG6H677TABRYZY1GRm01kVBV+aXj4vBOqqD7hYd1Hhz4UljXDA/BW0w3+QucugE3po6k+2nsv57wtVyKPgf2XQfh5f1m+r18I5NIPM9Jm5fyugSYHsUBaRB2b5Z7Xu6XwOzRkp5SpXGpfseuIpe3UJgUiHiqQKBgQCJ5yekvxJ0SGSSI6x+uN2g1jVvdIO88IPvviMSrTum7jsB79+Qo6p5MVzj7VABpgTUMtyt/VV3cmao6+EARKHkSfFLnwSX3s/P4qeqT/AQt71GlstOqg7jWxN5W5MEMW1XwH3LnWpYsEmmK31HqcGuVEM3mUEnLqS1fhV1Gr9c8QKBgBJAnabGRmnqQh4HBWXrgiCejQhuz20PEl2qZZcN7APllaCnYCqiK9OzgAKxupKEPr+pv40KKZKy2aZRU/ri5uoVOjF0rsx1J5XUG1r5T9kL4EXqtst3oGgG/EHML84j6Wv2b/oWrXcaIhwEO1UPGyT9eYzqgXpJa9ZoNmH9qlrBAoGBAKsXjMyagH4dbpgIHFDHyRCvjwSc4u8aNHxQwx3ATGSYOPT8nhFePBs2T3Y923zOPuQ1CifiV7R9opT6LEQsbAoiCJJp0q7uga6HqS58r0GFpDgI7m2WvgHlhxLa94aFxlFKestV/OCydYEFauWXX3dovNCWgEO8a1WERm0OPGhv";
+    //	/**通联平台RSA公钥，用于请求返回或者通联通知的验签**/
+    public static final String SYB_RSATLPUBKEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCm9OV6zH5DYH/ZnAVYHscEELdCNfNTHGuBv1nYYEY9FrOzE0/4kLl9f7Y9dkWHlc2ocDwbrFSm0Vqz0q2rJPxXUYBCQl5yW3jzuKSXif7q1yOwkFVtJXvuhf5WRy+1X5FOFoMvS7538No0RpnLzmNi3ktmiqmhpcY/1pmt20FHQQIDAQAB";
+
+    //
+//	/**商户sm2私钥,用于向通联发起请求前进行签名**/
+    public static final String SYB_SM2PPRIVATEKEY = "MIGTAgEAMBMGByqGSM49AgEGCCqBHM9VAYItBHkwdwIBAQQg4HI7mM7cghqPsqVD9Goa0cMrUXnSgyg6ua6Pz1K6Q0qgCgYIKoEcz1UBgi2hRANCAAQZubtOF6o9nVmk6bnkemme1/sjS1SfM1WsR3v537OqPhs7+ZA0Xqk07++jWIV/m+9RXBhP7l9qqCFD62ns8LbX";
+    //	/**通联平台sm2公钥，用于请求返回或者通联通知的验签**/
+    public static final String SYB_SM2TLPUBKEY = "MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAE/BnA8BawehBtH0ksPyayo4pmzL/u1FQ2sZcqwOp6bjVqQX4tjo930QAvHZPJ2eez8sCz/RYghcqv4LvMq+kloQ==";
+
+}
