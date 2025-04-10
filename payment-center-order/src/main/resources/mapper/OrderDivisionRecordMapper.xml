@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baosight.payment.order.mapper.OrderDivisionRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.baosight.payment.order.pojo.entity.OrderDivisionRecord">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="batchId" column="batch_id" jdbcType="BIGINT"/>
+            <result property="orderId" column="order_id" jdbcType="BIGINT"/>
+            <result property="state" column="state" jdbcType="TINYINT"/>
+            <result property="errMsg" column="err_msg" jdbcType="VARCHAR"/>
+            <result property="date" column="date" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,batch_id,order_id,
+        state,err_msg,date,
+        create_time,update_time
+    </sql>
+    <select id="recordPage" resultType="com.baosight.payment.order.pojo.vo.DivisionRecordPageVO">
+        select id,
+               batch_id    as batchId,
+               order_id    as orderId,
+               state       as state,
+               err_msg     as errMsg,
+               date        as date,
+               create_time as createTime,
+               update_time as updateTime
+        from order_division_record
+        where batch_id = #{batchId}
+    </select>
+</mapper>

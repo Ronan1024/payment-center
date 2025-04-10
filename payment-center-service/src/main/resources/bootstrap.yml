@@ -22,10 +22,39 @@ spring:
         username: ${spring.cloud.nacos.discovery.username}
         password: ${spring.cloud.nacos.discovery.password}
         namespace: ${spring.cloud.nacos.discovery.namespace}
-rocketmq:
-  name-server: 192.168.137.209:9876
-  producer:
-    group: pay-center-common-message-execute-cg
-    send-message-timeout: 2000
-    retry-times-when-send-failed: 1
-    retry-times-when-send-async-failed: 1
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/pay
+#    username: root
+#    password: 123456
+#  profiles:
+#    active: dev
+#feign:
+#  logger:
+#    level: info
+#pay:
+#  user_url: sss
+#  notifyUrl: ss
+#  tl_url: sss
+#mybatis-plus:
+#  configuration:
+#    ### 开启打印sql配置
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#
+#
+#logging:
+#  level:
+#    root: info  # 全局日志级别
+#    org.springframework.web: DEBUG
+#    org.springframework.http.converter.json: DEBUG
+#rocketmq:
+#  name-server: 127.0.0.1:9876
+#  producer:
+#    group: payment-center-server-common-message-execute-cg
+#    send-message-timeout: 2000
+#    retry-times-when-send-failed: 1
+#    retry-times-when-send-async-failed: 1
+#saas:
+#  ignore:
+#    any-request:
+#      ALL:
+#        - /error

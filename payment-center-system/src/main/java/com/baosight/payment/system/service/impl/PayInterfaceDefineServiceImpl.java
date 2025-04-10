@@ -248,6 +248,19 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
         );
     }
 
+    /**
+     * 获取支付接口定义信息
+     *
+     * @param code 支付接口code
+     */
+    @Override
+    public PayInterfaceDefine payInterfaceDefineByCode(String code) {
+        return payInterfaceDefineMapper.selectOne(new LambdaQueryWrapper<PayInterfaceDefine>()
+                .eq(PayInterfaceDefine::getEnable, Boolean.TRUE)
+                .eq(PayInterfaceDefine::getCode, code)
+        );
+    }
+
 
 }
 

@@ -17,4 +17,5 @@ public interface PayInterfaceApi {
      * @param mchChannelUser 渠道用户信息
      */
     MchInterfaceConfigVO mchInterfaceConfig(String interfaceCode, String mchChannelUser);
+
 }

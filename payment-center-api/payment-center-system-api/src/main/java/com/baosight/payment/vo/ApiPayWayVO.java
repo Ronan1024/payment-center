@@ -8,5 +8,5 @@ public class ApiPayWayVO {
 
     private String icon;
 
-    private Long id;
+    private String id;
 }

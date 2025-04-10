@@ -15,7 +15,12 @@ public enum PayWayCode implements IBaseEnum<String> {
     /**
      * 通联微信正扫
      */
-    TONG_LIAN_ALI_SCAN("tongLianWxScan", "通联微信正扫", 2),
+    TONG_LIAN_WX_SCAN("tongLianWxScan", "通联微信正扫", 2),
+
+    /**
+     * 通联微信小程序支付
+     */
+    TONG_LIAN_WX_MINI_PROGRAM("tongLianWxMiniProgram", "通联微信小程序", 4),
 
     /**
      * 特殊支付方式( 通过二维码跳转到收银台完成支付， 已集成获取用户ID的实现。 )

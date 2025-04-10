@@ -5,6 +5,7 @@ import com.baosight.payment.system.pojo.dto.ClientPayInterfaceConfigDTO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigListVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigVO;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
+import com.baosight.payment.system.service.app.PayInterfaceConfigAppService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,7 @@ import static com.baosight.saas.constant.BaseUrlConstant.SYSTEM;
 @RequestMapping(SYSTEM + "/pm/pay/isv/config/manage")
 public class SystemPayIsvInterfaceConfigController {
     private final PayInterfaceConfigService payInterfaceConfigService;
+    private final PayInterfaceConfigAppService payInterfaceConfigAppService;
 
 
     /**
@@ -53,7 +55,18 @@ public class SystemPayIsvInterfaceConfigController {
      */
     @GetMapping("/list/{isvId}")
     public List<PayInterfaceConfigListVO> getInterfaceConfigList(@PathVariable(value = "isvId") Long isvId) {
-        return payInterfaceConfigService.getIsvInterfaceConfigList(isvId);
+        return payInterfaceConfigAppService.getIsvInterfaceConfigList(isvId, PayClientType.SERVICE_PROVIDER);
+    }
+
+    /**
+     * 获取当前商户是否需要进行后续执行
+     *
+     * @param interfaceId 接口id
+     * @param mchId       商户id
+     */
+    @GetMapping("/option/{mchId}/{interfaceId}")
+    public List<String> trailingOption(@PathVariable("interfaceId") Long interfaceId, @PathVariable("mchId") Long mchId) {
+        return payInterfaceConfigService.trailingOption(interfaceId, mchId);
     }
 
 }

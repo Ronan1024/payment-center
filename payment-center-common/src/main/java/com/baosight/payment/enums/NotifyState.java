@@ -14,8 +14,16 @@ public enum NotifyState implements IBaseEnum<Integer> {
      * 通知中
      */
     NOTIFIED(1, "通知中"),
-    ;
-    NotifyState(Integer code, String msg){
+    /**
+     * 通知成功
+     */
+    SUCCESS(2, "通知成功"),
+    /**
+     * 通知失败
+     */
+    FAIL(3, "通知失败");
+
+    NotifyState(Integer code, String msg) {
         initEnum(code, msg);
     }
 }

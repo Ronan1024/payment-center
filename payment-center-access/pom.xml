@@ -8,9 +8,13 @@
         <artifactId>payment-center</artifactId>
         <version>1.0.0</version>
     </parent>
+    <packaging>pom</packaging>
 
     <artifactId>payment-center-access</artifactId>
     <description>三方服务接入层</description>
+    <modules>
+        <module>payment-center-access-tonglian</module>
+    </modules>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>

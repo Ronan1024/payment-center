@@ -91,6 +91,15 @@ public class PayInterfaceConfig extends BasePO implements Serializable {
      */
     private String interfaceCode;
 
+    /**
+     * 上级客户端id
+     */
+    private Long parentClientId;
+
+    /**
+     * 上级客户端编号
+     */
+    private String parentClientCode;
     @Serial
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

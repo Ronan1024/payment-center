@@ -18,6 +18,7 @@ public interface PayWayConvert {
 
     @Mapping(target = "name", source = "payName")
     @Mapping(target = "icon", ignore = true)
+    @Mapping(target = "id", source = "payCode")
     ApiPayWayVO toApiPayWayVO(PayWay payWay);
 
     PayWayPageVO toPayWayPageVO(PayWay payWay);

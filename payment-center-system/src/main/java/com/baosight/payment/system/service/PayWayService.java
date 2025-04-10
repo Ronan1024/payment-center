@@ -85,4 +85,10 @@ public interface PayWayService extends IService<PayWay> {
      */
     List<PayWay> getPayWayList(List<Long> payWayIdList);
 
+    /**
+     * 支付方式列表
+     * @param payWayIdList 支付方式id
+     * @param payClient 支付客户端
+     */
+    List<PayWay> getPayWayList(List<Long> payWayIdList, Integer payClient);
 }

@@ -74,4 +74,10 @@ public class PayInterfaceConfigVO extends BasePO {
      */
     @JsonIgnore
     private Boolean hasSetting;
+
+    /**
+     * 服务商id
+     */
+    @JsonIgnore
+    private Long isvId;
 }

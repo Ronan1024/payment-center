@@ -3,6 +3,7 @@ package com.baosight.payment.order.convert;
 import com.baosight.payment.order.api.vo.OrderVO;
 import com.baosight.payment.order.pojo.entity.PayOrder;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 /**
@@ -15,5 +16,7 @@ import org.mapstruct.factory.Mappers;
 public interface OrderConvert {
     OrderConvert INSTANCE = Mappers.getMapper(OrderConvert.class);
 
-    OrderVO toOrderVO(PayOrder byId);
+    @Mapping(target = "payWayId", ignore = true)
+    @Mapping(target = "interfaceId", ignore = true)
+    OrderVO toOrderVO(PayOrder payOrder);
 }

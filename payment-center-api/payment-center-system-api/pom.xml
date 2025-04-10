@@ -26,5 +26,10 @@
             <artifactId>web-spring-boot-starter</artifactId>
             <version>1.0.8</version>
         </dependency>
+        <dependency>
+            <groupId>com.baosight.payment</groupId>
+            <artifactId>payment-center-access-tonglian</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 </project>

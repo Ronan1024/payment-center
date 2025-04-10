@@ -6,6 +6,7 @@ import com.baosight.payment.system.pojo.entity.PayMchApp;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baosight.payment.system.pojo.vo.MchAppListVO;
 import com.baosight.payment.system.pojo.vo.MchPayAppInfoVO;
+import com.baosight.payment.vo.MchAppInfoVO;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -70,4 +71,12 @@ public interface PayMchAppService extends IService<PayMchApp> {
      * @param id 商户应用id
      */
     MchPayAppInfoVO info(Long id);
+
+    /**
+     * 获取商家应用信息
+     *
+     * @param mchNo 商户id
+     * @param appNo 应用编号
+     */
+    MchAppInfoVO appInfo(Long mchNo, String appNo);
 }

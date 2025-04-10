@@ -13,6 +13,10 @@ public enum MchError implements IBaseEnum<String> {
      *商户不存在
      */
     MCH_NOT_FOUND("10001", "商户不存在"),
+    /**
+     * 商户类型异常
+     */
+    MCH_TYPE_ERROR("10002", "商户类型异常"),
     ;
 
     MchError(String code, String msg) {

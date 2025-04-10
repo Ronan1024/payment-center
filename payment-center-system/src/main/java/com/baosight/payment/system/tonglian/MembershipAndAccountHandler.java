@@ -1,7 +1,7 @@
 package com.baosight.payment.system.tonglian;
 
+import com.baosight.payment.enums.TongLianInterfaceCode;
 import com.baosight.payment.system.enums.TongLianInfoType;
-import com.baosight.payment.system.pojo.dto.TongLianAgreementDTO;
 import com.baosight.utils.json.JsonUtil;
 
 import java.math.BigDecimal;
@@ -22,7 +22,7 @@ public class MembershipAndAccountHandler {
      * @param sybMerchantCode 收银宝商户号
      */
     public static TongLianClient.SendBuild memberBindSyb(Long reqTraceNum, String signNum, String sybMerchantCode) {
-        String transCode = "1024";
+        String transCode = TongLianInterfaceCode.BIND_SYB.getCode();
         Map<String, String> map = new HashMap<>(4);
         map.put("reqTraceNum", String.valueOf(reqTraceNum));
         map.put("signNum", signNum);
@@ -41,7 +41,7 @@ public class MembershipAndAccountHandler {
      * @param hasLegalPerson
      */
     public static TongLianClient.SendBuild memberBindMobile(Long reqTraceNum, String signNum, String mobile, Boolean hasLegalPerson) {
-        String transCode = "1030";
+        String transCode = TongLianInterfaceCode.BIND_PHONE_REPORT.getCode();
         Map<String, String> map = new HashMap<>(4);
         map.put("reqTraceNum", String.valueOf(reqTraceNum));
         map.put("signNum", signNum);
@@ -85,8 +85,8 @@ public class MembershipAndAccountHandler {
     /**
      * 线上协议签订申请
      */
-    public static TongLianClient.SendBuild onlineProtocolSignApply(Long reqTraceNum, String signNum, String memberName, TongLianAgreementDTO agreement) {
-        String transCode = "1050";
+    public static TongLianClient.SendBuild onlineProtocolSignApply(Long reqTraceNum, String signNum, String memberName, Long rete) {
+        String transCode = TongLianInterfaceCode.ONLINE_PROTOCOL_SIGN_APPLY.getCode();
         Map<String, String> map = new HashMap<>(7);
         map.put("reqTraceNum", String.valueOf(reqTraceNum));
         map.put("signNum", signNum);
@@ -94,8 +94,9 @@ public class MembershipAndAccountHandler {
         map.put("agreementType", "3");
         Map<String, String> agreementMap = new HashMap<>();
         agreementMap.put("couponWay", "1");
-        agreementMap.put("couponRate", new BigDecimal(agreement.getCouponRate()).divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP).toString());
+        agreementMap.put("couponRate", new BigDecimal(rete).divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP).toString());
         map.put("agreementJson", JsonUtil.toJson(agreementMap));
+        // TODO 签约回调地址未处理
         map.put("notifyUrl", "https://www.baidu.com");
         map.put("jumpUrl", "https://www.baidu.com/s?wd=ok");
         return new TongLianClient.SendBuild(reqTraceNum, transCode, JsonUtil.toJson(map));

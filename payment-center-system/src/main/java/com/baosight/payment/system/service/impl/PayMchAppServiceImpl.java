@@ -104,6 +104,7 @@ public class PayMchAppServiceImpl extends ServiceImpl<PayMchAppMapper, PayMchApp
     }
 
     private void handlerMchPayPassage(List<Long> payWay, MchInfoVO mchInfo, Long appId) {
+        // TODO 支付渠道问题待处理
         // 获取已配置的信息
         List<PayInterfaceConfig> payInterfaceConfigList = payInterfaceConfigMapper.selectList(new LambdaQueryWrapper<PayInterfaceConfig>()
                 .eq(PayInterfaceConfig::getClientId, mchInfo.getId()));
@@ -134,7 +135,7 @@ public class PayMchAppServiceImpl extends ServiceImpl<PayMchAppMapper, PayMchApp
             payMchPassage.setInterfaceId(e.getInterfaceId());
             payMchPassage.setCreateByName(AbstractUserContext.getUsername());
             payMchPassage.setState(State.NORMAL.getCode());
-            Long rate = map.containsKey(e.getInterfaceId()) ? map.get(e.getInterfaceId()) : null;
+            Long rate = map.getOrDefault(e.getInterfaceId(), null);
             payMchPassage.setRate(rate);
             return payMchPassage;
         }).forEach(payMchPassageService::save);
@@ -242,6 +243,25 @@ public class PayMchAppServiceImpl extends ServiceImpl<PayMchAppMapper, PayMchApp
         MchPayAppInfoVO mchPayAppInfoVO = PayMchAppConvert.INSTANCE.toMchPayAppInfoVO(payMchApp);
         mchPayAppInfoVO.setPayWay(new ArrayList<>(payWay));
         return mchPayAppInfoVO;
+    }
+
+    /**
+     * 获取商家应用信息
+     *
+     * @param mchNo 商户id
+     * @param appNo 应用编号
+     */
+    @Override
+    public MchAppInfoVO appInfo(Long mchNo, String appNo) {
+        PayMchApp payMchApp = payMchAppMapper.selectOne(new LambdaQueryWrapper<PayMchApp>()
+                .eq(PayMchApp::getMchId, mchNo)
+                .eq(PayMchApp::getAppCode, appNo)
+                .eq(PayMchApp::getState,State.NORMAL.getCode())
+        );
+        if (ObjectUtils.isEmpty(payMchApp)){
+            return null;
+        }
+        return PayMchAppConvert.INSTANCE.toMchAppInfoVO(payMchApp);
     }
 
 }

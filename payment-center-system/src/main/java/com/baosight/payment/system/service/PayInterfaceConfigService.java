@@ -3,10 +3,12 @@ package com.baosight.payment.system.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baosight.payment.enums.PayClientType;
 import com.baosight.payment.enums.PayingAgency;
+import com.baosight.payment.dao.TongLianIsvAndMchConfigDAO;
 import com.baosight.payment.system.pojo.dto.PayInterfaceConfigDTO;
 import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigListVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigVO;
+import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
 import com.baosight.payment.vo.MchInterfaceConfigVO;
 import com.baosight.saas.entity.DynamicForm;
 
@@ -98,6 +100,15 @@ public interface PayInterfaceConfigService extends IService<PayInterfaceConfig> 
     PayInterfaceConfigVO getConfigInfo(Long mchId, PayingAgency payingAgency);
 
     /**
+     * 获取指定客户端配置信息
+     *
+     * @param clientId     客户端id
+     * @param payingAgency 支付机构信息
+     * @param interfaceId  支付接口id
+     */
+    PayInterfaceConfigVO getConfigInfo(Long clientId, PayingAgency payingAgency, Long interfaceId);
+
+    /**
      * 获取服务商接口配置信息
      *
      * @param isvId 服务商id
@@ -113,6 +124,12 @@ public interface PayInterfaceConfigService extends IService<PayInterfaceConfig> 
      */
     List<PayInterfaceConfig> payInterfaceConfigByTypeAndInfoId(Integer accountType, Long infoId);
 
+    /**
+     * 获取指定商户
+     *
+     * @param mchId
+     * @return
+     */
     List<PayInterfaceConfigListVO> getMchInterfaceConfigList(Long mchId);
 
     /**
@@ -131,4 +148,28 @@ public interface PayInterfaceConfigService extends IService<PayInterfaceConfig> 
      */
     MchInterfaceConfigVO mchInterfaceConfig(String interfaceCode, String mchChannelUser);
 
+    /**
+     * 处理当前用户是否需要执行后续操作
+     *
+     * @param interfaceId 接口id
+     * @param mchId       商户id
+     */
+    List<String> trailingOption(Long interfaceId, Long mchId);
+
+    /**
+     * 获取通联服务商与商家配置
+     *
+     * @param mchId       商家id
+     * @param interfaceId 接口id
+     */
+    TongLianIsvAndMchConfigDAO getTongLianIsvAndMchConfig(Long mchId, Long interfaceId);
+
+    /**
+     * 获取服务商 支付配置列表
+     *
+     * @param isvId                  服务商id
+     * @param payInterfaceDefineList 支付接口定义列表
+     * @param clientType             客户端类型
+     */
+    List<PayInterfaceConfigListVO> getIsvInterfaceConfigList(Long isvId, List<PayInterfaceDefineListVO> payInterfaceDefineList, PayClientType clientType);
 }

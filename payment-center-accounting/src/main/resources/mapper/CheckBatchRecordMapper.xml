@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baosight.payment.accounting.mapper.CheckBatchRecordMapper">
+
+    <select id="checkBachPage" resultType="com.baosight.payment.accounting.pojo.vo.CheckBatchListVO">
+        select
+        id,
+        check_batch_code as checkBatchCode,
+        interface_code as channelCode,
+        interface_id as channelId,
+        channel_mch_no as channelMchNo,
+        state as state,
+        bill_date as billDate
+        from check_batch_record
+        <where>
+            <if test="checkBatchPage.checkBatchCode != null and checkBatchPage.checkBatchCode != ''">
+                and check_batch_code = #{checkBatchPage.checkBatchCode}
+            </if>
+        </where>
+    </select>
+</mapper>

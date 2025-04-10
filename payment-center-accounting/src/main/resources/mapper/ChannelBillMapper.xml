@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baosight.payment.accounting.mapper.ChannelBillMapper">
+    <select id="channelBillPage" resultType="com.baosight.payment.accounting.pojo.vo.ChannelBillListVO">
+        select
+        id,
+        bill_file_id as billFileId,
+        bill_file_code as billFileCode,
+        bill_date as billDate,
+        channel_id as channelId,
+        channel_code as channelCode,
+        sub_channel_id as subChannelId,
+        sub_channel_code as subChannelCode,
+        order_id as orderId,
+        trade_type as tradeType,
+        channel_order_id as channelOrderId,
+        trading_time as tradingTime,
+        trading_state as tradingState,
+        trading_amount as tradingAmount,
+        currency as currency,
+        trading_fee as tradingFee,
+        trading_fee_detail as tradingFeeDetail,
+        trading_fee_rule as tradingFeeRule,
+        channel_mch_no as channelMchNo,
+        user_no as userNo,
+        channel_origin_order as channelOriginOrder,
+        channel_trading_origin_type as channelTradingOriginType,
+        mete_date as meteDate,
+        bill_state as billState
+        from channel_bill
+        <where>
+            <if test="channelBill.billFileId != null">
+                and bill_file_id = #{channelBill.billFileId}
+            </if>
+        <if test="channelBill.billFileCode != null and channelBill.billFileCode != ''">
+            and bill_file_code = #{channelBill.billFileCode}
+        </if>
+            <if test="channelBill.billDate != null and channelBill.billDate != ''">
+                and bill_date = #{channelBill.billDate}
+            </if>
+            <if test="channelBill.channelId != null">
+                and channel_id = #{channelBill.channelId}
+
+            </if>
+            <if test="channelBill.channelCode != null and channelBill.channelCode != ''">
+                and channel_code = #{channelBill.channelCode}
+            </if>
+        </where>
+    </select>
+</mapper>

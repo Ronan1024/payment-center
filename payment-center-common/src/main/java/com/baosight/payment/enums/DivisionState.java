@@ -1,0 +1,39 @@
+package com.baosight.payment.enums;
+
+import com.baosight.utils.enums.IBaseEnum;
+
+/**
+ * @program: payment-center
+ * @description:
+ * @author: L.J.Ran
+ * @create: 2025/3/29
+ */
+public enum DivisionState implements IBaseEnum<Integer> {
+    /**
+     * 未发生分账
+     */
+    NOT_DIVISION(0, "未发生分账"),
+    /**
+     * 等待分账任务处理
+     */
+    WAITING(1, "等待分账任务处理"),
+    /**
+     * 分账处理中
+     */
+    DIVISION_ING(2, "分账处理中"),
+    /**
+     * 分账任务已结束(不体现状态)
+     */
+    DIVISION_END(3, "分账任务已结束"),
+
+    /**
+     * 分账失败
+     */
+    DIVISION_FAILURE(4, "分账失败")
+    ;
+
+
+    DivisionState(Integer code, String msg) {
+        initEnum(code, msg);
+    }
+}

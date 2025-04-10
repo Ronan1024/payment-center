@@ -55,6 +55,8 @@ public class MchPayIsvInterfaceConfigController {
         MchInfoVO mchInfoVO = mchInfoApi.mchInfo(mchId);
         PayClientType payClientType = IBaseEnum.getByCode(PayClientType.class, mchInfoVO.getType());
         return payInterfaceConfigService.payConfigurationSaveOrUpdate(payInterfaceConfigDTO, payClientType, mchInfoVO.getId(), Boolean.TRUE);
+        // 处理绑定信息
+
     }
 
     /**

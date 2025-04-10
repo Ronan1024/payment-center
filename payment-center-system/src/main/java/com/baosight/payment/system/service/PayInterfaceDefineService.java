@@ -85,4 +85,11 @@ public interface PayInterfaceDefineService extends IService<PayInterfaceDefine> 
      * @param interfaceIdList 接口id
      */
     List<PayInterfaceDefine> payInterfaceDefineByIdList(List<Long> interfaceIdList);
+
+    /**
+     * 获取支付接口定义信息
+     *
+     * @param code 支付接口code
+     */
+    PayInterfaceDefine payInterfaceDefineByCode(String code);
 }

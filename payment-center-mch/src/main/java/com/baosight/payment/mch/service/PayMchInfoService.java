@@ -51,4 +51,10 @@ public interface PayMchInfoService extends IService<PayMchInfo> {
      */
     PayMchInfo infoById(Long mchId);
 
+    /**
+     * 获取商户信息
+     *
+     * @param mchNo 商户号
+     */
+    PayMchInfo infoByMchNo(String mchNo);
 }

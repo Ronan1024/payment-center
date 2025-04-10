@@ -18,6 +18,15 @@ public class MchInterfaceConfigVO {
      */
     private Long interfaceId;
 
+    /**
+     * 接口名称
+     */
+    private String interfaceName;
+
+    /**
+     * 支付接口编号
+     */
+    private String interfaceCode;
 
     /**
      * 商户类型
@@ -38,7 +47,6 @@ public class MchInterfaceConfigVO {
      * 商户id
      */
     private Long mchId;
-
 
     /**
      * 三方系统code

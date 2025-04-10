@@ -184,6 +184,20 @@ public class PayWayServiceImpl extends ServiceImpl<PayWayMapper, PayWay> impleme
         );
     }
 
+    /**
+     * 支付方式列表
+     *
+     * @param payWayIdList 支付方式id
+     * @param payClient    支付客户端
+     */
+    @Override
+    public List<PayWay> getPayWayList(List<Long> payWayIdList, Integer payClient) {
+        return payWayMapper.selectList(new LambdaQueryWrapper<PayWay>()
+                .in(PayWay::getId, payWayIdList)
+                .eq(PayWay::getPayingClient, payClient)
+        );
+    }
+
 }
 
 

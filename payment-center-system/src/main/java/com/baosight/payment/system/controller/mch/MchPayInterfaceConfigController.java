@@ -7,6 +7,7 @@ import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineVO;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
 import com.baosight.payment.system.service.PayInterfaceDefineService;
+import com.baosight.payment.system.service.app.PayInterfaceConfigAppService;
 import com.baosight.saas.constant.BaseUrlConstant;
 import com.baosight.saas.context.SystemUserContext;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class MchPayInterfaceConfigController {
 
     private final PayInterfaceDefineService payInterfaceDefineService;
     private final PayInterfaceConfigService payInterfaceConfigService;
+    private final PayInterfaceConfigAppService payInterfaceConfigAppService;
 
     /**
      * 获取支付接口列表

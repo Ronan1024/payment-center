@@ -71,14 +71,34 @@ public class OrderVO {
     private String ifCode;
 
     /**
+     * 接口id
+     */
+    private Long interfaceId;
+
+    /**
      * 支付方式代码
      */
     private String wayCode;
 
+
     /**
-     * 支付金额,单位分
+     * 支付方式id
      */
-    private Long amount;
+    private Long payWayId;
+
+    /**
+     * 支付总金额 单位分 = payAmount + promotionAmount
+     */
+    private Long totalAmount;
+    /**
+     * 支付金额
+     */
+    private Long payAmount;
+
+    /**
+     * 营销金额
+     */
+    private Long promotionAmount;
 
     /**
      * 商户手续费费率快照
@@ -213,4 +233,9 @@ public class OrderVO {
      * 更新时间
      */
     private Date updateTime;
+
+    /**
+     * 支付机构渠道支付orderId
+     */
+    private String payAgencyChannelOrder;
 }

@@ -58,11 +58,19 @@ public class CrCreateOrderDTO {
      * 页面跳转地址
      */
     private String returnUrl;
-
     /**
-     * 交易金额
+     * 支付总金额 单位分 = payAmount + promotionAmount
      */
     private Long totalAmount;
+    /**
+     * 支付金额
+     */
+    private Long payAmount;
+
+    /**
+     * 营销金额
+     */
+    private Long promotionAmount;
 
     /**
      * 完成时间
@@ -102,4 +110,11 @@ public class CrCreateOrderDTO {
      * 订单状态
      */
     private Integer state;
+
+
+    /**
+     * 渠道返回信息
+     */
+    private String channelResult;
+
 }

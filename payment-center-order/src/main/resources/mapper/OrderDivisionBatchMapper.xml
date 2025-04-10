@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baosight.payment.order.mapper.OrderDivisionBatchMapper">
+
+
+    <select id="page" resultType="com.baosight.payment.order.pojo.vo.DivisionBatchPageVO">
+        select id             as id,
+               date,
+               division_state as divisionState,
+               client_id      as clientId,
+               fail_msg       as failMsg,
+               create_time    as createTime,
+               update_time    as updateTime
+        from order_division_batch
+    </select>
+</mapper>

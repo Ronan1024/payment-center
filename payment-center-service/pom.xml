@@ -11,7 +11,7 @@
 
     <artifactId>payment-center-service</artifactId>
 
-    <version>1.0.5-SNAPSHOT</version>
+    <version>1.0.40-SNAPSHOT</version>
 
     <properties>
         <buildNumber>1</buildNumber>
@@ -67,6 +67,11 @@
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-notify</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baosight.payment</groupId>
+            <artifactId>payment-center-accounting</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>

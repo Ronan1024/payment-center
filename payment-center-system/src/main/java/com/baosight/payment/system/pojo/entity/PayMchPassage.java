@@ -3,17 +3,19 @@ package com.baosight.payment.system.pojo.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baosight.database.base.BasePO;
 import lombok.Data;
-
-import java.util.Date;
+import lombok.EqualsAndHashCode;
 
 /**
  * 商户支付通道表
+ * @author L.J.Ran
  * @TableName pay_mch_passage
  */
-@TableName(value ="pay_mch_passage")
 @Data
-public class PayMchPassage {
+@EqualsAndHashCode(callSuper = true)
+@TableName(value ="pay_mch_passage")
+public class PayMchPassage extends BasePO {
     /**
      * ID
      */
@@ -36,6 +38,15 @@ public class PayMchPassage {
     private Long interfaceId;
 
     /**
+     * 支付接口编号
+     */
+    private String interfaceCode;
+
+    /**
+     * 支付方式id
+     */
+    private Long payWayId;
+    /**
      * 支付方式
      */
     private String payWayCode;
@@ -56,11 +67,6 @@ public class PayMchPassage {
     private Integer state;
 
     /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
      * 更新人
      */
     private Long updateBy;
@@ -79,9 +85,4 @@ public class PayMchPassage {
      * 创建人名称
      */
     private String createByName;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
 }

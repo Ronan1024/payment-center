@@ -1,7 +1,7 @@
 package com.baosight.payment.service.impl;
 
 import com.baosight.payment.api.PayWayApi;
-import com.baosight.payment.model.PayWayModel;
+import com.baosight.payment.model.payway.PayWayModel;
 import com.baosight.payment.service.ApiPayWayService;
 import com.baosight.payment.vo.ApiPayWayVO;
 import lombok.RequiredArgsConstructor;

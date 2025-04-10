@@ -33,7 +33,8 @@ public class PayTongLianRelevanceController {
     public Boolean bindSyb() {
         Long mchId = SystemUserContext.getCompanyId();
         PayInterfaceConfigVO payInterfaceConfigVO = payInterfaceConfigService.getConfigInfo(mchId, PayingAgency.TONG_LIAN);
-        return payTongLianRelevanceService.bindSybMerchantCode(mchId, payInterfaceConfigVO);
+//        return payTongLianRelevanceService.bindSybMerchantCode(mchId, payInterfaceConfigVO);
+        return null;
     }
 
     /**
@@ -67,6 +68,6 @@ public class PayTongLianRelevanceController {
     public String contractSign(@RequestBody @Validated TongLianAgreementDTO tongLianAgreement) {
         Long mchId = SystemUserContext.getCompanyId();
         PayInterfaceConfigVO payInterfaceConfigVO = payInterfaceConfigService.getConfigInfo(mchId, PayingAgency.TONG_LIAN);
-        return payTongLianRelevanceService.contractSign(mchId, payInterfaceConfigVO,tongLianAgreement);
+        return payTongLianRelevanceService.contractSign(mchId, payInterfaceConfigVO, tongLianAgreement);
     }
 }

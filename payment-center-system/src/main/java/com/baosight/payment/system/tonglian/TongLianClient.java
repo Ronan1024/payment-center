@@ -1,7 +1,7 @@
 package com.baosight.payment.system.tonglian;
 
+import com.baosight.payment.access.tl.model.TongLianIsvConfigDAO;
 import com.baosight.payment.system.tonglian.utils.DemoSM2Util;
-import com.baosight.payment.system.pojo.dao.tonglian.TongLianIsvConfigDAO;
 import com.baosight.payment.system.utils.OkHttp;
 import com.baosight.utils.json.JsonUtil;
 import com.baosight.utils.utils.Assert;
@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ public class TongLianClient {
     private TongLianIsvConfigDAO config;
     private final PrivateKey privateKey;
     private final PublicKey tlPublicKey;
-    public static final String URL = "http://116.228.64.55:28082/yst-service-api/tm/handle";
+//    public static final String URL = "http://116.228.64.55:28082/yst-service-api/tm/handle";
 
     public TongLianClient(TongLianIsvConfigDAO config) {
         this.config = config;
@@ -58,11 +59,15 @@ public class TongLianClient {
         JsonNode jsonNode = JsonUtil.readTree(result);
         if (jsonNode.get("code").asText().equals("00000")) {
             JsonNode bizData = JsonUtil.readTree(jsonNode.get("bizData").asText());
-            if (bizData.get("respCode").asText().equals("00000")) {
+            String respCode = bizData.get("respCode").asText();
+
+            if (Arrays.asList("00000", "66666", "66667").contains(respCode)) {
                 response.setSuccess(Boolean.TRUE);
             } else {
                 log.error("通联接口调用失败 request_code:{}   response:{}", sendBuild.requestId, bizData);
                 response.setSuccess(Boolean.FALSE);
+                response.setErrorMsg(bizData.get("respMsg").asText());
+                response.setRespCode(bizData.get("respCode").asText());
             }
             response.setResult(bizData);
         } else {
@@ -104,7 +109,9 @@ public class TongLianClient {
     @Data
     public static class Response {
         private Boolean success;
+        private String respCode;
         private JsonNode result;
+        private String errorMsg;
 
         public Boolean success() {
             return success;

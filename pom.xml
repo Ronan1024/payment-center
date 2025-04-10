@@ -20,6 +20,7 @@
         <module>payment-center-isv</module>
         <module>payment-center-order</module>
         <module>payment-center-notify</module>
+        <module>payment-center-accounting</module>
     </modules>
 
     <properties>

@@ -13,9 +13,12 @@ public class OkHttp {
     // 初始化 OkHttpClient
     static {
         client = new OkHttpClient.Builder()
-                .connectTimeout(10, TimeUnit.SECONDS)  // 连接超时时间
-                .readTimeout(10, TimeUnit.SECONDS)     // 读取超时时间
-                .writeTimeout(10, TimeUnit.SECONDS)    // 写入超时时间
+                // 连接超时时间
+                .connectTimeout(10, TimeUnit.SECONDS)
+                // 读取超时时间
+                .readTimeout(10, TimeUnit.SECONDS)
+                // 写入超时时间
+                .writeTimeout(10, TimeUnit.SECONDS)
                 .build();
     }
 

@@ -16,6 +16,12 @@ public class PayOrderNotifyDAO {
     private String orderId;
 
     /**
+     * 支付源订单信息(退款时才会有有体现)
+     */
+    private String originOrderNo;
+
+
+    /**
      * 订单类型
      */
     private Integer orderType;
@@ -23,12 +29,17 @@ public class PayOrderNotifyDAO {
     /**
      * 创建时间
      */
-    private Long createTime;
+    private String createTime;
 
     /**
      * 支付时间
      */
-    private Long payTime;
+    private String payTime;
+
+    /**
+     * 完成时间
+     */
+    private String finishTime;
     /**
      * 商户id
      */
@@ -42,7 +53,12 @@ public class PayOrderNotifyDAO {
     /**
      * 支付金额
      */
-    private Long payAmount;
+    private String payAmount;
+
+    /**
+     * 订单金额
+     */
+    private String orderAmount;
 
     /**
      * 服务商号
@@ -53,4 +69,37 @@ public class PayOrderNotifyDAO {
      * 支付类型
      */
     private Integer payType;
+
+    /**
+     * 支付订单返回状态
+     */
+    private String resultCode;
+
+    /**
+     * 失败信息
+     */
+    private String errMsg;
+
+
+    /**
+     * 商户订单id
+     */
+    private String mchOrderNo;
+
+
+    /**
+     * 商户原始订单(当退款时才会体现)
+     */
+    private String originMchOrderNo;
+
+
+    private String channelOrderNo;
+
+    /**
+     * 支付机构渠道支付orderId
+     */
+    private String payAgencyChannelOrder;
+
+
+    // TODO 处理渠道返回值
 }

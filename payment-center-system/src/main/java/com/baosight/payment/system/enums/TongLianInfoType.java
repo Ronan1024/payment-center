@@ -6,6 +6,10 @@ import com.baosight.utils.json.JsonUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 
 
+/**
+ * @author L.J.Ran
+ */
+
 public enum TongLianInfoType implements IBaseEnum<Integer> {
     /**
      * 基本信息

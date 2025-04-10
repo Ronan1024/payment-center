@@ -11,4 +11,9 @@ public interface MchInfoApi {
      * 获取商户信息
      */
     MchInfoVO mchInfo(Long mchId);
+
+    /**
+     * 获取商户信息
+     */
+    MchInfoVO mchInfoBuMchNO(String mchNo);
 }

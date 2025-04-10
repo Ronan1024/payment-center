@@ -1,6 +1,6 @@
 package com.baosight.payment.chanel.tonglianpay;
 
-import com.baosight.payment.dao.TongLianConfigVO;
+import com.baosight.payment.access.tl.model.TongLianIsvConfigDAO;
 import com.baosight.payment.utils.OkHttp;
 import com.baosight.utils.json.JsonUtil;
 import com.baosight.utils.utils.Assert;
@@ -22,12 +22,13 @@ import java.util.Map;
 public class TongLianClient {
     private static final String YYYY_MM_DD = "yyyyMMdd";
     private static final String HH_MM_SS = "HHmmss";
-    private TongLianConfigVO config;
+    private TongLianIsvConfigDAO config;
     private final PrivateKey privateKey;
     private final PublicKey tlPublicKey;
-    public static final String URL = "http://116.228.64.55:28082/yst-service-api/tx/handle";
+    // TODO 待处理url管理
+//    public static final String URL = "http://116.228.64.55:28082/yst-service-api/tx/handle";
 
-    public TongLianClient(TongLianConfigVO config) {
+    public TongLianClient(TongLianIsvConfigDAO config) {
         this.config = config;
         this.privateKey = DemoSM2Util.privKeySM2FromBase64Str(config.getPrivateKeyStr());
         this.tlPublicKey = DemoSM2Util.pubKeySM2FromBase64Str(config.getAllinPayPublicKeyStr());
@@ -66,6 +67,8 @@ public class TongLianClient {
             } else {
                 log.error("通联接口调用失败 request_code:{}   response:{}", sendBuild.requestId, bizData);
                 response.setSuccess(Boolean.FALSE);
+                response.setErrorMsg(bizData.get("respMsg").asText());
+                response.setRespCode(bizData.get("respCode").asText());
             }
             response.setResult(bizData);
         } else {
@@ -107,7 +110,9 @@ public class TongLianClient {
     @Data
     public static class Response {
         private Boolean success;
+        private String respCode;
         private JsonNode result;
+        private String errorMsg;
 
         public Boolean success() {
             return success;

@@ -35,6 +35,7 @@ public class NotifyApiImpl implements NotifyApi {
         payMchNotifyRecord.setAppId(payOrderNotifyDTO.getAppId());
         payMchNotifyRecord.setNotifyUrl(payOrderNotifyDTO.getNotifyUrl());
         payMchNotifyRecord.setNotifyCount(1);
+        //TODO 处理通知次数问题
         payMchNotifyRecord.setNotifyCountLimit(6);
         payMchNotifyRecord.setOrderId(payOrderNotifyDTO.getOrderId());
         payMchNotifyRecord.setOrderType(payOrderNotifyDTO.getOrderType());

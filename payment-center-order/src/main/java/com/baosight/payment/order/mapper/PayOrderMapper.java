@@ -1,8 +1,13 @@
 package com.baosight.payment.order.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baosight.payment.order.pojo.dto.PayOrderPageDTO;
 import com.baosight.payment.order.pojo.entity.PayOrder;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baosight.payment.order.pojo.vo.PayOrderPageVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
 * @author longjiangran
@@ -13,6 +18,12 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface PayOrderMapper extends BaseMapper<PayOrder> {
 
+    /**
+     * 支付订单列表
+     * @param page page
+     * @param payOrderPage 支付列表请求
+     */
+    IPage<PayOrderPageVO> payOrderPage(@Param("page") Page<PayOrderPageVO> page, @Param("payOrderPage") PayOrderPageDTO payOrderPage);
 }
 
 

@@ -1,6 +1,6 @@
 package com.baosight.payment.service;
 
-import com.baosight.payment.model.PayWayModel;
+import com.baosight.payment.model.payway.PayWayModel;
 
 import java.util.List;
 

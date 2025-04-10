@@ -16,6 +16,7 @@ import org.mapstruct.factory.Mappers;
 public interface PayInterfaceConfigConvert {
     PayInterfaceConfigConvert INSTANCE = Mappers.getMapper(PayInterfaceConfigConvert.class);
 
+    @Mapping(target = "isvId", ignore = true)
     @Mapping(target = "hasSetting", ignore = true)
     @Mapping(target = "interfaceParam", ignore = true)
     PayInterfaceConfigVO toPayInterfaceConfigVO(PayInterfaceConfig payInterfaceConfig);

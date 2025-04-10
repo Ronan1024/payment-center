@@ -2,13 +2,21 @@ package com.baosight.payment.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baosight.payment.access.tl.model.TongLianIsvConfigDAO;
 import com.baosight.payment.api.MchInfoApi;
+import com.baosight.payment.dao.TongLianIsvAndMchConfigDAO;
+import com.baosight.payment.dao.TongLianMchConfigDAO;
+import com.baosight.payment.enums.MchType;
 import com.baosight.payment.enums.PayClientType;
 import com.baosight.payment.enums.PayingAgency;
 import com.baosight.payment.error.MchError;
 import com.baosight.payment.system.convert.PayInterfaceConfigConvert;
+import com.baosight.payment.system.error.PayInterfaceConfigError;
 import com.baosight.payment.system.error.PayInterfaceError;
 import com.baosight.payment.system.error.PaymentError;
+import com.baosight.payment.system.handler.option.PayAgencyOptionContext;
+import com.baosight.payment.system.handler.option.TongLianOptionHandler;
+import com.baosight.payment.system.manager.PayInterfaceConfigManager;
 import com.baosight.payment.system.mapper.PayInterfaceConfigMapper;
 import com.baosight.payment.system.pojo.dto.PayInterfaceConfigDTO;
 import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
@@ -19,7 +27,6 @@ import com.baosight.payment.system.pojo.vo.PayInterfaceConfigVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
 import com.baosight.payment.system.service.PayInterfaceDefineService;
-import com.baosight.payment.system.service.PayTongLianRelevanceService;
 import com.baosight.payment.system.service.PayWayService;
 import com.baosight.payment.vo.MchInfoVO;
 import com.baosight.payment.vo.MchInterfaceConfigVO;
@@ -57,8 +64,9 @@ import static com.baosight.payment.system.error.PayInterfaceError.PAY_INTERFACE_
 public class PayInterfaceConfigServiceImpl extends ServiceImpl<PayInterfaceConfigMapper, PayInterfaceConfig> implements PayInterfaceConfigService {
     private final PayInterfaceConfigMapper payInterfaceConfigMapper;
     private final PayInterfaceDefineService payInterfaceDefineService;
-    private final PayTongLianRelevanceService payTongLianRelevanceService;
+    private final PayInterfaceConfigManager payInterfaceConfigManager;
     private final PayWayService payWayService;
+    private final PayAgencyOptionContext payAgencyOptionContext;
 
     @Resource
     private MchInfoApi mchInfoApi;
@@ -114,11 +122,11 @@ public class PayInterfaceConfigServiceImpl extends ServiceImpl<PayInterfaceConfi
      */
     @Override
     public PayInterfaceConfigVO getConfigInfo(PayClientType payClientType, Long id, Long interfaceId) {
-        MchInfoVO mchInfoVO = mchInfoApi.mchInfo(id);
         PayInterfaceConfig payInterfaceConfig = byPayInterfaceconfig(payClientType, id, interfaceId);
         PayInterfaceDefine payInterfaceDefine = payInterfaceDefineService.payInterfaceDefineBy(interfaceId);
         Long interfaceRate = 0L;
         if (payClientType.equals(PayClientType.SUB_MERCHANT)) {
+            MchInfoVO mchInfoVO = mchInfoApi.mchInfo(id);
             // 如果是子商户，需要获取服务商的费率
             PayInterfaceConfig config = byPayInterfaceconfig(PayClientType.SERVICE_PROVIDER, mchInfoVO.getIsvId(), interfaceId);
             interfaceRate = config.getInterfaceRate();
@@ -132,7 +140,7 @@ public class PayInterfaceConfigServiceImpl extends ServiceImpl<PayInterfaceConfi
                 Map<String, DynamicForm> map = dynamicFormList.stream().collect(Collectors.toMap(DynamicForm::getName, e -> e));
                 dynamicFormList.addAll(dynamicForms.stream().filter(e -> !map.containsKey(e.getName())).toList());
             }
-            result.setInterfaceId(payClientType.equals(PayClientType.SUB_MERCHANT) ? interfaceRate : payInterfaceConfig.getInterfaceRate());
+            result.setInterfaceRate(payClientType.equals(PayClientType.SUB_MERCHANT) ? interfaceRate : payInterfaceConfig.getInterfaceRate());
             result.setInterfaceParam(dynamicFormList);
             result.setHasSetting(Boolean.TRUE);
             return result;
@@ -144,8 +152,10 @@ public class PayInterfaceConfigServiceImpl extends ServiceImpl<PayInterfaceConfi
             result.setClientType(payClientType.getCode());
             result.setClientId(id);
             String interfaceParams = payInterfaceDefine.interfaceParam(payClientType);
-            result.setInterfaceParams(interfaceParams);
-            result.setInterfaceParam(JsonUtil.parseArray(interfaceParams, DynamicForm.class));
+            if (StringUtils.hasText(interfaceParams)) {
+                result.setInterfaceParams(interfaceParams);
+                result.setInterfaceParam(JsonUtil.parseArray(interfaceParams, DynamicForm.class));
+            }
             result.setHasSetting(Boolean.FALSE);
             result.setInterfaceRate(interfaceRate);
             result.setName(payInterfaceDefine.getName());
@@ -158,8 +168,6 @@ public class PayInterfaceConfigServiceImpl extends ServiceImpl<PayInterfaceConfi
      *
      * @param payInterfaceConfigDTO 保存或更新
      * @param payClientType         支付客户端信息
-     * @param mchId
-     * @param hasMch
      */
     @Override
     public Boolean payConfigurationSaveOrUpdate(PayInterfaceConfigDTO payInterfaceConfigDTO, PayClientType payClientType, Long mchId, Boolean hasMch) {
@@ -210,16 +218,10 @@ public class PayInterfaceConfigServiceImpl extends ServiceImpl<PayInterfaceConfi
             save.setPayingAgency(payInterfaceDefine.getPayingAgency());
             save.setInterfaceCode(payInterfaceDefine.getCode());
             save.setMchChannelUser(map.get(payInterfaceDefine.getMchChannelUserKey()));
-            option = payInterfaceConfigMapper.insert(save);
             // 处理扩展资源信息
             List<Long> payWayidList = Arrays.stream(payInterfaceDefine.getPayWay().split(",")).map(Long::valueOf).toList();
             List<PayWay> payWayList = payWayService.selectByIdList(payWayidList);
-            // 支付机构分组
-            Map<String, List<PayWay>> payAgency = StreamBuild.of(payWayList).groupingBy(PayWay::getPayingAgency);
-            payAgency.forEach((key, value) -> {
-                PayingAgency payingAgency = IBaseEnum.getByCode(PayingAgency.class, key);
-                handlerRelevance(payingAgency, mchId);
-            });
+            option = payInterfaceConfigManager.saveInterfaceConfig(save, payWayList);
         } else {
             // 更新
             payInterfaceConfig.setInterfaceParams(JsonUtil.toJson(param.dynamicFormList));
@@ -227,11 +229,12 @@ public class PayInterfaceConfigServiceImpl extends ServiceImpl<PayInterfaceConfi
             PayInterfaceConfigConvert.INSTANCE.copyPayInterfaceConfig(payInterfaceConfig, payInterfaceConfigDTO);
             payInterfaceConfig.setName(payInterfaceDefine.getName());
             payInterfaceConfig.setPayingAgency(payInterfaceDefine.getPayingAgency());
+            // TODO 接口定义修改了支付方式， 支付配置中不会进行同步更新， 后去流程需要进行优化， 是采用用户选择的方式， 还是采用接口直接更新的方式
             option = payInterfaceConfigMapper.updateById(payInterfaceConfig);
 
         }
         Assert.isFalse(option > 0, () -> new ApiException(PAY_INTERFACE_UPDATE_CONFIG_FAIL));
-        // TODO 推送mq到目前节点进行更新数据
+        // TODO (L.J.Ran 2025/3/24 - P2-1742871593 describe: 推送mq到目前节点进行更新数据 )
 //        mqSender.send(ResetIsvMchAppInfoConfigMQ.build(ResetIsvMchAppInfoConfigMQ.RESET_TYPE_ISV_INFO, infoId, null, null));
 
         return Boolean.TRUE;
@@ -310,6 +313,28 @@ public class PayInterfaceConfigServiceImpl extends ServiceImpl<PayInterfaceConfi
         result.setHasSetting(Boolean.FALSE);
         result.setName(payInterfaceConfig.getName());
         result.setPayingAgency(payInterfaceConfig.getPayingAgency());
+        return result;
+    }
+
+    /**
+     * 获取指定客户端配置信息
+     *
+     * @param clientId     客户端id
+     * @param payingAgency 支付机构信息
+     * @param interfaceId  支付接口id
+     */
+    @Override
+    public PayInterfaceConfigVO getConfigInfo(Long clientId, PayingAgency payingAgency, Long interfaceId) {
+        PayInterfaceConfig payInterfaceConfig = payInterfaceConfigMapper.selectOne(new LambdaQueryWrapper<PayInterfaceConfig>()
+                .eq(PayInterfaceConfig::getClientId, clientId)
+                .eq(PayInterfaceConfig::getPayingAgency, payingAgency.getCode())
+                .eq(PayInterfaceConfig::getInterfaceId, interfaceId)
+        );
+        if (ObjectUtils.isEmpty(payInterfaceConfig)) {
+            return null;
+        }
+        PayInterfaceConfigVO result = PayInterfaceConfigConvert.INSTANCE.toPayInterfaceConfigVO(payInterfaceConfig);
+        result.setInterfaceParam(JsonUtil.parseArray(payInterfaceConfig.getInterfaceParams(), DynamicForm.class));
         return result;
     }
 
@@ -418,6 +443,64 @@ public class PayInterfaceConfigServiceImpl extends ServiceImpl<PayInterfaceConfi
         return result;
     }
 
+    /**
+     * 处理当前用户是否需要执行后续操作
+     *
+     * @param interfaceId 接口id
+     * @param mchId       商户id
+     */
+    @Override
+    public List<String> trailingOption(Long interfaceId, Long mchId) {
+        PayInterfaceConfig payInterfaceConfig = payInterfaceConfigMapper.selectOne(new LambdaQueryWrapper<PayInterfaceConfig>()
+                .eq(PayInterfaceConfig::getInterfaceId, interfaceId)
+                .eq(PayInterfaceConfig::getClientId, mchId)
+                .in(PayInterfaceConfig::getClientType, Arrays.asList(MchType.SUB_MERCHANT.getCode(), MchType.MERCHANT.getCode())));
+
+        Assert.isNull(payInterfaceConfig, ApiException.supplier(PayInterfaceConfigError.MERCHANT_NOT_CONFIG_PAY_INTERFACE));
+        TongLianOptionHandler option = (TongLianOptionHandler) payAgencyOptionContext.option(payInterfaceConfig.getPayingAgency());
+        return option.option(payInterfaceConfig);
+    }
+
+    /**
+     * 获取通联服务商与商家配置
+     *
+     * @param mchId       商家id
+     * @param interfaceId 接口id
+     */
+    @Override
+    public TongLianIsvAndMchConfigDAO getTongLianIsvAndMchConfig(Long mchId, Long interfaceId) {
+        MchInfoVO mchInfo = mchInfoApi.mchInfo(mchId);
+        Assert.isNull(mchInfo, ApiException.supplier(MchError.MCH_NOT_FOUND));
+        Assert.isFalse(mchInfo.getType().equals(MchType.SUB_MERCHANT.getCode()), ApiException.supplier(MchError.MCH_TYPE_ERROR));
+        // 获取当前商户配置
+        PayInterfaceConfigVO mchInterfaceConfig = getConfigInfo(mchInfo.getId(), PayingAgency.TONG_LIAN, interfaceId);
+        Assert.isNull(mchInterfaceConfig, ApiException.supplier(PayInterfaceConfigError.MERCHANT_NOT_CONFIG_PAY_INTERFACE));
+        // 获取服务商配置信息
+        PayInterfaceConfigVO isvInterfaceConfig = getConfigInfo(mchInfo.getIsvId(), PayingAgency.TONG_LIAN, interfaceId);
+        Assert.isNull(isvInterfaceConfig, ApiException.supplier(PayInterfaceConfigError.ISV_NOT_CONFIG_PAY_INTERFACE));
+        Map<String, Object> mch = mchInterfaceConfig.getInterfaceParam().stream().collect(Collectors.toMap(DynamicForm::getName, DynamicForm::getValue));
+        TongLianMchConfigDAO tongLianMchConfigDAO = JsonUtil.parse(JsonUtil.toJson(mch), TongLianMchConfigDAO.class);
+        Map<String, Object> isv = isvInterfaceConfig.getInterfaceParam().stream().collect(Collectors.toMap(DynamicForm::getName, DynamicForm::getValue));
+        TongLianIsvConfigDAO tongLianIsvConfigDAO = JsonUtil.parse(JsonUtil.toJson(isv), TongLianIsvConfigDAO.class);
+        return new TongLianIsvAndMchConfigDAO(tongLianIsvConfigDAO, tongLianMchConfigDAO);
+    }
+
+    /**
+     * 获取服务商 支付配置列表
+     *
+     * @param isvId                  服务商id
+     * @param payInterfaceDefineList 支付接口定义列表
+     * @param clientType             客户端类型
+     */
+    @Override
+    public List<PayInterfaceConfigListVO> getIsvInterfaceConfigList(Long isvId, List<PayInterfaceDefineListVO> payInterfaceDefineList, PayClientType clientType) {
+        List<PayInterfaceConfig> payInterfaceConfigList = payInterfaceConfigMapper.selectList(new LambdaQueryWrapper<PayInterfaceConfig>()
+                .eq(PayInterfaceConfig::getClientType, clientType.getCode())
+                .eq(PayInterfaceConfig::getClientId, isvId)
+        );
+        return function.apply(payInterfaceDefineList, payInterfaceConfigList);
+    }
+
 
     private BiFunction<List<PayInterfaceDefineListVO>, List<PayInterfaceConfig>, List<PayInterfaceConfigListVO>> function = (payInterfaceDefineList, payInterfaceConfigList) -> {
         var let = new Object() {
@@ -436,12 +519,5 @@ public class PayInterfaceConfigServiceImpl extends ServiceImpl<PayInterfaceConfi
                 .toList();
     };
 
-
-    private void handlerRelevance(PayingAgency payingAgency, Long mchId) {
-        switch (payingAgency) {
-            case TONG_LIAN -> payTongLianRelevanceService.init(mchId);
-            default -> log.info("处理扩展信息异常");
-        }
-    }
 
 }

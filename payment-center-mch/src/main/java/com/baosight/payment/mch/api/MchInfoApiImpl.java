@@ -28,4 +28,16 @@ public class MchInfoApiImpl implements MchInfoApi {
         PayMchInfo info = payMchInfoService.infoById(mchId);
         return PayMchInfoConvert.INSTANCE.toMchInfoVO(info);
     }
+
+    /**
+     * 获取商户信息
+     *
+     * @param mchNo
+     * @return
+     */
+    @Override
+    public MchInfoVO mchInfoBuMchNO(String mchNo) {
+        PayMchInfo info = payMchInfoService.infoByMchNo(mchNo);
+        return PayMchInfoConvert.INSTANCE.toMchInfoVO(info);
+    }
 }

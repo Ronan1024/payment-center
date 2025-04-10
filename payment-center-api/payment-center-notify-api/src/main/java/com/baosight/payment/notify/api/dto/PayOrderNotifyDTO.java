@@ -2,6 +2,8 @@ package com.baosight.payment.notify.api.dto;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @program: payment-center
  * @description: 订单支付成功通知
@@ -35,5 +37,10 @@ public class PayOrderNotifyDTO {
     private Long appId;
 
     private Long payType;
+
+    /**
+     * 订单完成时间
+     */
+    private Date finishTime;
 
 }

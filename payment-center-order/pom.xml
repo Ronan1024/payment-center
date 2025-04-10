@@ -55,6 +55,16 @@
             <artifactId>payment-center-notify-api</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.baosight.payment</groupId>
+            <artifactId>payment-center-access-tonglian</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baosight.payment</groupId>
+            <artifactId>payment-center-system-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
 

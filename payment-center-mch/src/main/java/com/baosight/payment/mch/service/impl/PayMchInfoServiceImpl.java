@@ -149,6 +149,18 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
     public PayMchInfo infoById(Long mchId) {
         return payMchInfoMapper.selectById(mchId);
     }
+
+    /**
+     * 获取商户信息
+     *
+     * @param mchNo 商户号
+     */
+    @Override
+    public PayMchInfo infoByMchNo(String mchNo) {
+        return payMchInfoMapper.selectOne(new LambdaQueryWrapper<PayMchInfo>()
+                .eq(PayMchInfo::getMchNo, mchNo)
+        );
+    }
 }
 
 

@@ -73,11 +73,19 @@ public class PayOrder {
      * 支付方式代码
      */
     private String wayCode;
+    /**
+     * 支付总金额 单位分 = payAmount + promotionAmount
+     */
+    private Long totalAmount;
+    /**
+     * 支付金额
+     */
+    private Long payAmount;
 
     /**
-     * 支付金额,单位分
+     * 营销金额
      */
-    private Long amount;
+    private Long promotionAmount;
 
     /**
      * 商户手续费费率快照
@@ -212,4 +220,25 @@ public class PayOrder {
      * 更新时间
      */
     private Date updateTime;
+
+    /**
+     * 下游用户
+     */
+    private String signUser;
+
+
+    /**
+     * 渠道返回信息
+     */
+    private String channelResult;
+
+    /**
+     * 支付机构渠道支付orderId
+     */
+    private String payAgencyChannelOrder;
+
+    /**
+     * 待结算金额
+     */
+    private Long waitSettledAmount;
 }
