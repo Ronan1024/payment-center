@@ -73,7 +73,7 @@ public class RefundOrderController {
             OrderVO order = orderApi.orderInfo(mchInfo.getId(), request.getMchOrderNo(), request.getPayOrderId());
 
             Assert.isNull(order, "退款订单不存在");
-            Assert.isFalse(order.getState().equals(PayOrderState.SUCCESS.getCode()), "订单状态不正确， 无法完成退款");
+            Assert.isFalse(order.getState().equals(PayOrderState.SUCCESS.getCode()) || order.getState().equals(PayOrderState.PRE_CONSUMPTION.getCode()), "订单状态不正确， 无法完成退款");
 
             Assert.isTrue(order.getRefundState().equals(RefundType.REFUND_TYPE_ALL.getCode()) || order.getRefundAmount() >= order.getTotalAmount(), "订单已全额退款，本次申请失败");
 

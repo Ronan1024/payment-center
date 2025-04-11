@@ -211,7 +211,7 @@ public class TongLianPayReconciliationManagerImpl implements TongLianPayReconcil
      */
     private Function<String, PayWayCode> payType = e -> switch (e) {
         case "SCAN_WEIXIN" -> PayWayCode.TONG_LIAN_WX_SCAN;
-        case "WECHATPAY_MINIPROGRAM" -> PayWayCode.TONG_LIAN_WX_MINI_PROGRAM;
+        case "WECHATPAY_MINIPROGRAM", "WECHAT_PRECONSUME" -> PayWayCode.TONG_LIAN_WX_MINI_PROGRAM;
         default -> null;
     };
 
