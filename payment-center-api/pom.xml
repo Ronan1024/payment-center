@@ -16,6 +16,8 @@
         <module>payment-center-isv-api</module>
         <module>payment-center-order-api</module>
         <module>payment-center-notify-api</module>
+        <module>payment-center-check-api</module>
+        <module>payment-center-settlement-api</module>
     </modules>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

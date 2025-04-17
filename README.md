@@ -15,9 +15,10 @@ payment-center
     cache 通用缓存层
     dao 数据操作 如操作 orderMapper 操作redis orderRedismapper 操作 mongo  orderMongoMapper
 
-
 ## 系统模块说明
+
 ### payment-center-accounting 财务中心
+
 ```text
 |--- 账务核心 
   ｜--- 记账
@@ -25,14 +26,36 @@ payment-center
 |--- 会记中心
 |--- 清结算中心
 ```
+
 ### payment-center-channel 支付渠道网关
+
 ```text
 |--- 支付渠道接入
 ```
+
 ### 收银支付系统
+
 ```text
 ```
+
 ### 收单结算系统
+
 ### 会员中心
 
 ### 商户中心
+
+### 支付核心
+
+待处理支付单
+支付记录
+支付单 - （1:N）-> 支付记录
+
+### 财务核心
+1. 财务记账
+
+支付正向流程
+
+```mermaid
+flowchart LR
+    业务系统 --> 交易中心 --> 支付中心 --> 支付渠道
+```

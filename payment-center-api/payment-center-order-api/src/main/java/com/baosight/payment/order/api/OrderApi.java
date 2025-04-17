@@ -54,10 +54,9 @@ public interface OrderApi {
     /**
      * 更新订单状态
      *
-     * @param state            订单状态
      * @param updateOrderState 更新状态信息
      */
-    Boolean updateInitOrderStateThrowException(Integer state, UpdateOrderState updateOrderState);
+    Boolean updateInitOrderStateThrowException( UpdateOrderState updateOrderState);
 
     /**
      * 获取订单信息

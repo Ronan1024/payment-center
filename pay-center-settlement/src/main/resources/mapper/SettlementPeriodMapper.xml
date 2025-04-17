@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baosight.payment.settlement.mapper.SettlementPeriodMapper">
+
+    <resultMap id="BaseResultMap" type="com.baosight.payment.settlement.pojo.entity.SettlementPeriod">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="mchId" column="mch_id" jdbcType="BIGINT"/>
+            <result property="startTime" column="start_time" jdbcType="TIMESTAMP"/>
+            <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
+            <result property="state" column="state" jdbcType="TINYINT"/>
+            <result property="totalAmount" column="total_amount" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,mch_id,start_time,
+        end_time,state,total_amount
+    </sql>
+</mapper>

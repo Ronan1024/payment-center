@@ -21,15 +21,18 @@ public enum DivisionState implements IBaseEnum<Integer> {
      * 分账处理中
      */
     DIVISION_ING(2, "分账处理中"),
+
     /**
-     * 分账任务已结束(不体现状态)
+     * 分账成功
      */
-    DIVISION_END(3, "分账任务已结束"),
+    DIVISION_SUCCESS(3, "分账成功"),
 
     /**
      * 分账失败
      */
-    DIVISION_FAILURE(4, "分账失败")
+    DIVISION_FAILURE(4, "分账失败"),
+
+
     ;
 
 

@@ -11,7 +11,7 @@
 
     <artifactId>payment-center-service</artifactId>
 
-    <version>1.0.42-SNAPSHOT</version>
+    <version>1.0.45-SNAPSHOT</version>
 
     <properties>
         <buildNumber>1</buildNumber>
@@ -57,12 +57,12 @@
         </dependency>
         <dependency>
             <groupId>com.baosight.payment</groupId>
-            <artifactId>payment-center-pay</artifactId>
+            <artifactId>payment-center-pay-gateway</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.baosight.payment</groupId>
-            <artifactId>payment-center-order</artifactId>
+            <artifactId>payment-center-trade</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>
@@ -73,6 +73,16 @@
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-accounting</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baosight.payment</groupId>
+            <artifactId>pay-center-check</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baosight.payment</groupId>
+            <artifactId>pay-center-settlement</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>

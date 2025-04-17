@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baosight.payment.check.mapper.ChannelBillFileMapper">
+
+    <select id="channelBillPage" resultType="com.baosight.payment.check.pojo.vo.ChannelBillFileVO">
+        select
+        id,
+        bill_date as billDate,
+        parse_state as parseState,
+        channel_bill_code as channelBillCode,
+        parse_error as parseError,
+        channel_id as channelId,
+        channel_code as channelCode
+        from channel_bill_file
+        <where>
+            <if test="channelBillFilePage.billDate != null and channelBillFilePage.billDate !=''">
+                and bill_data = #{channelBillFilePage.billDate}
+            </if>
+            <if test="channelBillFilePage.channelId != null">
+                and channel_id = #{channelBillFilePage.channelId}
+            </if>
+            <if test="channelBillFilePage.channelCode != null and channelBillFilePage.channelCode != ''">
+                and channel_code = #{channelBillFilePage.channelCode}
+            </if>
+        </where>
+    </select>
+</mapper>

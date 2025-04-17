@@ -189,4 +189,18 @@ public class CreateOrderDTO {
      */
     private String signUser;
 
+    /**
+     * 交易类型
+     */
+    private String tradingType;
+
+    /**
+     * 交易模式
+     */
+    private Integer tradingMode;
+
+    /**
+     * 渠道商户号
+     */
+    private String channelMchNo;
 }

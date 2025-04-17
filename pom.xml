@@ -14,13 +14,17 @@
         <module>payment-center-common</module>
         <module>payment-center-mch</module>
         <module>payment-center-access</module>
-        <module>payment-center-pay</module>
+        <module>payment-center-pay-gateway</module>
         <module>payment-center-api</module>
         <module>pay</module>
         <module>payment-center-isv</module>
-        <module>payment-center-order</module>
+        <module>payment-center-trade</module>
         <module>payment-center-notify</module>
         <module>payment-center-accounting</module>
+        <module>pay-center-channel</module>
+        <module>pay-center-cashier</module>
+        <module>pay-center-check</module>
+        <module>pay-center-settlement</module>
     </modules>
 
     <properties>

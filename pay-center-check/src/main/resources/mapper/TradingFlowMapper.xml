@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baosight.payment.check.mapper.TradingFlowMapper">
+
+    <resultMap id="BaseResultMap" type="com.baosight.payment.check.pojo.entity.TradingFlow">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="amount" column="amount" jdbcType="BIGINT"/>
+            <result property="channelCost" column="channel_cost" jdbcType="BIGINT"/>
+            <result property="canSettleAmount" column="can_settle_amount" jdbcType="BIGINT"/>
+            <result property="tradingType" column="trading_type" jdbcType="VARCHAR"/>
+            <result property="state" column="state" jdbcType="TINYINT"/>
+            <result property="tradingMode" column="trading_mode" jdbcType="TINYINT"/>
+            <result property="orderId" column="order_id" jdbcType="BIGINT"/>
+            <result property="date" column="date" jdbcType="DATE"/>
+            <result property="channelOrderId" column="channel_order_id" jdbcType="VARCHAR"/>
+            <result property="channelCode" column="channel_code" jdbcType="VARCHAR"/>
+            <result property="channelId" column="channel_id" jdbcType="BIGINT"/>
+            <result property="tradingTime" column="trading_time" jdbcType="TIMESTAMP"/>
+            <result property="mchId" column="mch_id" jdbcType="BIGINT"/>
+            <result property="originOrderId" column="origin_order_id" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,create_time,update_time,
+        amount,channel_cost,can_settle_amount,
+        trading_type,state,trading_mode,
+        order_id,date,channel_order_id,
+        channel_code,channel_id,trading_time,
+        mch_id,origin_order_id
+    </sql>
+</mapper>

@@ -17,6 +17,10 @@ public class UpdateOrderState {
 
     private Integer orderState;
 
+    /**
+     * 渠道商户号
+     */
+    private String channelMchNo;
 
     /**
      * 渠道用户标识,如微信openId,支付宝账号
@@ -52,4 +56,14 @@ public class UpdateOrderState {
      * 支付机构渠道支付orderId
      */
     private String payAgencyChannelOrder;
+
+    /**
+     * 交易模式
+     */
+    private Integer tradingMode;
+
+    /**
+     * 交易类型
+     */
+    private String tradingType;
 }

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baosight.payment.settlement.mapper.SettlementRequestMapper">
+
+    <resultMap id="BaseResultMap" type="com.baosight.payment.settlement.pojo.entity.SettlementRequest">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="mchId" column="mch_id" jdbcType="BIGINT"/>
+            <result property="refId" column="ref_id" jdbcType="BIGINT"/>
+            <result property="state" column="state" jdbcType="TINYINT"/>
+            <result property="amount" column="amount" jdbcType="BIGINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="fee" column="fee" jdbcType="DECIMAL"/>
+            <result property="settleTime" column="settle_time" jdbcType="TIMESTAMP"/>
+            <result property="feeSnapshot" column="fee_snapshot" jdbcType="BIGINT"/>
+            <result property="tradingId" column="trading_id" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,mch_id,ref_id,
+        state,amount,create_time,
+        fee,settle_time,fee_snapshot,
+        trading_id
+    </sql>
+</mapper>

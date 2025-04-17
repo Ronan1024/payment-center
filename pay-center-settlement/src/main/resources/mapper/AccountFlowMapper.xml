@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baosight.payment.settlement.mapper.AccountFlowMapper">
+
+    <resultMap id="BaseResultMap" type="com.baosight.payment.settlement.pojo.entity.AccountFlow">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="requestId" column="request_id" jdbcType="BIGINT"/>
+            <result property="tradingType" column="trading_type" jdbcType="TINYINT"/>
+            <result property="amount" column="amount" jdbcType="DECIMAL"/>
+            <result property="channelId" column="channel_id" jdbcType="BIGINT"/>
+            <result property="channelCode" column="channel_code" jdbcType="VARCHAR"/>
+            <result property="state" column="state" jdbcType="TINYINT"/>
+            <result property="tradingTime" column="trading_time" jdbcType="TIMESTAMP"/>
+            <result property="channelTradingId" column="channel_trading_id" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,request_id,trading_type,
+        amount,channel_id,channel_code,
+        state,trading_time,channel_trading_id
+    </sql>
+</mapper>
