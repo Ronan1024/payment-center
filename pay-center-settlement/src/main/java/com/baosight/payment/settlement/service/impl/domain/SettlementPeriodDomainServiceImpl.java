@@ -1,6 +1,6 @@
 package com.baosight.payment.settlement.service.impl.domain;
 
-import com.baosight.payment.settlement.service.domain.SettlementPeriodDomainService;
+import com.baosight.payment.settlement.manager.SettlementPeriodDomainService;
 import org.springframework.stereotype.Service;
 
 /**

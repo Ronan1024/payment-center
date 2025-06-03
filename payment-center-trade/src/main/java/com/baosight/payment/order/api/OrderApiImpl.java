@@ -1,5 +1,7 @@
 package com.baosight.payment.order.api;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.math.Money;
 import com.baosight.payment.check.api.CheckTradingFlowApi;
 import com.baosight.payment.check.dto.RegisterTradingFlowDTO;
@@ -21,7 +23,9 @@ import com.baosight.payment.settlement.dto.CreateSettlementRequestDTO;
 import com.baosight.payment.utils.IdGenUtil;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
@@ -35,6 +39,7 @@ import java.util.List;
  * @author: L.J.Ran
  * @create: 2025/3/20
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderApiImpl implements OrderApi {
@@ -195,7 +200,11 @@ public class OrderApiImpl implements OrderApi {
      */
     @Override
     public Boolean updateInitOrderStateThrowException(UpdateOrderState updateOrderState) {
+        log.info("更新的数据: {}", updateOrderState);
         PayOrder payOrder = payOrderService.getById(updateOrderState.getOrderId());
+        if (!ObjectUtils.isEmpty(updateOrderState.getTradingMode()) && updateOrderState.getTradingMode().equals(TradingMode.WECHAT_ORDER_COMPLETED.getCode())) {
+            payOrder.setChannelOriginId(payOrder.getChannelOrderNo());
+        }
         payOrder.setState(updateOrderState.getOrderState());
         payOrder.setChannelOrderNo(updateOrderState.getChannelOrderNo());
         payOrder.setErrCode(updateOrderState.getErrCode());
@@ -209,7 +218,10 @@ public class OrderApiImpl implements OrderApi {
         payOrder.setTradingMode(updateOrderState.getTradingMode());
         if (updateOrderState.getOrderState().equals(PayOrderState.SUCCESS.getCode()) && payOrder.getTradingMode().equals(TradingMode.WECHAT_ORDER_COMPLETED.getCode())) {
             payOrder.setDivisionState(DivisionState.WAITING.getCode());
+            DateTime dateTime = DateUtil.offsetDay(new Date(), 1);
+            payOrder.setDivisionValidTime(dateTime);
         }
+
 
         boolean result = payOrderService.updateById(payOrder);
         if (result && (updateOrderState.getOrderState().equals(PayOrderState.SUCCESS.getCode()) || updateOrderState.getOrderState().equals(PayOrderState.PRE_CONSUMPTION.getCode()))) {

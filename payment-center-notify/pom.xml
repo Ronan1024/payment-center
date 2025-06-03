@@ -65,6 +65,12 @@
             <artifactId>payment-center-order-api</artifactId>
             <version>1.0.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.baosight.payment</groupId>
+            <artifactId>payment-center-settlement-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
 </project>

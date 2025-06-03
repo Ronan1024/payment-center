@@ -2,12 +2,15 @@ package com.baosight.payment.order.manager.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baosight.payment.annotation.Manager;
+import com.baosight.payment.enums.RefundOrderState;
 import com.baosight.payment.order.api.dto.CreateRefundOrderDTO;
 import com.baosight.payment.order.api.dto.UpdateRefundOrderState;
 import com.baosight.payment.order.api.vo.CreateRefundOrderVO;
 import com.baosight.payment.order.api.vo.PayRefundOrderVO;
 import com.baosight.payment.order.manager.PayRefundOrderManager;
+import com.baosight.payment.order.mapper.PayOrderMapper;
 import com.baosight.payment.order.mapper.PayRefundOrderMapper;
+import com.baosight.payment.order.pojo.entity.PayOrder;
 import com.baosight.payment.order.pojo.entity.PayRefundOrder;
 import com.baosight.payment.utils.IdGenUtil;
 import com.baosight.utils.utils.Assert;
@@ -27,6 +30,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PayRefundOrderManagerImpl implements PayRefundOrderManager {
     private final PayRefundOrderMapper payRefundOrderMapper;
+    private final PayOrderMapper payOrderMapper;
 
     /**
      * 获取指定商户指定的退款订单数量
@@ -75,7 +79,23 @@ public class PayRefundOrderManagerImpl implements PayRefundOrderManager {
         String refundNo = IdGenUtil.generateId(refundOrder.getMchId());
         PayRefundOrder payRefundOrder = PayReFundConvert.INSTANCE.toPayRefundOrder(refundOrder);
         payRefundOrder.setRefundNo(refundNo);
-        payRefundOrderMapper.insert(payRefundOrder);
+        boolean insert = payRefundOrderMapper.insert(payRefundOrder) > 0;
+        if (insert) {
+            PayOrder payOrder = payOrderMapper.selectById(payRefundOrder.getPayOrderId());
+            payOrder.setRefundTimes(payOrder.getRefundTimes() + 1);
+            payOrder.setRefundAmount(payOrder.getRefundAmount() + refundOrder.getRefundAmount());
+            if (payOrder.getRefundAmount().equals(payOrder.getPayAmount())) {
+                payOrder.setRefundState(2);
+                payOrder.setHasDivision(Boolean.FALSE);
+            } else {
+                // 部分退款
+                payOrder.setRefundState(1);
+            }
+
+            // 修改退款金额
+            payOrderMapper.updateById(payOrder);
+        }
+
         CreateRefundOrderVO result = new CreateRefundOrderVO();
         result.setRefundOrderId(payRefundOrder.getId());
         result.setRefundOrderNo(payRefundOrder.getRefundNo());
@@ -100,7 +120,22 @@ public class PayRefundOrderManagerImpl implements PayRefundOrderManager {
         payRefundOrder.setErrMsg(updateRefundOrderState.getErrMsg());
         payRefundOrder.setChanelResult(updateRefundOrderState.getChanelResult());
         payRefundOrder.setSuccessTime(updateRefundOrderState.getFinishTime());
-        return payRefundOrderMapper.updateById(payRefundOrder) > 0;
+        boolean result = payRefundOrderMapper.updateById(payRefundOrder) > 0;
+        if (result) {
+            if (updateRefundOrderState.getRefundState().equals(RefundOrderState.REFUND_FAILED.getCode())) {
+                PayOrder payOrder = payOrderMapper.selectById(payRefundOrder.getPayOrderId());
+                payOrder.setRefundTimes(payOrder.getRefundTimes() - 1);
+                payOrder.setRefundAmount(payOrder.getRefundAmount() - payRefundOrder.getRefundAmount());
+                if (payOrder.getRefundAmount().equals(payOrder.getPayAmount())) {
+                    payOrder.setRefundState(2);
+                } else {
+                    // 部分退款
+                    payOrder.setHasDivision(Boolean.TRUE);
+                    payOrder.setRefundState(1);
+                }
+            }
+        }
+        return result;
     }
 
     /**

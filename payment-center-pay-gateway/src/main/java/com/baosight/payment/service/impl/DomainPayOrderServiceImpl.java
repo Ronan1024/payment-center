@@ -335,6 +335,7 @@ public class DomainPayOrderServiceImpl implements DomainPayOrderService {
         updateOrderState.setErrCode(channelResult.getChannelErrCode());
         updateOrderState.setErrMsg(channelResult.getChannelErrMsg());
         updateOrderState.setChannelMchNo(channelResult.getChannelMchNo());
+        updateOrderState.setTradingType(channelResult.getTradingType());
         // TODO 待记录上游返回结果信息
         //明确成功
         if (ChannelState.SUCCESS.getCode().equals(channelResult.getChannelState())) {

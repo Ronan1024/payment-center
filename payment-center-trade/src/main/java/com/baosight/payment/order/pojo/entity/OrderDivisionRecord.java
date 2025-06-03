@@ -9,41 +9,46 @@ import lombok.EqualsAndHashCode;
 
 /**
  * 订单分账记录
+ *
  * @author L.J.Ran
  * @TableName order_division_record
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName(value ="order_division_record")
+@TableName(value = "order_division_record")
 public class OrderDivisionRecord extends BasePO {
     /**
-     * 
+     *
      */
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
 
     /**
-     * 
+     *
      */
     private Long batchId;
 
     /**
-     * 
+     *
      */
     private Long orderId;
 
     /**
-     * 
+     *
      */
     private Integer state;
 
     /**
-     * 
+     *
      */
     private String errMsg;
+    /**
+     * 渠道订单id
+     */
+    private String channelOrderId;
 
     /**
-     * 
+     *
      */
     private String date;
 }

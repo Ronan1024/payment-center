@@ -26,6 +26,11 @@
             <artifactId>hutool-core</artifactId>
             <version>5.8.32</version>
         </dependency>
+        <dependency>
+            <groupId>com.baosight.utils</groupId>
+            <artifactId>common-util-core</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
 </project>

@@ -19,6 +19,10 @@ public enum NotifyHandlerType implements IBaseEnum<Integer> {
      * 退款
      */
     REFUND(NotifyType.REFUND_SUCCESS.getCode(), RefundNotifyHandler.MARK),
+    /**
+     * 提现
+     */
+    WITHDRAW(NotifyType.WITHDRAW_SUCCESS.getCode(), WithdrawNotifyHandler.MARK)
     ;
 
 

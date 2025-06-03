@@ -17,6 +17,10 @@ public enum NotifyType implements IBaseEnum<Integer> {
      * 退款成功
      */
     REFUND_SUCCESS(2, "退款成功"),
+    /**
+     * 提现成功
+     */
+    WITHDRAW_SUCCESS(3, "提现成功"),
     ;
 
     NotifyType(Integer code, String msg) {

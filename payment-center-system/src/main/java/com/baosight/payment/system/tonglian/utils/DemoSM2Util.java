@@ -1,9 +1,12 @@
 package com.baosight.payment.system.tonglian.utils;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.pqc.math.linearalgebra.ByteUtils;
 import org.bouncycastle.util.encoders.Base64;
 import org.springframework.util.StringUtils;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
@@ -24,6 +27,9 @@ public class DemoSM2Util {
      * 算法常量:SM3withSM2
      */
     public static final String ALGORITHM_SM3SM2_BCPROV = "SM3withSM2";
+    public static final String ALGORITHM_NAME = "SM4";
+    public static final String ALGORITHM_NAME_ECB_PADDING = "SM4/ECB/PKCS5Padding";
+
 
     static {
         Security.addProvider(new BouncyCastleProvider());
@@ -94,6 +100,62 @@ public class DemoSM2Util {
         return signature.verify(signed);
     }
 
+    /**
+     * sm4解密
+     *
+     * @explain 解密模式：采用ECB
+     * @param hexKey 16进制密钥
+     * @param cipherText 16进制的加密字符串（忽略大小写）
+     * @return 解密后的字符串
+     * @throws Exception
+     */
+    public static String decryptEcb(String hexKey, String cipherText) throws Exception
+    {
+        // 用于接收解密后的字符串
+        String decryptStr = "";
+        // hexString-->byte[]
+        byte[] keyData = ByteUtils.fromHexString(hexKey);
+        // hexString-->byte[]
+        byte[] cipherData = ByteUtils.fromHexString(cipherText);
+        // 解密
+        byte[] srcData = decrypt_Ecb_Padding(keyData, cipherData);
+        // byte[]-->String
+        decryptStr = new String(srcData, StandardCharsets.UTF_8);
+        return decryptStr;
+    }
+
+    /**
+     * 解密
+     *
+     * @explain
+     * @param key
+     * @param cipherText
+     * @return
+     * @throws Exception
+     */
+    public static byte[] decrypt_Ecb_Padding(byte[] key, byte[] cipherText) throws Exception
+    {
+        Cipher cipher = generateEcbCipher(ALGORITHM_NAME_ECB_PADDING, Cipher.DECRYPT_MODE, key);
+        return cipher.doFinal(cipherText);
+    }
+
+    /**
+     * 生成ECB暗号
+     *
+     * @explain ECB模式（电子密码本模式：Electronic codebook）
+     * @param algorithmName 算法名称
+     * @param mode 模式
+     * @param key
+     * @return
+     * @throws Exception
+     */
+    private static Cipher generateEcbCipher(String algorithmName, int mode, byte[] key) throws Exception
+    {
+        Cipher cipher = Cipher.getInstance(algorithmName, BouncyCastleProvider.PROVIDER_NAME);
+        Key sm4Key = new SecretKeySpec(key, ALGORITHM_NAME);
+        cipher.init(mode, sm4Key);
+        return cipher;
+    }
     public static boolean isEmpty(String str) {
         return str == null || "".equals(str) || "".equals(str.trim());
     }

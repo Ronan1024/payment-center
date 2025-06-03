@@ -5,6 +5,7 @@ import com.baosight.payment.dao.TongLianIsvAndMchConfigDAO;
 import com.baosight.payment.vo.MchAppConfigInfoVO;
 import com.baosight.payment.vo.MchAppInfoVO;
 import com.baosight.payment.vo.MchInterfaceConfigVO;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.List;
 
@@ -45,4 +46,10 @@ public interface MchAppConfigApi {
      * @param interfaceCode 支付接口编号
      */
     List<MchInterfaceConfigVO> mchConfig(Long isvId, String interfaceCode);
+
+    /**
+     * 获取商家银行卡信息
+     * @param mchId 商家id
+     */
+    JsonNode getMchBankCardNo(Long mchId);
 }

@@ -13,90 +13,90 @@ public class DelayLevel {
     /**
      * 1S
      */
-    public static Integer ONE_SECOND = 1;
+    public static final Integer ONE_SECOND = 1;
 
     /**
      * 5S
      */
-    public static Integer FIVE_SECOND = 2;
+    public static final Integer FIVE_SECOND = 2;
 
     /**
      * 10S
      */
-    public static Integer TEN_SECOND = 3;
+    public static  final Integer TEN_SECOND = 3;
 
     /**
      * 30S
      */
-    public static Integer THIRTY_SECOND = 4;
+    public static final Integer THIRTY_SECOND = 4;
 
     /**
      * 1M
      */
-    public static Integer ONE_MINUTE = 5;
+    public static  final Integer ONE_MINUTE = 5;
 
     /**
      * 2M
      */
-    public static Integer TWO_MINUTE = 6;
+    public static final  Integer TWO_MINUTE = 6;
 
     /**
      * 3M
      */
-    public static Integer THREE_MINUTE = 7;
+    public static  final Integer THREE_MINUTE = 7;
 
     /**
      * 4M
      */
-    public static Integer FREE_MINUTE = 8;
+    public static final  Integer FREE_MINUTE = 8;
 
     /**
      * 5M
      */
-    public static Integer FIVE_MINUTE = 9;
+    public static  final Integer FIVE_MINUTE = 9;
 
     /**
      * 6m
      */
-    public static Integer SIX_MINUTE = 10;
+    public static  final Integer SIX_MINUTE = 10;
 
     /**
      * 7M
      */
-    public static Integer SEVEN_MINUTE = 11;
+    public static final  Integer SEVEN_MINUTE = 11;
 
     /**
      * 8M
      */
-    public static Integer EIGHT_MINUTE = 12;
+    public static  final Integer EIGHT_MINUTE = 12;
 
     /**
      * 9M
      */
-    public static Integer NINE_MINUTE = 13;
+    public static  final Integer NINE_MINUTE = 13;
 
     /**
      * 10m
      */
-    public static Integer TEN_MINUTE = 14;
+    public static  final Integer TEN_MINUTE = 14;
 
     /**
      * 20m
      */
-    public static Integer TWENTY_MINUTE = 15;
+    public static  final Integer TWENTY_MINUTE = 15;
 
     /**
      * 30m
      */
-    public static Integer THIRTY_MINUTE = 16;
+    public static final Integer THIRTY_MINUTE = 16;
 
     /**
      * 1h
      */
-    public static Integer ONE_HOUR = 17;
+    public static final Integer ONE_HOUR = 17;
 
     /**
-     *  2h
+     * 2h
      */
-    public static Integer TWO_HOUR = 18;
+    public static final Integer TWO_HOUR = 18;
 }

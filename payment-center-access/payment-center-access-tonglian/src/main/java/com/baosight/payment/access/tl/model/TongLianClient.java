@@ -7,7 +7,6 @@ import com.baosight.utils.json.JsonUtil;
 import com.baosight.utils.utils.Assert;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.BufferedReader;
@@ -22,11 +21,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-
 public class TongLianClient {
     private static final String YYYY_MM_DD = "yyyyMMdd";
     private static final String HH_MM_SS = "HHmmss";
-    private TongLianIsvConfigDAO config;
+    private final TongLianIsvConfigDAO config;
     private final PrivateKey privateKey;
     private final PublicKey tlPublicKey;
     // TODO 待处理url管理
@@ -36,6 +34,14 @@ public class TongLianClient {
         this.config = config;
         this.privateKey = DemoSM2Util.privKeySM2FromBase64Str(config.getPrivateKeyStr());
         this.tlPublicKey = DemoSM2Util.pubKeySM2FromBase64Str(config.getAllinPayPublicKeyStr());
+    }
+
+    public TongLianClient(String appId, String privateKey, String allinPayPublicKey) {
+        TongLianIsvConfigDAO tongLianIsvConfigDAO = new TongLianIsvConfigDAO();
+        tongLianIsvConfigDAO.setAppId(appId);
+        this.config = tongLianIsvConfigDAO;
+        this.privateKey = DemoSM2Util.privKeySM2FromBase64Str(privateKey);
+        this.tlPublicKey = DemoSM2Util.pubKeySM2FromBase64Str(allinPayPublicKey);
     }
 
 
@@ -50,7 +56,7 @@ public class TongLianClient {
         request.setTransDate(new SimpleDateFormat(YYYY_MM_DD).format(new Date()));
         request.setTransTime(new SimpleDateFormat(HH_MM_SS).format(new Date()));
         request.setVersion("1.0");
-        request.setBizData(readTree.toString());
+        request.setBizData(String.valueOf(readTree));
         String signedValue = DemoSM2Util.jsonMapToStr(JsonUtil.toMap(JsonUtil.toJson(request)));
         String sign = DemoSM2Util.sign(this.privateKey, signedValue);
         request.setSignType("SM3withSM2");
@@ -78,7 +84,6 @@ public class TongLianClient {
         }
         return response;
     }
-
 
     public List<String> download(SendBuild sendBuild, String url, String srcMsg) {
         // 加签开始
@@ -141,11 +146,25 @@ public class TongLianClient {
     }
 
     @Data
-    @AllArgsConstructor
     public static class SendBuild {
         private Long requestId;
         private String transCode;
 
         private Map<String, Object> params;
+        private String paramsStr;
+
+        public SendBuild(Long requestId, String transCode, Map<String, Object> params) {
+            this.params = params;
+            this.transCode = transCode;
+            this.requestId = requestId;
+            this.paramsStr = JsonUtil.toJson(params);
+        }
+
+        public SendBuild(Long requestId, String transCode, String params) {
+            this.params = JsonUtil.toMap(params);
+            this.transCode = transCode;
+            this.requestId = requestId;
+            this.paramsStr = params;
+        }
     }
 }

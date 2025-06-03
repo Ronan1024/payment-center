@@ -31,7 +31,19 @@ public enum DivisionState implements IBaseEnum<Integer> {
      * 分账失败
      */
     DIVISION_FAILURE(4, "分账失败"),
+    /**
+     * 渠道处理完成
+     */
+    CHANNEL_HANDLER_SUCCESS(5, "渠道处理完成"),
+    /**
+     * 渠道处理失败
+     */
+    CHANNEL_HANDLER_FAILURE(6, "渠道处理失败"),
 
+    /**
+     * 渠道处理中
+     */
+    DIVISION_CHANNEL_PROCESSING(7, "渠道处理中")
 
     ;
 

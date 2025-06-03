@@ -8,16 +8,10 @@ import com.baosight.payment.enums.PayClientType;
 import com.baosight.payment.enums.State;
 import com.baosight.payment.error.MchError;
 import com.baosight.payment.system.convert.PayMchAppConvert;
-import com.baosight.payment.system.mapper.PayInterfaceConfigMapper;
-import com.baosight.payment.system.mapper.PayInterfaceDefineMapper;
-import com.baosight.payment.system.mapper.PayMchAppMapper;
-import com.baosight.payment.system.mapper.SaasAppPayRelevanceMapper;
+import com.baosight.payment.system.mapper.*;
 import com.baosight.payment.system.pojo.dto.CreateAppDTO;
 import com.baosight.payment.system.pojo.dto.MchAppListDTO;
-import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
-import com.baosight.payment.system.pojo.entity.PayMchApp;
-import com.baosight.payment.system.pojo.entity.PayMchPassage;
-import com.baosight.payment.system.pojo.entity.SaasAppPayRelevance;
+import com.baosight.payment.system.pojo.entity.*;
 import com.baosight.payment.system.pojo.vo.MchAppListVO;
 import com.baosight.payment.system.pojo.vo.MchPayAppInfoVO;
 import com.baosight.payment.system.service.PayMchAppService;
@@ -31,6 +25,7 @@ import com.baosight.utils.utils.ObjectUtils;
 import com.baosight.web.exception.ApiException;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -59,6 +54,8 @@ public class PayMchAppServiceImpl extends ServiceImpl<PayMchAppMapper, PayMchApp
     private PayInterfaceDefineMapper payInterfaceDefineMapper;
     @Resource
     private PayInterfaceConfigMapper payInterfaceConfigMapper;
+    @Autowired
+    private PayWayMapper payWayMapper;
 
     /**
      * 创建或者更新支付应用信息
@@ -104,6 +101,8 @@ public class PayMchAppServiceImpl extends ServiceImpl<PayMchAppMapper, PayMchApp
     }
 
     private void handlerMchPayPassage(List<Long> payWay, MchInfoVO mchInfo, Long appId) {
+        List<PayWay> payWayList = payWayMapper.selectByIds(payWay);
+        Map<Long, PayWay> payWayMap = payWayList.stream().collect(Collectors.toMap(PayWay::getId, e -> e));
         // TODO 支付渠道问题待处理
         // 获取已配置的信息
         List<PayInterfaceConfig> payInterfaceConfigList = payInterfaceConfigMapper.selectList(new LambdaQueryWrapper<PayInterfaceConfig>()
@@ -120,25 +119,34 @@ public class PayMchAppServiceImpl extends ServiceImpl<PayMchAppMapper, PayMchApp
                     .in(PayInterfaceConfig::getInterfaceId, list)
                     .eq(PayInterfaceConfig::getClientId, mchInfo.getIsvId())
             );
-            Map<Long, Long> collect = interfaceConfigList.stream().collect(Collectors.toMap(PayInterfaceConfig::getInterfaceId, PayInterfaceConfig::getInterfaceRate));
+            Map<Long, Long> collect = interfaceConfigList.stream().collect(Collectors.toMap(PayInterfaceConfig::getInterfaceId, e -> ObjectUtils.isEmpty(e.getInterfaceRate()) ? 0 : e.getInterfaceRate()));
             map.putAll(collect);
         }
 
-
+        payMchPassageService.remove(new LambdaQueryWrapper<PayMchPassage>()
+                .eq(PayMchPassage::getMchId, mchInfo.getId())
+                .eq(PayMchPassage::getAppId, appId)
+        );
         // 保存支付渠道信息
-        mchPayInterfaceConfigList.stream().map(e -> {
-            PayMchPassage payMchPassage = new PayMchPassage();
-            payMchPassage.setAppId(appId);
-            payMchPassage.setMchId(mchInfo.getId());
-            payMchPassage.setCreateBy(AbstractUserContext.getUserId());
-            payMchPassage.setPayWayCode(e.getPayWay());
-            payMchPassage.setInterfaceId(e.getInterfaceId());
-            payMchPassage.setCreateByName(AbstractUserContext.getUsername());
-            payMchPassage.setState(State.NORMAL.getCode());
-            Long rate = map.getOrDefault(e.getInterfaceId(), null);
-            payMchPassage.setRate(rate);
-            return payMchPassage;
-        }).forEach(payMchPassageService::save);
+        mchPayInterfaceConfigList.forEach(e -> {
+            List<Long> list = Arrays.stream(e.getPayWay().split(",")).map(Long::valueOf).toList();
+            list.stream().map(way -> {
+                PayMchPassage payMchPassage = new PayMchPassage();
+                payMchPassage.setAppId(appId);
+                payMchPassage.setMchId(mchInfo.getId());
+                payMchPassage.setCreateBy(AbstractUserContext.getUserId());
+                PayWay payWayEntity = payWayMap.get(way);
+                payMchPassage.setPayWayCode(payWayEntity.getPayCode());
+                payMchPassage.setPayWayId(payWayEntity.getId());
+                payMchPassage.setInterfaceId(e.getInterfaceId());
+                payMchPassage.setCreateByName(AbstractUserContext.getUsername());
+                payMchPassage.setState(State.NORMAL.getCode());
+                payMchPassage.setInterfaceCode(e.getInterfaceCode());
+                Long rate = map.getOrDefault(e.getInterfaceId(), null);
+                payMchPassage.setRate(rate);
+                return payMchPassage;
+            }).forEach(payMchPassageService::save);
+        });
     }
 
     /**
@@ -239,9 +247,9 @@ public class PayMchAppServiceImpl extends ServiceImpl<PayMchAppMapper, PayMchApp
     public MchPayAppInfoVO info(Long id) {
         PayMchApp payMchApp = payMchAppMapper.selectById(id);
         List<PayMchPassage> payMchPassages = payMchPassageService.getPayPassageByAppId(payMchApp.getId(), payMchApp.getMchId());
-        Set<String> payWay = payMchPassages.stream().map(e -> Arrays.asList(e.getPayWayCode().split(","))).flatMap(Collection::stream).collect(Collectors.toSet());
+        List<String> payWay = payMchPassages.stream().map(PayMchPassage::getPayWayId).map(String::valueOf).toList();
         MchPayAppInfoVO mchPayAppInfoVO = PayMchAppConvert.INSTANCE.toMchPayAppInfoVO(payMchApp);
-        mchPayAppInfoVO.setPayWay(new ArrayList<>(payWay));
+        mchPayAppInfoVO.setPayWay(payWay);
         return mchPayAppInfoVO;
     }
 
@@ -256,9 +264,9 @@ public class PayMchAppServiceImpl extends ServiceImpl<PayMchAppMapper, PayMchApp
         PayMchApp payMchApp = payMchAppMapper.selectOne(new LambdaQueryWrapper<PayMchApp>()
                 .eq(PayMchApp::getMchId, mchNo)
                 .eq(PayMchApp::getAppCode, appNo)
-                .eq(PayMchApp::getState,State.NORMAL.getCode())
+                .eq(PayMchApp::getState, State.NORMAL.getCode())
         );
-        if (ObjectUtils.isEmpty(payMchApp)){
+        if (ObjectUtils.isEmpty(payMchApp)) {
             return null;
         }
         return PayMchAppConvert.INSTANCE.toMchAppInfoVO(payMchApp);

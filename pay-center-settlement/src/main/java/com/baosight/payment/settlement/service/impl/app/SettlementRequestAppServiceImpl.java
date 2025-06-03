@@ -6,7 +6,7 @@ import com.baosight.payment.annotation.ApplicationService;
 import com.baosight.payment.settlement.dto.CreateSettlementRequestDTO;
 import com.baosight.payment.settlement.manager.SettlementRequestManager;
 import com.baosight.payment.settlement.service.app.SettlementRequestAppService;
-import com.baosight.payment.settlement.service.domain.SettlementPeriodDomainService;
+import com.baosight.payment.settlement.manager.SettlementPeriodDomainService;
 import lombok.RequiredArgsConstructor;
 
 /**

@@ -86,8 +86,9 @@ public class SybUtil {
 		if (param != null && !param.isEmpty()) {
 			if (!param.containsKey("sign"))
 				return false;
+			// 如果是md5则需要把md5的key加入到排序
 			String sign = param.remove("sign");
-			if ("MD5".equals(signType)) {// 如果是md5则需要把md5的key加入到排序
+			if ("MD5".equals(signType)) {
 				param.put("key", appkey);
 			}
 			StringBuilder sb = new StringBuilder();
@@ -97,7 +98,7 @@ public class SybUtil {
 							.append(entry.getValue()).append("&");
 				}
 			}
-			if (sb.length() > 0) {
+			if (!sb.isEmpty()) {
 				sb.deleteCharAt(sb.length() - 1);
 			}
 			if ("MD5".equals(signType)) {
@@ -107,18 +108,18 @@ public class SybUtil {
 				PublicKey publicKey = SmUtil.pubKeySM2FromBase64Str(appkey);
 				return SmUtil.verifySM3SM2(publicKey, "Allinpay", Base64.decodeBase64(sign), sb.toString().getBytes("UTF-8"));
 			}else {
-				return rsaVerifyPublickey(sb.toString(), sign, appkey, "UTF-8");
+				return rsaVerifyPublicKey(sb.toString(), sign, appkey, "UTF-8");
 			}
 		}
 		return false;
 	}
 
-	public static boolean rsaVerifyPublickey(String content, String sign,
-			String publicKey, String charset) throws Exception {
+	public static boolean rsaVerifyPublicKey(String content, String sign,
+											 String publicKey, String charset) throws Exception {
 		try {
 			PublicKey pubKey = getPublicKeyFromX509("RSA",
 					Base64.decodeBase64(publicKey.getBytes()));
-			return rsaVerifyPublickey(content, sign, pubKey, charset);
+			return rsaVerifyPublicKey(content, sign, pubKey, charset);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception("RSAcontent = " + content + ",sign=" + sign
@@ -126,8 +127,8 @@ public class SybUtil {
 		}
 	}
 
-	public static boolean rsaVerifyPublickey(String content, String sign,
-			PublicKey pubKey, String charset) throws Exception {
+	public static boolean rsaVerifyPublicKey(String content, String sign,
+											 PublicKey pubKey, String charset) throws Exception {
 		try {
 			java.security.Signature signature = java.security.Signature
 					.getInstance("SHA1WithRSA");

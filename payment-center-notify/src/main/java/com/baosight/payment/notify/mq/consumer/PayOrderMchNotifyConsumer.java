@@ -13,7 +13,6 @@ import com.baosight.payment.notify.pojo.entity.PayMchNotifyRecord;
 import com.baosight.payment.notify.service.PayMchNotifyConfigService;
 import com.baosight.payment.notify.service.PayMchNotifyRecordService;
 import com.baosight.payment.order.api.OrderApi;
-import com.baosight.payment.order.api.vo.OrderVO;
 import com.baosight.spring.base.utils.ApplicationContextHolder;
 import com.baosight.utils.enums.IBaseEnum;
 import com.baosight.utils.utils.ObjectUtils;
@@ -61,17 +60,16 @@ public class PayOrderMchNotifyConsumer implements RocketMQListener<MessageWrappe
             //1. (发送结果最多6次)
             Integer currentCount = record.getNotifyCount() + 1;
 
-            OrderVO order = orderApi.orderInfo(record.getOrderId());
 
             String notifyUrl = record.getNotifyUrl();
             if (ObjectUtils.isEmpty(record.getNotifyUrl())) {
                 // TODO (L.J.Ran 2025/3/20 - P1 describe: 处理支付回调地址配置问题)
                 PayMchNotifyConfig one = payMchNotifyConfigService.getOne(new LambdaQueryWrapper<PayMchNotifyConfig>()
-                        .eq(PayMchNotifyConfig::getMchId, order.getMchId()));
+                        .eq(PayMchNotifyConfig::getMchId, record.getMchId()));
                 notifyUrl = one.getNotifyUrl();
             }
             NotifyHandlerType notifyHandlerType = IBaseEnum.getByCode(NotifyHandlerType.class, record.getOrderType());
-            log.info("通知处理器：{}, 订单类型：{}", notifyHandlerType.getMsg(), record.getOrderType());
+            log.info("通知处理器：{}, 通知类型：{}", notifyHandlerType.getMsg(), record.getOrderType());
             INotifyHandler notifyHandler = ApplicationContextHolder.getBean(notifyHandlerType.getMsg(), INotifyHandler.class);
             log.info("处理器:{}", notifyHandler);
             String res = notifyHandler.notify(record.getOrderId(), notifyUrl);

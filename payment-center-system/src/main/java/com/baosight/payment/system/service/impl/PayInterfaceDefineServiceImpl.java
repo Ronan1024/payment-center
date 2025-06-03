@@ -1,14 +1,17 @@
 package com.baosight.payment.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baosight.payment.api.MchInfoApi;
 import com.baosight.payment.enums.PayClientType;
 import com.baosight.payment.system.convert.PayInterfaceDefineConvert;
 import com.baosight.payment.system.error.PayInterfaceError;
+import com.baosight.payment.system.mapper.PayInterfaceConfigMapper;
 import com.baosight.payment.system.mapper.PayInterfaceDefineMapper;
 import com.baosight.payment.system.pojo.dto.PayInterFaceDefineDTO;
 import com.baosight.payment.system.pojo.dto.PayInterfaceListDTO;
+import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
 import com.baosight.payment.system.pojo.entity.PayInterfaceDefine;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineVO;
@@ -22,6 +25,7 @@ import com.baosight.utils.utils.Assert;
 import com.baosight.web.exception.ApiException;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -42,6 +46,8 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
     private final PayInterfaceDefineMapper payInterfaceDefineMapper;
     @Resource
     private MchInfoApi mchInfoApi;
+    @Autowired
+    private PayInterfaceConfigMapper payInterfaceConfigMapper;
 
     /**
      * 新增支付接口参数配置
@@ -101,7 +107,16 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
         if (!CollectionUtils.isEmpty(payInterFaceDefineDTO.getNormalMchParams())) {
             payInterfaceDefine.setNormalMchParams(JsonUtil.toJson(payInterFaceDefineDTO.getNormalMchParams()));
         }
-        return payInterfaceDefineMapper.updateById(payInterfaceDefine) > 0;
+        boolean update = payInterfaceDefineMapper.updateById(payInterfaceDefine) > 0;
+        // 修改已签约的支付方式
+        if (update) {
+            payInterfaceConfigMapper.update(new LambdaUpdateWrapper<PayInterfaceConfig>()
+                    .eq(PayInterfaceConfig::getInterfaceId,  payInterfaceDefine.getId())
+                    .set(PayInterfaceConfig::getPayWay, payInterfaceDefine.getPayWay())
+            );
+        }
+
+        return Boolean.TRUE;
     }
 
     /**

@@ -24,6 +24,8 @@ public interface PayOrderMapper extends BaseMapper<PayOrder> {
      * @param payOrderPage 支付列表请求
      */
     IPage<PayOrderPageVO> payOrderPage(@Param("page") Page<PayOrderPageVO> page, @Param("payOrderPage") PayOrderPageDTO payOrderPage);
+
+    void updateRefundAmount(@Param("payOrderId") Long payOrderId, @Param("refundAmount") Long refundAmount);
 }
 
 

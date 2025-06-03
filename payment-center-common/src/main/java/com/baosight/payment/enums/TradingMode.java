@@ -5,6 +5,8 @@ import com.baosight.utils.enums.IBaseEnum;
 
 /**
  * 交易模式定义
+ *
+ * @author L.J.Ran
  */
 public enum TradingMode implements IBaseEnum<Integer> {
     /**

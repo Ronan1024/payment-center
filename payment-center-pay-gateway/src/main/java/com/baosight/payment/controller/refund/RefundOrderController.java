@@ -225,7 +225,7 @@ public class RefundOrderController {
         }
 
         //明确成功
-        if (ChannelState.PROCESSING.getCode().equals(handlerResult.getChannelState())) {
+        if (ChannelState.SUCCESS.getCode().equals(handlerResult.getChannelState())) {
             updateRefundOrderState.setRefundState(RefundOrderState.REFUNDED.getCode());
             updateRefundOrderState.setRefundId(refundOrder.getRefundOrderId());
             refundOrderApi.updateInitOrderStateThrowException(updateRefundOrderState);
@@ -244,7 +244,7 @@ public class RefundOrderController {
         } else if (ChannelState.PROCESSING.getCode() == handlerResult.getChannelState() ||
                 ChannelState.UNKNOWN.getCode() == handlerResult.getChannelState() ||
                 ChannelState.CHANNEL_ERROR.getCode() == handlerResult.getChannelState()) {
-            updateRefundOrderState.setRefundState(RefundOrderState.REFUNDING.getCode());
+            updateRefundOrderState.setRefundState(RefundOrderState.ORDER_GENERATED.getCode());
             updateRefundOrderState.setRefundId(refundOrder.getRefundOrderId());
             refundOrderApi.updateInitOrderStateThrowException(updateRefundOrderState);
 

@@ -1,5 +1,7 @@
 package com.baosight.payment.order.pojo.vo;
 
+import com.baosight.web.serializer.CustomLongSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
 /**
@@ -11,6 +13,7 @@ import lombok.Data;
 @Data
 public class DivisionBatchPageVO {
 
+    @JsonSerialize(using = CustomLongSerializer.class)
     private Long id;
 
     /**
@@ -26,10 +29,20 @@ public class DivisionBatchPageVO {
     /**
      * 客户端id
      */
+    @JsonSerialize(using = CustomLongSerializer.class)
     private Long clientId;
 
     /**
      * 失败原因
      */
     private String failMsg;
+
+    /**
+     * 渠道分账id
+     */
+    private String channelBatchId;
+    /**
+     * 渠道处理结果
+     */
+    private String channelHandlerResult;
 }

@@ -43,4 +43,6 @@ public class UpdateRefundOrderState {
      */
     private Date finishTime;
 
+    private Date notifyTime;
+
 }

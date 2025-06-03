@@ -74,6 +74,15 @@
             <artifactId>payment-center-settlement-api</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.baosight.payment</groupId>
+            <artifactId>payment-center-system</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.baosight.payment</groupId>
+            <artifactId>payment-center-pay-gateway</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
 </project>

@@ -165,8 +165,8 @@ public class ChannelNoticeController {
                 log.error("{}, 处理回调事件异常  notifyResult data error, notifyResult ={} ", logPrefix, notifyResult);
                 throw new ServiceException("处理回调事件异常！");
             }
-
-            boolean updateOrderSuccess = true; //默认更新成功
+            //默认更新成功
+            boolean updateOrderSuccess = true;
             // 开始处理订单
             if (payOrder.getState().equals(PayOrderState.PAYING.getCode()) || payOrder.getState().equals(PayOrderState.PRE_CONSUMPTION.getCode())) {
                 UpdateOrderState updateOrderState = new UpdateOrderState();
@@ -175,6 +175,7 @@ public class ChannelNoticeController {
                 updateOrderState.setChannelUser(parseParams.getChannelUserId());
                 updateOrderState.setFinishTime(parseParams.getFinishTime());
                 updateOrderState.setTradingMode(parseParams.getTradingMode());
+                updateOrderState.setChannelOrderNo(parseParams.getChannelOrderId());
                 updateOrderState.setChannelResult(notifyParam);
                 //明确成功
                 if (ChannelState.SUCCESS.getCode().equals(notifyResult.getChannelState())) {
@@ -199,6 +200,7 @@ public class ChannelNoticeController {
 
             log.info("===== {}, 订单通知完成。 payOrderId={}, parseState = {} =====", logPrefix, payOrderId, notifyResult.getChannelState());
 
+            callbackHandlerLog.setHasHandler(Boolean.TRUE);
             return notifyResult.getResponseEntity();
 
         } catch (SecurityException e) {
@@ -271,7 +273,7 @@ public class ChannelNoticeController {
             if (ObjectUtils.isEmpty(info)) {
                 MchInterfaceConfigVO mchInterfaceConfig = payInterfaceApi.mchInterfaceConfig(interfaceCode, cusid);
                 // 未处理当前请求或是处理失败 再一次处理请求
-                Assert.isNull(mchInterfaceConfig, "当线下码牌商户号:[" + cusid + "]及支付接口：[" + interfaceCode + "]  未配置");
+                Assert.isNull(mchInterfaceConfig, "当前线下码牌商户号:[" + cusid + "]及支付接口：[" + interfaceCode + "]  未配置");
                 callbackHandlerLog.setMchNo(mchInterfaceConfig.getMchNo());
                 // 预先保存
                 // 根据支付接口以及通联收银宝账号获取接口信息

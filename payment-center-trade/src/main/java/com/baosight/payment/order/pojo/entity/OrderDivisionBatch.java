@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 /**
  * 订单分账批次
  *
+ * @author L.J.Ran
  * @TableName order_division_batch
  */
 @Data
@@ -41,4 +42,13 @@ public class OrderDivisionBatch extends BasePO {
      * 失败原因
      */
     private String failMsg;
+
+    /**
+     * 渠道分账id
+     */
+    private String  channelBatchId;
+    /**
+     * 渠道处理结果
+     */
+    private String channelHandlerResult;
 }

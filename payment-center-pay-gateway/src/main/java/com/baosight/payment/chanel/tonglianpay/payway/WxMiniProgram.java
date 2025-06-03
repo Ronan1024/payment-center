@@ -10,10 +10,7 @@ import com.baosight.payment.chanel.tonglianpay.TongLianClient;
 import com.baosight.payment.chanel.tonglianpay.response.TongLianResponse;
 import com.baosight.payment.dao.TongLianIsvAndMchConfigDAO;
 import com.baosight.payment.dao.TongLianMchConfigDAO;
-import com.baosight.payment.enums.ChannelState;
-import com.baosight.payment.enums.ChannelType;
-import com.baosight.payment.enums.PayInterfaceCode;
-import com.baosight.payment.enums.PayWayCode;
+import com.baosight.payment.enums.*;
 import com.baosight.payment.model.order.UnifiedOrder;
 import com.baosight.payment.order.api.dto.CreateOrderDTO;
 import com.baosight.payment.pojo.dto.WxMiniProgramDTO;
@@ -74,7 +71,6 @@ public class WxMiniProgram implements IPaymentService {
     public OrderChannelHandlerResult pay(UnifiedOrder unifiedOrder, MchInfoVO mchInfo, CreateOrderDTO createOrder) {
         log.info("获取到请求参数：{}", unifiedOrder);
         TongLianIsvAndMchConfigDAO tongLianIsvAndMchConfigDAO = mchAppConfigApi.tongLianIsvAndMchConfig(mchInfo.getId(), createOrder.getIfCode(), mchInfo.getIsvId());
-
         WxMiniProgramDTO wxMiniProgramDTO = JsonUtil.parse(unifiedOrder.getChannelExtra(), WxMiniProgramDTO.class);
         MchChannelCorrelationVO mchChannelCorrelationVO = mchChannelCorrelationApi.mchChannelCorrelation(mchInfo.getId(), ChannelType.WECHAT.getCode());
         TongLianMchConfigDAO mchConfig = tongLianIsvAndMchConfigDAO.mchConfig();
@@ -116,6 +112,7 @@ public class WxMiniProgram implements IPaymentService {
                 result.setChannelAttach(response.getResult().toString());
                 result.setChannelOrderNo(response.get("respTraceNum").asText());
                 result.setChannelMchNo(mchConfig.getSignNum());
+                result.setTradingType(TradingType.CONSUMPTION.getCode());
                 TongLianResponse tongLianResponse = new TongLianResponse();
                 JsonNode frontParamInfo = JsonUtil.readTree(response.get("chnlFrontParamInfo").asText());
                 tongLianResponse.setUrl(frontParamInfo.get("chnlPayInfo").asText());

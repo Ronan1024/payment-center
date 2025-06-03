@@ -5,7 +5,6 @@ import com.baosight.payment.chanel.IChannelRefundNoticeService;
 import com.baosight.payment.enums.ChannelState;
 import com.baosight.payment.enums.PayingAgency;
 import com.baosight.payment.enums.RefundOrderState;
-import com.baosight.payment.exception.ChannelHandlerException;
 import com.baosight.payment.pojo.dao.ParseChannelParamDAO;
 import com.baosight.payment.pojo.vo.RefundOrderChannelHandlerResult;
 import com.baosight.utils.json.JsonUtil;
@@ -14,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,15 +43,16 @@ public class TlPayRefundNoticeService implements IChannelRefundNoticeService {
      */
     @Override
     public String getNotifyParam(HttpServletRequest request) {
-        String body = getBody(request);
-        log.info("通联退款回调信息: {}", body);
-        JsonNode jsonNode = JsonUtil.readTree(body);
-        if (jsonNode.has("bizData")) {
-            return jsonNode.get("bizData").asText();
-        } else {
-            throw ChannelHandlerException.system("通联回调信息异常");
+        String body = null;
+        try {
+            body = getBody(request);
+            log.info("获取到通联回调信息：{}", body);
+        } catch (Exception e) {
+            log.info("解析通联回调信息异常.....");
+            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-
+        return body;
     }
 
     /**
@@ -63,7 +64,9 @@ public class TlPayRefundNoticeService implements IChannelRefundNoticeService {
      */
     @Override
     public ParseChannelParamDAO parseParams(String notifyParam, Long refundOrderId) {
-        JsonNode jsonNode = JsonUtil.readTree(notifyParam);
+
+        JsonNode notifyParamJsonNode = JsonUtil.readTree(notifyParam);
+        JsonNode jsonNode = JsonUtil.readTree(notifyParamJsonNode.get("bizData").asText());
         ParseChannelParamDAO parseChannelParamDAO = new ParseChannelParamDAO();
         parseChannelParamDAO.setChannelState(jsonNode.get("result").asText());
         parseChannelParamDAO.setErrMsg(jsonNode.get("respMsg").asText());
@@ -71,6 +74,14 @@ public class TlPayRefundNoticeService implements IChannelRefundNoticeService {
         parseChannelParamDAO.setChannelOrderId(jsonNode.get("respTraceNum").asText());
         parseChannelParamDAO.setPayingAgency(PayingAgency.TONG_LIAN.getAgencyCode());
         parseChannelParamDAO.setChannelResult(notifyParam);
+        if (jsonNode.has("channelParamInfo")) {
+            JsonNode channelParamInfo = JsonUtil.readTree(jsonNode.get("channelParamInfo").asText());
+            String chnlTransCode = channelParamInfo.get("chnlTransCode").asText();
+            if (chnlTransCode.equals("VSP682") || chnlTransCode.equals("VSP684")) {
+                parseChannelParamDAO.setOrderState(RefundOrderState.REFUNDED.getCode());
+            }
+        }
+
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             parseChannelParamDAO.setFinishTime(simpleDateFormat.parse(jsonNode.get("finishTime").asText()));
@@ -91,14 +102,14 @@ public class TlPayRefundNoticeService implements IChannelRefundNoticeService {
         RefundOrderChannelHandlerResult refundOrderChannelHandlerResult = new RefundOrderChannelHandlerResult();
         refundOrderChannelHandlerResult.setChannelErrCode(parseParams.getErrCode());
         refundOrderChannelHandlerResult.setChannelErrMsg(parseParams.getErrMsg());
+        Integer orderState = ObjectUtils.isEmpty(parseParams.getOrderState()) ? RefundOrderState.REFUNDING.getCode() : parseParams.getOrderState();
         if (parseParams.getChannelState().equals("1")) {
-            refundOrderChannelHandlerResult.setPayOrderState(RefundOrderState.REFUNDED.getCode());
+            orderState = RefundOrderState.REFUNDED.getCode();
             refundOrderChannelHandlerResult.setChannelState(ChannelState.SUCCESS.getCode());
         } else if (parseParams.getChannelState().equals("2")) {
-            refundOrderChannelHandlerResult.setPayOrderState(RefundOrderState.REFUND_FAILED.getCode());
+            orderState = RefundOrderState.REFUND_FAILED.getCode();
             refundOrderChannelHandlerResult.setChannelState(ChannelState.FAIL.getCode());
         } else {
-            refundOrderChannelHandlerResult.setPayOrderState(RefundOrderState.REFUNDING.getCode());
             refundOrderChannelHandlerResult.setChannelState(ChannelState.PROCESSING.getCode());
         }
         ResponseEntity<String> success = ResponseEntity.ok().body("success");
@@ -106,6 +117,7 @@ public class TlPayRefundNoticeService implements IChannelRefundNoticeService {
         refundOrderChannelHandlerResult.setChannelAttach(parseParams.getChannelResult());
         refundOrderChannelHandlerResult.setResponseEntity(success);
         refundOrderChannelHandlerResult.setChannelOrderNo(parseParams.getChannelOrderId());
+        refundOrderChannelHandlerResult.setPayOrderState(orderState);
         return refundOrderChannelHandlerResult;
     }
 

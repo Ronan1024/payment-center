@@ -175,6 +175,10 @@ public class PayOrder {
      * 最新分账时间
      */
     private Date divisionLastTime;
+    /**
+     * 可分账时间
+     */
+    private Date divisionValidTime;
 
     /**
      * 渠道支付错误码
@@ -256,4 +260,9 @@ public class PayOrder {
      * 渠道商户号
      */
     private String channelMchNo;
+
+    /**
+     * 渠道原始订单
+     */
+    private String channelOriginId;
 }

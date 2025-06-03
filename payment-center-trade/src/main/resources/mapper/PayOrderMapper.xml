@@ -3,6 +3,10 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.baosight.payment.order.mapper.PayOrderMapper">
+    <update id="updateRefundAmount">
+        update pay_order
+        set refund_amount = refund_amount + #{refundAmount} where id = #{orderId}
+    </update>
     <select id="payOrderPage" resultType="com.baosight.payment.order.pojo.vo.PayOrderPageVO">
         select id as orderId,
         order_no as orderNo,

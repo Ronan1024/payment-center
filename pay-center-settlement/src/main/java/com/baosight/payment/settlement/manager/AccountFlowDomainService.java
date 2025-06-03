@@ -1,4 +1,4 @@
-package com.baosight.payment.settlement.service.domain;
+package com.baosight.payment.settlement.manager;
 
 /**
  * @program: payment-center

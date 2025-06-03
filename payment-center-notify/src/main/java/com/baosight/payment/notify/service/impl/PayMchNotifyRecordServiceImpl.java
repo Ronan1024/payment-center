@@ -59,6 +59,7 @@ public class PayMchNotifyRecordServiceImpl extends ServiceImpl<PayMchNotifyRecor
                 if (StringUtils.hasText(payMchNotifyRecord.getResResult())) {
                     JsonNode jsonNode = JsonUtil.readTree(payMchNotifyRecord.getResResult());
                     jsonNode.forEach(e -> list.add(JsonUtil.parse(e.asText(), String.class)));
+                    list.add(res);
                 }
                 payMchNotifyRecord.setResResult(JsonUtil.toJson(list));
             }

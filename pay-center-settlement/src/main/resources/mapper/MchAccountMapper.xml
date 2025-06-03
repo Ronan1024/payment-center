@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baosight.payment.settlement.mapper.MchAccountMapper">
+
+    <resultMap id="BaseResultMap" type="com.baosight.payment.settlement.pojo.entity.MchAccount">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="mchId" column="mch_id" jdbcType="BIGINT"/>
+            <result property="balance" column="balance" jdbcType="DECIMAL"/>
+            <result property="accountFrozen" column="account_frozen" jdbcType="DECIMAL"/>
+            <result property="isvId" column="isv_id" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,mch_id,balance,
+        account_frozen,isv_id
+    </sql>
+</mapper>

@@ -121,6 +121,7 @@ public class ChannelRefundNoticeController {
                 return refundNotifyService.doNotifyOrderStateUpdateFail(request);
             }
             log.info("===== {}, 订单通知完成。 refundOrderId={}, parseState = {} =====", logPrefix, refundOrderId, notifyResult.getChannelState());
+            callbackHandlerLog.setHasHandler(Boolean.TRUE);
             return notifyResult.getResponseEntity();
         } catch (ApiException e) {
             log.error("{}, refundOrderId={}, BizException", logPrefix, refundOrderId, e);
@@ -149,6 +150,7 @@ public class ChannelRefundNoticeController {
         updateRefundOrderState.setChannelOrderNo(refundOrder.getChannelOrderNo());
         updateRefundOrderState.setChanelResult(channelRetMsg.getChannelOriginResponse());
         updateRefundOrderState.setFinishTime(parseParams.getFinishTime());
+        updateRefundOrderState.setRefundState(channelRetMsg.getPayOrderState());
         //默认更新成功
         boolean updateOrderSuccess = true;
         PayOrderNotifyDTO payOrderNotifyDTO = new PayOrderNotifyDTO();
@@ -158,10 +160,9 @@ public class ChannelRefundNoticeController {
         payOrderNotifyDTO.setAppId(refundOrder.getAppId());
         // 明确退款成功
         if (channelRetMsg.getChannelState() == ChannelState.SUCCESS.getCode()) {
-            updateRefundOrderState.setRefundState(RefundOrderState.REFUNDED.getCode());
             updateOrderSuccess = payRefundOrderServiceManager.updateRefundOrderState(updateRefundOrderState);
             // 通知商户系统
-            if (updateOrderSuccess && StringUtils.hasText(refundOrder.getNotifyUrl())) {
+            if (updateOrderSuccess && StringUtils.hasText(refundOrder.getNotifyUrl()) && updateRefundOrderState.getRefundState().equals(RefundOrderState.REFUNDED.getCode())) {
                 //发送商户通知
                 payOrderNotifyDTO.setOrderType(NotifyType.REFUND_SUCCESS.getCode());
                 notifyApi.payOrderNotify(payOrderNotifyDTO);
@@ -169,7 +170,6 @@ public class ChannelRefundNoticeController {
 
             //确认失败
         } else if (channelRetMsg.getChannelState() == ChannelState.FAIL.getCode()) {
-            updateRefundOrderState.setRefundState(RefundOrderState.REFUND_FAILED.getCode());
             updateRefundOrderState.setErrCode(channelRetMsg.getChannelErrCode());
             updateRefundOrderState.setErrMsg(channelRetMsg.getChannelErrMsg());
             // 更新为失败状态

@@ -33,8 +33,17 @@ public class TongLianClient {
         this.tlPublicKey = DemoSM2Util.pubKeySM2FromBase64Str(config.getAllinPayPublicKeyStr());
     }
 
+    public TongLianClient(String appId, String privateKey, String allinPayPublicKey) {
+        TongLianIsvConfigDAO tongLianIsvConfigDAO = new TongLianIsvConfigDAO();
+        tongLianIsvConfigDAO.setAppId(appId);
+        this.config = tongLianIsvConfigDAO;
+        this.privateKey = com.baosight.payment.access.tl.utils.DemoSM2Util.privKeySM2FromBase64Str(privateKey);
+        this.tlPublicKey = com.baosight.payment.access.tl.utils.DemoSM2Util.pubKeySM2FromBase64Str(allinPayPublicKey);
+    }
+
 
     public Response sendRequest(SendBuild sendBuild, String url) {
+        System.out.println(JsonUtil.toJson(config));
         Request request = new Request();
         request.setAppId(this.config.getAppId());
         request.setSpAppId(this.config.getSpAppId());
