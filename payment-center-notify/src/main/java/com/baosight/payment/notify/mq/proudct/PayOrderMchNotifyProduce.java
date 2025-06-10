@@ -5,7 +5,6 @@ import com.baosight.mq.rocket.domain.MessageWrapper;
 import com.baosight.mq.rocket.product.AbstractCommonSendProduceTemplate;
 import com.baosight.mq.rocket.product.BaseSendExtendDTO;
 import com.baosight.payment.notify.constant.OrderNotifyMQConstant;
-import com.baosight.payment.notify.pojo.dao.PayOrderNotifyMsgDAO;
 import org.apache.rocketmq.common.message.MessageConst;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ import org.springframework.util.StringUtils;
  * @author L.J.Ran
  */
 @Component
-public class PayOrderMchNotifyProduce extends AbstractCommonSendProduceTemplate<PayOrderNotifyMsgDAO> {
+public class PayOrderMchNotifyProduce extends AbstractCommonSendProduceTemplate<Long> {
 
     private final ConfigurableEnvironment environment;
 
@@ -29,19 +28,18 @@ public class PayOrderMchNotifyProduce extends AbstractCommonSendProduceTemplate<
     }
 
     @Override
-    protected BaseSendExtendDTO buildBaseSendExtendParam(PayOrderNotifyMsgDAO notify) {
+    protected BaseSendExtendDTO buildBaseSendExtendParam(Long notify) {
         return BaseSendExtendDTO.builder()
                 .eventName("商家支付成功回调")
-                .keys(String.valueOf(notify.getNotifyId()))
+                .keys(String.valueOf(notify))
                 .topic(environment.resolvePlaceholders(OrderNotifyMQConstant.PAY_ORDER_NOTIFY_TOPIC_KEY))
                 .tag(environment.resolvePlaceholders(OrderNotifyMQConstant.PAY_ORDER_NOTIFY_TOPIC_KEY_TAG))
                 .sentTimeout(2000L)
-                .delayLevel(notify.getDelayLevel())
                 .build();
     }
 
     @Override
-    protected Message<?> buildMessage(PayOrderNotifyMsgDAO sendMessage, BaseSendExtendDTO requestParam) {
+    protected Message<?> buildMessage(Long sendMessage, BaseSendExtendDTO requestParam) {
         String keys = !StringUtils.hasText(requestParam.getKeys()) ? IdUtil.fastSimpleUUID() : requestParam.getKeys();
         return MessageBuilder
                 .withPayload(new MessageWrapper<>(keys, sendMessage))

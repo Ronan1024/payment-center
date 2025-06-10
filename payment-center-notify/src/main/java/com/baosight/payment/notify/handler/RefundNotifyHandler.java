@@ -71,7 +71,7 @@ public class RefundNotifyHandler implements INotifyHandler {
      * @param notifyState 通知状态
      */
     @Override
-    public Boolean updateNotifySent(Long orderId, NotifyState notifyState) {
+    public Boolean updateNotifySent(Long orderId, NotifyState notifyState, String notifyUrl) {
         return refundOrderApi.updateNotifySent(orderId, notifyState.getCode());
     }
 }

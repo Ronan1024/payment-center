@@ -3,4 +3,27 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.baosight.payment.notify.mapper.PayMchNotifyRecordMapper">
+    <select id="getRecordList" resultType="com.baosight.payment.notify.pojo.vo.PayMchNotifyRecordVO">
+        select id,
+               order_id           as orderId,
+               order_type         as orderType,
+               mch_order_no       as mchOrderNo,
+               mch_id             as mchId,
+               isv_id             as isvId,
+               mch_no             as mchNo,
+               isv_no             as isvNo,
+               app_id             as appId,
+               notify_url         as notifyUrl,
+               res_result         as resResult,
+               notify_count       as notifyCount,
+               notify_count_limit as notifyCountLimit,
+               state              as state,
+               last_notify_time   as lastNotifyTime,
+               notify_type        as notifyType,
+               product_type       as productType,
+               next_notify_time   as nextNotifyTime
+        from pay_mch_notify_record
+        where next_notify_time &lt;= #{now}
+          and state = 1
+    </select>
 </mapper>

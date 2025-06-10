@@ -31,7 +31,7 @@ public class PayNotifyHandler implements INotifyHandler {
      * 发起通知
      *
      * @param orderId   订单id
-     * @param notifyUrl
+     * @param notifyUrl 通知url
      */
     @Override
     public String notify(Long orderId, String notifyUrl) {
@@ -68,9 +68,10 @@ public class PayNotifyHandler implements INotifyHandler {
      *
      * @param orderId     订单id
      * @param notifyState 通知状态
+     * @param notifyUrl   通知地址
      */
     @Override
-    public Boolean updateNotifySent(Long orderId, NotifyState notifyState) {
-        return orderApi.updateNotifySent(orderId, notifyState.getCode());
+    public Boolean updateNotifySent(Long orderId, NotifyState notifyState, String notifyUrl) {
+        return orderApi.updateNotifySent(orderId, notifyState.getCode(), notifyUrl);
     }
 }

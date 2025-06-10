@@ -11,7 +11,7 @@ import java.util.Map;
  * @create: 2025/3/20
  */
 @Data
-public class MchInterfaceConfigVO {
+public class IsvInterfaceConfigVO {
 
     /**
      * 接口id
@@ -29,11 +29,6 @@ public class MchInterfaceConfigVO {
     private String interfaceCode;
 
     /**
-     * 商户类型
-     */
-    private Integer mchType;
-
-    /**
      * 配置信息
      */
     private Map<String, String> config;
@@ -41,26 +36,12 @@ public class MchInterfaceConfigVO {
     /**
      * 商户号
      */
-    private String mchNo;
+    private String isvNo;
 
     /**
      * 商户id
      */
-    private Long mchId;
-
-    /**
-     * 服务商id
-     */
     private Long isvId;
 
-    /**
-     * 三方系统code
-     */
-    private String thirdCode;
-
-    /**
-     * 手续费
-     */
-    private Long mchFeeRate;
 
 }

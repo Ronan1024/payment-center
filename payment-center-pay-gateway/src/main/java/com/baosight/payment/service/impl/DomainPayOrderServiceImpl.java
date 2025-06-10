@@ -274,7 +274,8 @@ public class DomainPayOrderServiceImpl implements DomainPayOrderService {
         createOrderDTO.setHasDivision(Boolean.TRUE);
         createOrderDTO.setNotifyUrl(unifiedOrder.getNotifyUrl());
         createOrderDTO.setReturnUrl(unifiedOrder.getReturnUrl());
-        createOrderDTO.setTradingType(TradingType.CONSUMPTION.getCode());
+        createOrderDTO.setType(OrderType.CONSUMPTION.getCode());
+        createOrderDTO.setProductType(ProductType.ONLINE_PAYMENT.getCode());
         Date nowDate = new Date();
         if (unifiedOrder.getExpiredTime() != null) {
             createOrderDTO.setExpiredTime(DateUtil.offsetSecond(nowDate, unifiedOrder.getExpiredTime()));
@@ -335,7 +336,10 @@ public class DomainPayOrderServiceImpl implements DomainPayOrderService {
         updateOrderState.setErrCode(channelResult.getChannelErrCode());
         updateOrderState.setErrMsg(channelResult.getChannelErrMsg());
         updateOrderState.setChannelMchNo(channelResult.getChannelMchNo());
-        updateOrderState.setTradingType(channelResult.getTradingType());
+        updateOrderState.setType(channelResult.getType());
+        updateOrderState.setSubType(channelResult.getSubType());
+        updateOrderState.setTradeType(channelResult.getTradeType());
+        updateOrderState.setTradeMode(channelResult.getTradeModel());
         // TODO 待记录上游返回结果信息
         //明确成功
         if (ChannelState.SUCCESS.getCode().equals(channelResult.getChannelState())) {

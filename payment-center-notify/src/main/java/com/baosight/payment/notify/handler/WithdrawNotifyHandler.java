@@ -27,7 +27,6 @@ public class WithdrawNotifyHandler implements INotifyHandler {
     private final MchAccountApi mchAccountApi;
 
 
-
     /**
      * 发起通知
      *
@@ -59,7 +58,7 @@ public class WithdrawNotifyHandler implements INotifyHandler {
      * @param notifyState 通知状态
      */
     @Override
-    public Boolean updateNotifySent(Long orderId, NotifyState notifyState) {
+    public Boolean updateNotifySent(Long orderId, NotifyState notifyState, String notifyUrl) {
         return Boolean.TRUE;
     }
 }

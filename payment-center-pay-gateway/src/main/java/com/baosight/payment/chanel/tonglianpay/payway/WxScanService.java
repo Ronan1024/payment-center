@@ -10,9 +10,7 @@ import com.baosight.payment.chanel.tonglianpay.response.TongLianResponse;
 import com.baosight.payment.constant.PayWay;
 import com.baosight.payment.dao.TongLianIsvAndMchConfigDAO;
 import com.baosight.payment.dao.TongLianMchConfigDAO;
-import com.baosight.payment.enums.ChannelState;
-import com.baosight.payment.enums.PayInterfaceCode;
-import com.baosight.payment.enums.PayWayCode;
+import com.baosight.payment.enums.*;
 import com.baosight.payment.model.order.UnifiedOrder;
 import com.baosight.payment.order.api.dto.CreateOrderDTO;
 import com.baosight.payment.pojo.vo.OrderChannelHandlerResult;
@@ -89,6 +87,8 @@ public class WxScanService implements IPaymentService {
         map.put("goodsName", unifiedOrder.getSubject());
         map.put("goodsDesc", unifiedOrder.getBody());
         OrderChannelHandlerResult result = new OrderChannelHandlerResult();
+        result.setTradeType(TradeType.WECHAT_PAY.getCode());
+        result.setTradeModel(TradeModel.WECHAT_SCAN.getCode());
         try {
             // 获取用户信息
             TongLianClient.SendBuild sendBuild = new TongLianClient.SendBuild(SnowflakeIdUtil.nextId(), "2085", map);
@@ -101,6 +101,7 @@ public class WxScanService implements IPaymentService {
                 result.setChannelState(ChannelState.PROCESSING.getCode());
                 result.setChannelAttach(response.getResult().toString());
                 result.setChannelOrderNo(response.get("respTraceNum").asText());
+                result.setType(OrderType.CONSUMPTION.getCode());
                 TongLianResponse tongLianResponse = new TongLianResponse();
                 JsonNode frontParamInfo = JsonUtil.readTree(response.get("chnlFrontParamInfo").asText());
                 tongLianResponse.setUrl(frontParamInfo.get("chnlPayInfo").asText());

@@ -28,6 +28,7 @@ import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
 import com.baosight.payment.system.service.PayInterfaceDefineService;
 import com.baosight.payment.system.service.PayWayService;
+import com.baosight.payment.vo.IsvInterfaceConfigVO;
 import com.baosight.payment.vo.MchInfoVO;
 import com.baosight.payment.vo.MchInterfaceConfigVO;
 import com.baosight.saas.context.AbstractUserContext;
@@ -499,6 +500,33 @@ public class PayInterfaceConfigServiceImpl extends ServiceImpl<PayInterfaceConfi
                 .eq(PayInterfaceConfig::getClientId, isvId)
         );
         return function.apply(payInterfaceDefineList, payInterfaceConfigList);
+    }
+
+    /**
+     * 根据接口code 以及 商户渠道用户信息获取接口配置信息
+     *
+     * @param interfaceCode  接口编号
+     * @param mchChannelUser 渠道用户信息
+     */
+    @Override
+    public IsvInterfaceConfigVO isvInterfaceConfig(String interfaceCode, String mchChannelUser) {
+        PayInterfaceConfig payInterfaceConfig = payInterfaceConfigMapper.selectOne(new LambdaQueryWrapper<PayInterfaceConfig>()
+                .eq(PayInterfaceConfig::getMchChannelUser, mchChannelUser)
+                .eq(PayInterfaceConfig::getInterfaceCode, interfaceCode)
+        );
+        if (ObjectUtils.isEmpty(payInterfaceConfig)) {
+            return null;
+        }
+        payInterfaceConfig = payInterfaceConfigMapper.selectOne(new LambdaQueryWrapper<PayInterfaceConfig>()
+                .eq(PayInterfaceConfig::getClientId, payInterfaceConfig.getParentClientId())
+                .eq(PayInterfaceConfig::getInterfaceCode, interfaceCode)
+        );
+        IsvInterfaceConfigVO result = PayInterfaceConfigConvert.INSTANCE.toIsvInterfaceConfigVO(payInterfaceConfig);
+        String interfaceParam = payInterfaceConfig.getInterfaceParams();
+        List<DynamicForm> dynamicFormList = JsonUtil.parseArray(interfaceParam, DynamicForm.class);
+        Map<String, String> collect = dynamicFormList.stream().collect(Collectors.toMap(DynamicForm::getName, e -> String.valueOf(e.getValue())));
+        result.setConfig(collect);
+        return result;
     }
 
 

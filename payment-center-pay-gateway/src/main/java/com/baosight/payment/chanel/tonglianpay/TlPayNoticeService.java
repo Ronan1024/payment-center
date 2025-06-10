@@ -93,16 +93,16 @@ public class TlPayNoticeService implements IChannelNoticeService {
                 parseChannelParamDAO.setPayAgencyChannelOrder(channelParamInfo.get("chnlTrxid").asText());
                 parseChannelParamDAO.setChannelUserId(channelParamInfo.get("payAcctNo").asText());
                 if (channelParamInfo.get("chnlTransCode").asText().equals("VSP681")) {
-                    parseChannelParamDAO.setTradingMode(TradingMode.WECHAT_PRE_CONSUMPTION.getCode());
+                    parseChannelParamDAO.setSubType(OrderSubType.WECHAT_PRE_CONSUMPTION.getCode());
                 }
                 if (channelParamInfo.get("chnlTransCode").asText().equals("VSP683")) {
-                    parseChannelParamDAO.setTradingMode(TradingMode.WECHAT_ORDER_COMPLETED.getCode());
+                    parseChannelParamDAO.setSubType(OrderSubType.WECHAT_ORDER_COMPLETED.getCode());
                 }
             }
 
             if (notifyParamJsonNode.get("transCode").equals("2085")) {
                 // 消费
-                parseChannelParamDAO.setTradingType(TradingType.CONSUMPTION.getCode());
+                parseChannelParamDAO.setType(OrderType.CONSUMPTION.getCode());
             }
 
             return parseChannelParamDAO;
@@ -127,7 +127,7 @@ public class TlPayNoticeService implements IChannelNoticeService {
         result.setChannelErrMsg(params.getErrMsg());
         if (params.getChannelState().equals("1")) {
             result.setChannelState(ChannelState.SUCCESS.getCode());
-            if (params.getTradingMode().equals(TradingMode.WECHAT_PRE_CONSUMPTION.getCode())) {
+            if (params.getSubType().equals(OrderSubType.WECHAT_PRE_CONSUMPTION.getCode())) {
                 result.setPayOrderState(PayOrderState.PRE_CONSUMPTION.getCode());
             } else {
                 result.setPayOrderState(PayOrderState.SUCCESS.getCode());
@@ -142,8 +142,8 @@ public class TlPayNoticeService implements IChannelNoticeService {
         }
         result.setChannelOrderNo(params.getChannelOrderId());
         result.setResponseEntity(textResp("success"));
-        result.setTradingModel(params.getTradingMode());
-        result.setTradingType(params.getTradingType());
+        result.setType(params.getType());
+        result.setSubType(params.getSubType());
         return result;
     }
 

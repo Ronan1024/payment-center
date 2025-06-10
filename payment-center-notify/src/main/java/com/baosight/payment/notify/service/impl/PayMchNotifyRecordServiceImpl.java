@@ -1,14 +1,17 @@
 package com.baosight.payment.notify.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baosight.payment.enums.NotifyState;
+import com.baosight.payment.notify.constant.NotifyLevelConstant;
 import com.baosight.payment.notify.mapper.PayMchNotifyRecordMapper;
 import com.baosight.payment.notify.pojo.entity.PayMchNotifyRecord;
+import com.baosight.payment.notify.pojo.vo.PayMchNotifyRecordVO;
 import com.baosight.payment.notify.service.PayMchNotifyRecordService;
 import com.baosight.utils.json.JsonUtil;
-import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -37,7 +40,9 @@ public class PayMchNotifyRecordServiceImpl extends ServiceImpl<PayMchNotifyRecor
      */
     @Override
     public PayMchNotifyRecord infoId(Long notifyId) {
-        return payMchNotifyRecordMapper.selectById(notifyId);
+        return payMchNotifyRecordMapper.selectOne(new LambdaQueryWrapper<PayMchNotifyRecord>()
+                .eq(PayMchNotifyRecord::getId, notifyId)
+        );
     }
 
     /**
@@ -46,31 +51,51 @@ public class PayMchNotifyRecordServiceImpl extends ServiceImpl<PayMchNotifyRecor
      * @param notifyId    异步通知id
      * @param notifyState 异步通知状态
      * @param res         通知系统返回信息
+     * @param notifyUrl   通知地址
      */
     @Override
-    public Boolean updateNotifyResult(Long notifyId, NotifyState notifyState, String res) {
+    public Boolean updateNotifyResult(Long notifyId, NotifyState notifyState, String res, String notifyUrl) {
         // 获取已有记录
         PayMchNotifyRecord payMchNotifyRecord = payMchNotifyRecordMapper.selectById(notifyId);
         Integer index = payMchNotifyRecord.getNotifyCount();
+        if (StringUtils.hasText(notifyUrl)) {
+            payMchNotifyRecord.setNotifyUrl(notifyUrl);
+        }
         payMchNotifyRecord.setNotifyCount(index + 1);
         if (!ObjectUtils.isEmpty(payMchNotifyRecord)) {
             if (StringUtils.hasText(res)) {
-                List<String> list = new ArrayList<>();
-                if (StringUtils.hasText(payMchNotifyRecord.getResResult())) {
-                    JsonNode jsonNode = JsonUtil.readTree(payMchNotifyRecord.getResResult());
-                    jsonNode.forEach(e -> list.add(JsonUtil.parse(e.asText(), String.class)));
-                    list.add(res);
-                }
-                payMchNotifyRecord.setResResult(JsonUtil.toJson(list));
+                List<NotifyResponseDAO> notifyResponseDAOList = StringUtils.hasText(payMchNotifyRecord.getResResult())
+                        ? JsonUtil.parseArray(payMchNotifyRecord.getResResult(), NotifyResponseDAO.class) : new ArrayList<>();
+                NotifyResponseDAO dao = new NotifyResponseDAO().setTime(new Date()).setState(notifyState.getCode())
+                        .setResResult(res).setIndex(notifyResponseDAOList.size() + 1);
+                notifyResponseDAOList.add(dao);
+                payMchNotifyRecord.setResResult(JsonUtil.toJson(notifyResponseDAOList));
             }
+            payMchNotifyRecord.setLastNotifyTime(new Date());
             payMchNotifyRecord.setState(notifyState.getCode());
+            if (notifyState == NotifyState.NOTIFIED) {
+                // 修改下一次通知的时间
+                payMchNotifyRecord.setNextNotifyTime(NotifyLevelConstant.getNotifyTime(new Date(), payMchNotifyRecord.getNotifyCount()));
+            }
             return payMchNotifyRecordMapper.updateById(payMchNotifyRecord) > 0;
         }
         log.error("当前通知记录不存在：{}", notifyId);
         return Boolean.FALSE;
     }
 
+    /**
+     * 获取满足通知条件的记录信息
+     *
+     * @param now 当前时间
+     */
+    @Override
+    public List<PayMchNotifyRecordVO> mchNotifyRecordList(Date now) {
+        return payMchNotifyRecordMapper.getRecordList(now);
+    }
+
+
     @Data
+    @Accessors(chain = true)
     private static class NotifyResponseDAO {
         /**
          * 序号
@@ -91,7 +116,13 @@ public class PayMchNotifyRecordServiceImpl extends ServiceImpl<PayMchNotifyRecor
          * 返回结果
          */
         private String resResult;
+
+        /**
+         * 通知地址url
+         */
+        private String notifyUrl;
     }
+
 }
 
 

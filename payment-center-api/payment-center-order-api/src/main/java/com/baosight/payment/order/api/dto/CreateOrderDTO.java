@@ -192,15 +192,30 @@ public class CreateOrderDTO {
     /**
      * 交易类型
      */
-    private String tradingType;
+    private String tradeType;
 
     /**
      * 交易模式
      */
-    private Integer tradingMode;
+    private String tradeMode;
+
+    /**
+     * 订单类型
+     */
+    private String type;
+
+    /**
+     * 子订单类型
+     */
+    private Integer subType;
 
     /**
      * 渠道商户号
      */
     private String channelMchNo;
+
+    /**
+     * 产品类型
+     */
+    private String productType;
 }

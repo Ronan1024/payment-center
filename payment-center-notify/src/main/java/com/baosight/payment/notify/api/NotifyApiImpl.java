@@ -1,14 +1,14 @@
 package com.baosight.payment.notify.api;
 
-import com.baosight.payment.constant.DelayLevel;
 import com.baosight.payment.enums.NotifyState;
 import com.baosight.payment.notify.api.dto.PayOrderNotifyDTO;
-import com.baosight.payment.notify.mq.proudct.PayOrderMchNotifyProduce;
-import com.baosight.payment.notify.pojo.dao.PayOrderNotifyMsgDAO;
+import com.baosight.payment.notify.constant.NotifyLevelConstant;
 import com.baosight.payment.notify.pojo.entity.PayMchNotifyRecord;
 import com.baosight.payment.notify.service.PayMchNotifyRecordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 /**
  * @program: payment-center
@@ -21,8 +21,6 @@ import org.springframework.stereotype.Service;
 public class NotifyApiImpl implements NotifyApi {
     private final PayMchNotifyRecordService payMchNotifyRecordService;
 
-    private final PayOrderMchNotifyProduce payOrderMchNotifyProduce;
-
     /**
      * 支付接口通知
      *
@@ -33,21 +31,17 @@ public class NotifyApiImpl implements NotifyApi {
         PayMchNotifyRecord payMchNotifyRecord = new PayMchNotifyRecord();
         payMchNotifyRecord.setMchId(payOrderNotifyDTO.getMchId());
         payMchNotifyRecord.setAppId(payOrderNotifyDTO.getAppId());
+        payMchNotifyRecord.setIsvId(payOrderNotifyDTO.getIsvId());
         payMchNotifyRecord.setNotifyUrl(payOrderNotifyDTO.getNotifyUrl());
         payMchNotifyRecord.setNotifyCount(1);
         //TODO 处理通知次数问题
-        payMchNotifyRecord.setNotifyCountLimit(6);
+        payMchNotifyRecord.setNotifyCountLimit(7);
         payMchNotifyRecord.setOrderId(payOrderNotifyDTO.getOrderId());
         payMchNotifyRecord.setOrderType(payOrderNotifyDTO.getOrderType());
         payMchNotifyRecord.setState(NotifyState.NOTIFIED.getCode());
+        payMchNotifyRecord.setProductType(payOrderNotifyDTO.getProductType());
+        payMchNotifyRecord.setNextNotifyTime(NotifyLevelConstant.getNotifyTime(new Date(), payMchNotifyRecord.getNotifyCount()));
         // TODO 处理商户号等问题
-        boolean save = payMchNotifyRecordService.save(payMchNotifyRecord);
-        if (save) {
-            // 发送mq
-            PayOrderNotifyMsgDAO payOrderNotifyMsgDAO = new PayOrderNotifyMsgDAO();
-            payOrderNotifyMsgDAO.setNotifyId(payMchNotifyRecord.getId());
-            payOrderNotifyMsgDAO.setDelayLevel(DelayLevel.ONE_SECOND);
-            payOrderMchNotifyProduce.sendMessage(payOrderNotifyMsgDAO);
-        }
+        payMchNotifyRecordService.save(payMchNotifyRecord);
     }
 }

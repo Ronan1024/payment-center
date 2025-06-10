@@ -117,4 +117,28 @@ public class CrCreateOrderDTO {
      */
     private String channelResult;
 
+    /**
+     * 交易类型
+     */
+    private String tradeType;
+    /**
+     * 交易模式
+     */
+    private String tradeModel;
+
+    /**
+     * 订单类型
+     */
+    private String type;
+
+    /**
+     * 子订单类型
+     */
+    private Integer subType;
+
+    /**
+     * 产品类型
+     */
+    private String productType;
+
 }

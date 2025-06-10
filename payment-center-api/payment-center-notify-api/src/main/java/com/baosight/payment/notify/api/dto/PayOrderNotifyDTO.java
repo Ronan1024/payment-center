@@ -1,6 +1,7 @@
 package com.baosight.payment.notify.api.dto;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.util.Date;
 
@@ -11,6 +12,7 @@ import java.util.Date;
  * @create: 2025/3/20
  */
 @Data
+@Accessors(chain = true)
 public class PayOrderNotifyDTO {
     /**
      * 异步通知地址
@@ -36,11 +38,16 @@ public class PayOrderNotifyDTO {
      */
     private Long appId;
 
-    private Long payType;
+    /**
+     * 产品类型
+     */
+    private String productType;
 
     /**
      * 订单完成时间
      */
     private Date finishTime;
+
+    private Long isvId;
 
 }

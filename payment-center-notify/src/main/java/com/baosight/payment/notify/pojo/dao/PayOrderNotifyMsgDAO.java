@@ -12,7 +12,4 @@ import lombok.Data;
 public class PayOrderNotifyMsgDAO {
 
     private Long notifyId;
-
-
-    private Integer delayLevel;
 }

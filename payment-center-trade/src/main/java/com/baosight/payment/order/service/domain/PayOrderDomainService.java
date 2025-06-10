@@ -25,4 +25,14 @@ public interface PayOrderDomainService extends IService<PayOrder> {
      * @param outTradeNo 商户订单号
      */
     int getPayOrderCount(Long mchId, String outTradeNo);
+
+
+    /**
+     * 修改订单状态为已通知
+     *
+     * @param orderId      订单id
+     * @param notifyStatus 异步通知状态
+     * @param notifyUrl    通知地址
+     */
+    Boolean updateNotifySent(Long orderId, Integer notifyStatus, String notifyUrl);
 }

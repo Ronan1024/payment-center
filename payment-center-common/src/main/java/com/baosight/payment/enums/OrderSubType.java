@@ -4,11 +4,11 @@ package com.baosight.payment.enums;
 import com.baosight.utils.enums.IBaseEnum;
 
 /**
- * 交易模式定义
+ * 子订单类型
  *
  * @author L.J.Ran
  */
-public enum TradingMode implements IBaseEnum<Integer> {
+public enum OrderSubType implements IBaseEnum<Integer> {
     /**
      * 消费订单
      */
@@ -64,7 +64,7 @@ public enum TradingMode implements IBaseEnum<Integer> {
 
     ;
 
-    TradingMode(Integer code, String msg) {
+    OrderSubType(Integer code, String msg) {
         initEnum(code, msg);
     }
 }

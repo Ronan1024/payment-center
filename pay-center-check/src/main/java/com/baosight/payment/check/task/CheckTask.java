@@ -15,7 +15,7 @@ import com.baosight.payment.check.pojo.entity.ChannelBill;
 import com.baosight.payment.check.pojo.entity.CheckBatchRecord;
 import com.baosight.payment.check.pojo.entity.CheckRecord;
 import com.baosight.payment.check.pojo.entity.TradingFlow;
-import com.baosight.payment.enums.TradingType;
+import com.baosight.payment.enums.OrderType;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -67,7 +67,7 @@ public class CheckTask {
                 }
 
                 //创建批次并创建对账信息
-                if (e.getTradeType().equals(TradingType.CONSUMPTION.getCode())) {
+                if (e.getTradeType().equals(OrderType.CONSUMPTION.getCode())) {
                     // 消费订单
                     List<ChannelBill> billList = channelBillMapper.selectList(new LambdaQueryWrapper<ChannelBill>()
                             .eq(ChannelBill::getBillDate, e.getBillDate())
@@ -108,7 +108,7 @@ public class CheckTask {
                                 if (tradingFlow.getAmount().equals(bill.getTradingAmount()) && tradingFlow.getTradingState().equals(bill.getTradingState())) {
                                     successBillList.add(bill.getId());
                                     successTradingFlowList.add(tradingFlow.getId());
-                                    if (tradingFlow.getTradingType().equals(TradingType.CONSUMPTION.getCode())) {
+                                    if (tradingFlow.getTradingType().equals(OrderType.CONSUMPTION.getCode())) {
                                         settlementSet.add(tradingFlow.getOrderId());
                                     }else {
                                         settlementSet.add(tradingFlow.getOriginOrderId());

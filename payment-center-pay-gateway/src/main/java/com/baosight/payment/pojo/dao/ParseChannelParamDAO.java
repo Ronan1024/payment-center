@@ -66,14 +66,16 @@ public class ParseChannelParamDAO {
     private PayWayCode payWayCode;
 
     /**
-     * 交易类型
+     * 订单类型
      */
-    private String tradingType;
+    private String type;
 
     /**
-     * 交易模式
+     * 子订单类型
      */
-    private Integer tradingMode;
+    private Integer subType;
+
+
 
     /**
      * 支付机构渠道支付orderId

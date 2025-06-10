@@ -16,7 +16,7 @@ import com.baosight.payment.check.pojo.entity.ChannelBill;
 import com.baosight.payment.check.pojo.entity.ChannelBillFile;
 import com.baosight.payment.enums.PayInterfaceCode;
 import com.baosight.payment.enums.PayWayCode;
-import com.baosight.payment.enums.TradingType;
+import com.baosight.payment.enums.OrderType;
 import com.baosight.payment.vo.MchInterfaceConfigVO;
 import com.baosight.utils.utils.Assert;
 import com.baosight.web.properties.ProjectInfo;
@@ -140,7 +140,7 @@ public class TongLianPayReconciliationManagerImpl implements TongLianPayReconcil
         // 通联订单号
         channelBill.setChannelOrderId(split[0]);
         //订单类型
-        TradingType apply = orderTypeFunction.apply(split[1]);
+        OrderType apply = orderTypeFunction.apply(split[1]);
         String orderType = ObjectUtils.isEmpty(apply) ? "empty" : apply.getCode();
         // TODO 需要根据具体的订单类型逻辑进行处理
         channelBill.setTradingState(2);
@@ -187,13 +187,13 @@ public class TongLianPayReconciliationManagerImpl implements TongLianPayReconcil
         channelBill.setSourceDate(tongLianBillLine);
     }
 
-    private final Function<String, TradingType> orderTypeFunction = e -> switch (e) {
+    private final Function<String, OrderType> orderTypeFunction = e -> switch (e) {
         // TODO 通联未处理 订单类型"2089", "2297", "2080", "2084", "2094"
-        case "2085" -> TradingType.CONSUMPTION;
-        case "2294" -> TradingType.REFUND;
-        case "2290" -> TradingType.WITHDRAWAL;
-        case "4020" -> TradingType.SETTLEMENT;
-        case "2298" -> TradingType.ERROR;
+        case "2085" -> OrderType.CONSUMPTION;
+        case "2294" -> OrderType.REFUND;
+        case "2290" -> OrderType.WITHDRAWAL;
+        case "4020" -> OrderType.SETTLEMENT;
+        case "2298" -> OrderType.ERROR;
         default -> null;
     };
 

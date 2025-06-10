@@ -1,27 +1,21 @@
-package com.baosight.payment.notify.pojo.entity;
+package com.baosight.payment.notify.pojo.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baosight.database.base.BasePO;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 
 /**
- * 商户通知记录表
- *
- * @TableName pay_mch_notify_record
+ * @program: payment-center
+ * @description:
+ * @author: L.J.Ran
+ * @create: 2025/6/9
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
-@TableName(value = "pay_mch_notify_record")
-public class PayMchNotifyRecord extends BasePO {
+public class PayMchNotifyRecordVO {
+
     /**
      * 商户通知记录ID
      */
-    @TableId(type = IdType.ASSIGN_ID)
     private Long id;
 
     /**
@@ -80,7 +74,7 @@ public class PayMchNotifyRecord extends BasePO {
     private Integer notifyCount;
 
     /**
-     * 最大通知次数, 默认7次
+     * 最大通知次数, 默认6次
      */
     private Integer notifyCountLimit;
 
@@ -103,7 +97,6 @@ public class PayMchNotifyRecord extends BasePO {
      * 产品类型
      */
     private String productType;
-
     /**
      * 下一次通知时间
      */

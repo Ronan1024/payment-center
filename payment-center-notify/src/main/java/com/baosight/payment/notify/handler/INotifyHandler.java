@@ -25,6 +25,7 @@ public interface INotifyHandler {
      *
      * @param orderId     订单id
      * @param notifyState 通知状态
+     * @param notifyUrl   通知地址
      */
-    Boolean updateNotifySent(Long orderId, NotifyState notifyState);
+    Boolean updateNotifySent(Long orderId, NotifyState notifyState, String notifyUrl);
 }

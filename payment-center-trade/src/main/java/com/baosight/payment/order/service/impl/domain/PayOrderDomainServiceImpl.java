@@ -11,6 +11,7 @@ import com.baosight.utils.utils.Assert;
 import com.baosight.web.exception.ApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * @author longjiangran
@@ -30,13 +31,25 @@ public class PayOrderDomainServiceImpl extends ServiceImpl<PayOrderMapper, PayOr
      */
     @Override
     public Boolean updateNotifySent(Long orderId, Integer notifyStatus) {
+        return updateNotifySent(orderId, notifyStatus, null);
+    }
+
+    /**
+     * 修改订单状态为已通知
+     *
+     * @param orderId      订单id
+     * @param notifyStatus 异步通知状态
+     * @param notifyUrl    通知地址
+     */
+    @Override
+    public Boolean updateNotifySent(Long orderId, Integer notifyStatus, String notifyUrl) {
         PayOrder payOrder = payOrderMapper.selectById(orderId);
         Assert.isNull(payOrder, ApiException.supplier(PayOrderError.ORDER_NOT_FOUND));
         return payOrderMapper.update(new LambdaUpdateWrapper<PayOrder>()
                 .eq(PayOrder::getId, orderId)
-                .set(PayOrder::getState, notifyStatus)
+                .set(PayOrder::getNotifyState, notifyStatus)
+                .set(StringUtils.hasText(notifyUrl), PayOrder::getNotifyUrl, notifyUrl)
         ) > 0;
-
     }
 
     /**
@@ -51,6 +64,8 @@ public class PayOrderDomainServiceImpl extends ServiceImpl<PayOrderMapper, PayOr
                 .eq(PayOrder::getMchId, mchId)
                 .eq(PayOrder::getMchOrderNo, outTradeNo)));
     }
+
+
 }
 
 

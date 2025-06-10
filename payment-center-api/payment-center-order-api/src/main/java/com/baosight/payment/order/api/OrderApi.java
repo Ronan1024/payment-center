@@ -37,6 +37,15 @@ public interface OrderApi {
     Boolean updateNotifySent(Long orderId, Integer notifyStatus);
 
     /**
+     * 更新订单状态
+     *
+     * @param orderId      订单id
+     * @param notifyStatus 通知状态
+     * @param notifyUrl    通知地址
+     */
+    Boolean updateNotifySent(Long orderId, Integer notifyStatus, String notifyUrl);
+
+    /**
      * 获取商户支付订单数据
      *
      * @param mchId      商户ID
@@ -56,7 +65,7 @@ public interface OrderApi {
      *
      * @param updateOrderState 更新状态信息
      */
-    Boolean updateInitOrderStateThrowException( UpdateOrderState updateOrderState);
+    Boolean updateInitOrderStateThrowException(UpdateOrderState updateOrderState);
 
     /**
      * 获取订单信息

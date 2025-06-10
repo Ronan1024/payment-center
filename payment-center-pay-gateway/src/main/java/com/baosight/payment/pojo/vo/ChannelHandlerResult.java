@@ -40,11 +40,21 @@ public class ChannelHandlerResult {
     /**
      * 交易类型
      */
-    private String tradingType;
+    private String tradeType;
     /**
      * 交易模式
      */
-    private Integer tradingModel;
+    private String tradeModel;
+
+    /**
+     * 订单类型
+     */
+    private String type;
+
+    /**
+     * 子订单类型
+     */
+    private Integer subType;
 
     /**
      * 渠道商户号

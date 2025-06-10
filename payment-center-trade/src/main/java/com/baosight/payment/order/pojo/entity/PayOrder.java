@@ -246,15 +246,27 @@ public class PayOrder {
      */
     private Long waitSettledAmount;
 
+
+    /**
+     * 订单类型
+     */
+    private String type;
+
+    /**
+     * 子订单类型
+     */
+    private Integer subType;
+
+
     /**
      * 交易类型
      */
-    private String tradingType;
+    private String tradeType;
 
     /**
      * 交易模式
      */
-    private Integer tradingMode;
+    private String tradeMode;
 
     /**
      * 渠道商户号
@@ -265,4 +277,9 @@ public class PayOrder {
      * 渠道原始订单
      */
     private String channelOriginId;
+
+    /**
+     * 产品类型
+     */
+    private String productType;
 }

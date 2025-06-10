@@ -86,17 +86,18 @@ public class OrderApiImpl implements OrderApi {
         payOrder.setSuccessTime(crCreateOrderDTO.getFinishTime());
         payOrder.setCreateTime(crCreateOrderDTO.getCreateTime());
         payOrder.setMchFeeRate(crCreateOrderDTO.getMchFeeRate());
+        payOrder.setType(crCreateOrderDTO.getType());
+        payOrder.setSubType(crCreateOrderDTO.getSubType());
+        payOrder.setTradeType(crCreateOrderDTO.getTradeType());
+        payOrder.setProductType(crCreateOrderDTO.getProductType());
         payOrder.setChannelResult(crCreateOrderDTO.getChannelResult());
         // TODO (L.J.Ran 2025/3/20 - P0 describe: 待补全 应用编号，服务商编号等信息 处理计算手续费等处理)
         boolean save = payOrderService.save(payOrder);
         if (save) {
-            // TODO 通知下游
+            // 记录订单支付日志
             PayOrderNotifyDTO payOrderNotifyDTO = new PayOrderNotifyDTO();
-            payOrderNotifyDTO.setNotifyUrl(null);
-            payOrderNotifyDTO.setOrderType(NotifyType.PAY_SUCCESS.getCode());
-            payOrderNotifyDTO.setOrderId(payOrder.getId());
-            payOrderNotifyDTO.setMchId(payOrder.getMchId());
-            payOrderNotifyDTO.setAppId(payOrder.getAppId());
+            payOrderNotifyDTO.setNotifyUrl(null).setOrderType(NotifyType.PAY_SUCCESS.getCode()).setOrderId(payOrder.getId())
+                    .setMchId(payOrder.getMchId()).setIsvId(payOrder.getIsvId()).setAppId(payOrder.getAppId()).setProductType(payOrder.getProductType());
             notifyApi.payOrderNotify(payOrderNotifyDTO);
         }
         return Boolean.TRUE;
@@ -117,7 +118,7 @@ public class OrderApiImpl implements OrderApi {
      * 更新订单异步通知状态
      *
      * @param orderId      订单id
-     * @param notifyStatus
+     * @param notifyStatus 通知状态
      */
     @Override
     public Boolean updateNotifySent(Long orderId, Integer notifyStatus) {
@@ -125,11 +126,22 @@ public class OrderApiImpl implements OrderApi {
     }
 
     /**
+     * 更新订单状态
+     *
+     * @param orderId      订单id
+     * @param notifyStatus 通知状态
+     * @param notifyUrl    通知地址
+     */
+    @Override
+    public Boolean updateNotifySent(Long orderId, Integer notifyStatus, String notifyUrl) {
+        return payOrderService.updateNotifySent(orderId, notifyStatus, notifyUrl);
+    }
+
+    /**
      * 获取商家指定的订单数量
      *
      * @param mchId      商户ID
      * @param outTradeNo 商家订单号
-     * @return
      */
     @Override
     public int getPayOrderCount(Long mchId, String outTradeNo) {
@@ -140,7 +152,6 @@ public class OrderApiImpl implements OrderApi {
      * 创建订单
      *
      * @param payOrder 支付订单
-     * @return
      */
     @Override
     public CreateOrderVO createOrder(CreateOrderDTO payOrder) {
@@ -182,8 +193,10 @@ public class OrderApiImpl implements OrderApi {
         order.setDivisionMode(payOrder.getDivisionMode());
         order.setSignUser(payOrder.getSignUser());
         order.setExpiredTime(payOrder.getExpiredTime());
-        order.setTradingType(payOrder.getTradingType());
-        order.setTradingMode(payOrder.getTradingMode());
+        order.setTradeType(payOrder.getTradeType());
+        order.setTradeMode(payOrder.getTradeMode());
+        order.setType(payOrder.getType());
+        order.setSubType(payOrder.getSubType());
         // TODO 待优化
         payOrderService.save(order);
 
@@ -202,7 +215,7 @@ public class OrderApiImpl implements OrderApi {
     public Boolean updateInitOrderStateThrowException(UpdateOrderState updateOrderState) {
         log.info("更新的数据: {}", updateOrderState);
         PayOrder payOrder = payOrderService.getById(updateOrderState.getOrderId());
-        if (!ObjectUtils.isEmpty(updateOrderState.getTradingMode()) && updateOrderState.getTradingMode().equals(TradingMode.WECHAT_ORDER_COMPLETED.getCode())) {
+        if (!ObjectUtils.isEmpty(updateOrderState.getSubType()) && updateOrderState.getSubType().equals(OrderSubType.WECHAT_ORDER_COMPLETED.getCode())) {
             payOrder.setChannelOriginId(payOrder.getChannelOrderNo());
         }
         payOrder.setState(updateOrderState.getOrderState());
@@ -215,8 +228,8 @@ public class OrderApiImpl implements OrderApi {
         payOrder.setChannelUser(updateOrderState.getChannelUser());
         payOrder.setPayAgencyChannelOrder(updateOrderState.getPayAgencyChannelOrder());
         payOrder.setChannelMchNo(updateOrderState.getChannelMchNo());
-        payOrder.setTradingMode(updateOrderState.getTradingMode());
-        if (updateOrderState.getOrderState().equals(PayOrderState.SUCCESS.getCode()) && payOrder.getTradingMode().equals(TradingMode.WECHAT_ORDER_COMPLETED.getCode())) {
+        payOrder.setSubType(updateOrderState.getSubType());
+        if (updateOrderState.getOrderState().equals(PayOrderState.SUCCESS.getCode()) && payOrder.getSubType().equals(OrderSubType.WECHAT_ORDER_COMPLETED.getCode())) {
             payOrder.setDivisionState(DivisionState.WAITING.getCode());
             DateTime dateTime = DateUtil.offsetDay(new Date(), 1);
             payOrder.setDivisionValidTime(dateTime);
@@ -231,7 +244,7 @@ public class OrderApiImpl implements OrderApi {
             // 创建结算受理单, 注册账期
             CreateSettlementRequestDTO createSettlementRequest = new CreateSettlementRequestDTO();
             //TODO 结算类型待处理
-            createSettlementRequest.setType(TradingType.CONSUMPTION.getCode());
+            createSettlementRequest.setType(OrderType.CONSUMPTION.getCode());
             createSettlementRequest.setFirmTime(updateOrderState.getFinishTime());
             BigDecimal divide = new BigDecimal(payOrder.getPayAmount()).divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
             createSettlementRequest.setAmount(new Money(divide));

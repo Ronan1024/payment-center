@@ -9,6 +9,7 @@ import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigListVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
+import com.baosight.payment.vo.IsvInterfaceConfigVO;
 import com.baosight.payment.vo.MchInterfaceConfigVO;
 import com.baosight.saas.entity.DynamicForm;
 
@@ -164,6 +165,7 @@ public interface PayInterfaceConfigService extends IService<PayInterfaceConfig> 
      */
     TongLianIsvAndMchConfigDAO getTongLianIsvAndMchConfig(Long mchId, Long interfaceId);
 
+
     /**
      * 获取服务商 支付配置列表
      *
@@ -172,4 +174,12 @@ public interface PayInterfaceConfigService extends IService<PayInterfaceConfig> 
      * @param clientType             客户端类型
      */
     List<PayInterfaceConfigListVO> getIsvInterfaceConfigList(Long isvId, List<PayInterfaceDefineListVO> payInterfaceDefineList, PayClientType clientType);
+
+    /**
+     * 根据接口code 以及 商户渠道用户信息获取接口配置信息
+     *
+     * @param interfaceCode  接口编号
+     * @param mchChannelUser 渠道用户信息
+     */
+    IsvInterfaceConfigVO isvInterfaceConfig(String interfaceCode, String mchChannelUser);
 }

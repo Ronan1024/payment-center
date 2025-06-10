@@ -2,7 +2,12 @@ package com.baosight.payment.notify.mapper;
 
 import com.baosight.payment.notify.pojo.entity.PayMchNotifyRecord;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baosight.payment.notify.pojo.vo.PayMchNotifyRecordVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author longjiangran
@@ -13,6 +18,12 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface PayMchNotifyRecordMapper extends BaseMapper<PayMchNotifyRecord> {
 
+    /**
+     * 获取可进行通知的记录信息
+     *
+     * @param now 当前时间
+     */
+    List<PayMchNotifyRecordVO> getRecordList(@Param("now") Date now);
 }
 
 

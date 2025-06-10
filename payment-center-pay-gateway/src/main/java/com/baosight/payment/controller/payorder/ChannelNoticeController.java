@@ -17,6 +17,7 @@ import com.baosight.payment.pojo.entity.CallbackHandlerLog;
 import com.baosight.payment.pojo.vo.OrderChannelHandlerResult;
 import com.baosight.payment.service.CallbackHandlerLogService;
 import com.baosight.payment.utils.SybUtil;
+import com.baosight.payment.vo.IsvInterfaceConfigVO;
 import com.baosight.payment.vo.MchInfoVO;
 import com.baosight.payment.vo.MchInterfaceConfigVO;
 import com.baosight.spring.base.utils.ApplicationContextHolder;
@@ -36,6 +37,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 // TODO  关闭订单问题
@@ -174,7 +176,8 @@ public class ChannelNoticeController {
                 updateOrderState.setOrderState(notifyResult.getPayOrderState());
                 updateOrderState.setChannelUser(parseParams.getChannelUserId());
                 updateOrderState.setFinishTime(parseParams.getFinishTime());
-                updateOrderState.setTradingMode(parseParams.getTradingMode());
+                updateOrderState.setType(parseParams.getType());
+                updateOrderState.setSubType(parseParams.getSubType());
                 updateOrderState.setChannelOrderNo(parseParams.getChannelOrderId());
                 updateOrderState.setChannelResult(notifyParam);
                 //明确成功
@@ -272,15 +275,18 @@ public class ChannelNoticeController {
             CallbackHandlerLog info = callbackHandlerLogService.getInfo(payingAgency, payType, trxId, interfaceCode);
             if (ObjectUtils.isEmpty(info)) {
                 MchInterfaceConfigVO mchInterfaceConfig = payInterfaceApi.mchInterfaceConfig(interfaceCode, cusid);
+                // TODO 后续进行优化
+                IsvInterfaceConfigVO isvInterfaceConfig = payInterfaceApi.isvInterfaceConfig(interfaceCode, cusid);
                 // 未处理当前请求或是处理失败 再一次处理请求
                 Assert.isNull(mchInterfaceConfig, "当前线下码牌商户号:[" + cusid + "]及支付接口：[" + interfaceCode + "]  未配置");
+                Assert.isNull(isvInterfaceConfig, "当前线下码牌商户号:[" + cusid + "]服务商及支付接口：[" + interfaceCode + "]  未配置");
                 callbackHandlerLog.setMchNo(mchInterfaceConfig.getMchNo());
                 // 预先保存
                 // 根据支付接口以及通联收银宝账号获取接口信息
                 // 获取商户信息
                 MchInfoVO mchInfoVO = mchInfoApi.mchInfo(mchInterfaceConfig.getMchId());
                 // 获取公钥
-                String appPubKey = mchInterfaceConfig.getConfig().get("rsaPublicKey");
+                String appPubKey = isvInterfaceConfig.getConfig().get("rsaPublicKey");
                 //请求数据验签解密使用公钥
                 String signType = params.get("signtype");
                 boolean isSign = SybUtil.validSign(params, appPubKey, signType);
@@ -309,6 +315,12 @@ public class ChannelNoticeController {
                 crCreateOrderDTO.setPayAmount(jsonNode.get("amount").asLong());
                 crCreateOrderDTO.setPromotionAmount(0L);
                 crCreateOrderDTO.setChannelResult(data);
+                crCreateOrderDTO.setType(OrderType.CONSUMPTION.getCode());
+                crCreateOrderDTO.setSubType(OrderSubType.ORDER_COMPLETED.getCode());
+                crCreateOrderDTO.setTradeType(TradeType.WECHAT_PAY.getCode());
+                crCreateOrderDTO.setProductType(ProductType.OFFLINE_PAYMENT.getCode());
+                String tradeType = getTradeType(jsonNode.get("trxcode").asText());
+                crCreateOrderDTO.setTradeType(tradeType);
                 // TODO 应用信息待处理
                 crCreateOrderDTO.setState(PayState.findState(jsonNode.get("trxstatus").asText()).getCode());
                 Boolean result = orderApi.qCrCreateOrder(crCreateOrderDTO);
@@ -331,5 +343,36 @@ public class ChannelNoticeController {
         Map<String, String[]> reqMap = request.getParameterMap();
         reqMap.forEach((k, v) -> map.put(k, v[0]));
         return map;
+    }
+
+    private static final Map<String, String> TRADE_TYPE_MAP = new HashMap<>();
+
+    static {
+        TRADE_TYPE_MAP.put("VSP501", TradeType.WECHAT_PAY.getCode());
+        TRADE_TYPE_MAP.put("VSP501", TradeType.WECHAT_CANCEL.getCode());
+        TRADE_TYPE_MAP.put("VSP503", TradeType.WECHAT_REFUND.getCode());
+        TRADE_TYPE_MAP.put("VSP511", TradeType.ALIPAY_PAY.getCode());
+        TRADE_TYPE_MAP.put("VSP512", TradeType.ALIPAY_CANCEL.getCode());
+        TRADE_TYPE_MAP.put("VSP513", TradeType.ALIPAY_REFUND.getCode());
+
+    }
+
+    private String getTradeType(String code) {
+        return TRADE_TYPE_MAP.get(code);
+//        VSP501	微信支付
+//        VSP502	微信支付撤销
+//        VSP503	微信支付退款
+//        VSP511	支付宝支付
+//        VSP512	支付宝支付撤销
+//        VSP513	支付宝支付退货
+//        VSP521	通联钱包消费
+//        VSP522	通联钱包消费撤销
+//        VSP523	通联钱包消费退货
+//        VSP551	银联扫码支付
+//        VSP552	银联扫码撤销
+//        VSP553	银联扫码退货
+//        VSP621	分期支付
+//        VSP622	分期撤销
+//        VSP623  分期退货
     }
 }

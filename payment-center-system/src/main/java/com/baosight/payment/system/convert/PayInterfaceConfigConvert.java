@@ -6,6 +6,7 @@ import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigListVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
+import com.baosight.payment.vo.IsvInterfaceConfigVO;
 import com.baosight.payment.vo.MchInterfaceConfigVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -54,4 +55,10 @@ public interface PayInterfaceConfigConvert {
     @Mapping(target = "mchId", source = "clientId")
     @Mapping(target = "config", ignore = true)
     MchInterfaceConfigVO toMchInterfaceConfigVO(PayInterfaceConfig payInterfaceConfig);
+
+    @Mapping(target = "isvId", source = "clientId")
+    @Mapping(target = "isvNo", ignore = true)
+    @Mapping(target = "interfaceName", source = "name")
+    @Mapping(target = "config", ignore = true)
+    IsvInterfaceConfigVO toIsvInterfaceConfigVO(PayInterfaceConfig payInterfaceConfig);
 }
