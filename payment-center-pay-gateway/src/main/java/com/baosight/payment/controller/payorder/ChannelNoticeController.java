@@ -297,7 +297,7 @@ public class ChannelNoticeController {
                 crCreateOrderDTO.setChannelOrderNo(trxId);
                 crCreateOrderDTO.setTradeUser(jsonNode.get("acct").asText());
                 crCreateOrderDTO.setMchChannelUser(mchInterfaceConfig.getThirdCode());
-                crCreateOrderDTO.setCreateTime(new Date(jsonNode.get("timestamp").asLong()));
+                crCreateOrderDTO.setCreateTime(new Date());
                 crCreateOrderDTO.setHasDivision(Boolean.FALSE);
                 crCreateOrderDTO.setOutTradeNo(jsonNode.get("chnltrxid").asText());
                 crCreateOrderDTO.setMchChannelUser(cusid);
@@ -319,8 +319,8 @@ public class ChannelNoticeController {
                 crCreateOrderDTO.setSubType(OrderSubType.ORDER_COMPLETED.getCode());
                 crCreateOrderDTO.setTradeType(TradeType.WECHAT_PAY.getCode());
                 crCreateOrderDTO.setProductType(ProductType.OFFLINE_PAYMENT.getCode());
-                String tradeType = getTradeType(jsonNode.get("trxcode").asText());
-                crCreateOrderDTO.setTradeType(tradeType);
+//                String tradeType = getTradeType(jsonNode.get("trxcode").asText());
+//                crCreateOrderDTO.setTradeType(tradeType);
                 // TODO 应用信息待处理
                 crCreateOrderDTO.setState(PayState.findState(jsonNode.get("trxstatus").asText()).getCode());
                 Boolean result = orderApi.qCrCreateOrder(crCreateOrderDTO);

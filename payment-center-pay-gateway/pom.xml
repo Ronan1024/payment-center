@@ -86,6 +86,10 @@
             <artifactId>payment-center-notify-api</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.baosight.saas</groupId>
+            <artifactId>saas-common-auth</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

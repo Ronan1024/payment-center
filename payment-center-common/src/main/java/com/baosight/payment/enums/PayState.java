@@ -17,7 +17,7 @@ public enum PayState implements IBaseEnum<Integer> {
     /**
      * 交易成功
      */
-    SUCCESS(1, "交易成功", List.of("0000")),
+    SUCCESS(PayOrderState.SUCCESS.getCode(), "交易成功", List.of("0000")),
     ;
     private final List<String> channelPayState;
 
