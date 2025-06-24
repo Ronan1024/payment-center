@@ -27,7 +27,7 @@
                 and id = #{mchPage.mchId}
             </if>
             <if test="mchPage.name != null and mchPage.name != ''">
-                and `mch_name` = #{mchPage.name}
+                and `mch_name` LIKE CONCAT('%', #{mchPage.name}, '%')
             </if>
             <if test="mchPage.isvId !=null">
                 and isv_id = #{mchPage.isvId}
