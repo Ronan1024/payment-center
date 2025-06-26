@@ -26,8 +26,6 @@ public class AccountFlowAppServiceImpl implements AccountFlowAppService {
      */
     @Override
     public Boolean registerSettlementAccountFlow(RegisterSettlementFlowDTO registerSettlementFlow) {
-
-
         return null;
     }
 }

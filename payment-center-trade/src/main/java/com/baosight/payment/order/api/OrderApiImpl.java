@@ -70,7 +70,6 @@ public class OrderApiImpl implements OrderApi {
         payOrder.setAppId(crCreateOrderDTO.getAppId());
         payOrder.setMchName(crCreateOrderDTO.getMchName());
         payOrder.setMchType(crCreateOrderDTO.getMchType());
-        payOrder.setMchOrderNo(crCreateOrderDTO.getChannelOrderNo());
         payOrder.setIfCode(crCreateOrderDTO.getInterfaceCode());
         payOrder.setWayCode(crCreateOrderDTO.getWayCode());
         payOrder.setPayAmount(crCreateOrderDTO.getPayAmount());
@@ -84,13 +83,15 @@ public class OrderApiImpl implements OrderApi {
         payOrder.setNotifyUrl(crCreateOrderDTO.getNotifyUrl());
         payOrder.setReturnUrl(crCreateOrderDTO.getReturnUrl());
         payOrder.setSuccessTime(crCreateOrderDTO.getFinishTime());
-        payOrder.setCreateTime(crCreateOrderDTO.getCreateTime());
+        Date createTime = ObjectUtils.isEmpty(crCreateOrderDTO.getCreateTime()) ? new Date() : crCreateOrderDTO.getCreateTime();
+        payOrder.setCreateTime(createTime);
         payOrder.setMchFeeRate(crCreateOrderDTO.getMchFeeRate());
         payOrder.setType(crCreateOrderDTO.getType());
         payOrder.setSubType(crCreateOrderDTO.getSubType());
         payOrder.setTradeType(crCreateOrderDTO.getTradeType());
         payOrder.setProductType(crCreateOrderDTO.getProductType());
         payOrder.setChannelResult(crCreateOrderDTO.getChannelResult());
+        payOrder.setChannelMchNo(crCreateOrderDTO.getChannelMchNo());
         // TODO (L.J.Ran 2025/3/20 - P0 describe: 待补全 应用编号，服务商编号等信息 处理计算手续费等处理)
         boolean save = payOrderService.save(payOrder);
         if (save) {

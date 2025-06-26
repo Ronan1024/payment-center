@@ -5,7 +5,8 @@
 <mapper namespace="com.baosight.payment.order.mapper.PayOrderMapper">
     <update id="updateRefundAmount">
         update pay_order
-        set refund_amount = refund_amount + #{refundAmount} where id = #{orderId}
+        set refund_amount = refund_amount + #{refundAmount}
+        where id = #{orderId}
     </update>
     <select id="payOrderPage" resultType="com.baosight.payment.order.pojo.vo.PayOrderPageVO">
         select id as orderId,
@@ -35,7 +36,8 @@
         expired_time as expiredTime,
         success_time as successTime,
         create_time as createTime,
-        update_time as updateTime
+        update_time as updateTime,
+        notify_state as notifyState
         from pay_order
         <where>
             <if test="payOrderPage.orderId != null">
@@ -54,8 +56,12 @@
                 and if_code = #{payOrderPage.channelCode}
             </if>
             <if test="payOrderPage.mchName != null and payOrderPage.mchName != ''">
-                and mch_name = LIKE CONCAT('%', #{payOrderPage.mchName}, '%')
+                and mch_name LIKE CONCAT('%', #{payOrderPage.mchName}, '%')
+            </if>
+            <if test="payOrderPage.notifyState != null">
+                and notify_state = #{payOrderPage.notifyState}
             </if>
         </where>
+        order by create_time desc
     </select>
 </mapper>

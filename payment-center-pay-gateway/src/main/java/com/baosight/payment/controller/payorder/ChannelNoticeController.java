@@ -1,9 +1,11 @@
 package com.baosight.payment.controller.payorder;
 
+import cn.hutool.core.date.DateUtil;
 import com.baosight.common.exception.ServiceException;
 import com.baosight.payment.api.MchInfoApi;
 import com.baosight.payment.api.PayInterfaceApi;
 import com.baosight.payment.chanel.IChannelNoticeService;
+import com.baosight.payment.controller.refund.ChannelRefundNoticeController;
 import com.baosight.payment.enums.*;
 import com.baosight.payment.error.NoticeError;
 import com.baosight.payment.notify.api.NotifyApi;
@@ -31,15 +33,21 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 // TODO  关闭订单问题
 // TODO 订单状态查询 此处需要进行逻辑处理， 如果支付
 
@@ -68,6 +76,8 @@ public class ChannelNoticeController {
     private MchInfoApi mchInfoApi;
     @Resource
     private NotifyApi notifyApi;
+    @Autowired
+    private ChannelRefundNoticeController channelRefundNoticeController;
 
     // TODO 根据接口code与收银宝号获取支付配置
     // TODO 根据收银宝号获取商家信息
@@ -207,11 +217,13 @@ public class ChannelNoticeController {
             return notifyResult.getResponseEntity();
 
         } catch (SecurityException e) {
-            callbackHandlerLog.setHandlerError(JsonUtil.toJson(e));
+            String error = getStackTraceAsString(e);
+            callbackHandlerLog.setHandlerError(error);
             log.error("{}, payOrderId={}, BizException", logPrefix, payOrderId, e);
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
-            callbackHandlerLog.setHandlerError(JsonUtil.toJson(e.getCause()));
+            String error = getStackTraceAsString(e);
+            callbackHandlerLog.setHandlerError(error);
             log.error("{}, payOrderId={}, 系统异常", logPrefix, payOrderId, e);
             return ResponseEntity.badRequest().body(e.getMessage());
         } finally {
@@ -296,14 +308,13 @@ public class ChannelNoticeController {
                 CrCreateOrderDTO crCreateOrderDTO = new CrCreateOrderDTO();
                 crCreateOrderDTO.setChannelOrderNo(trxId);
                 crCreateOrderDTO.setTradeUser(jsonNode.get("acct").asText());
-                crCreateOrderDTO.setMchChannelUser(mchInterfaceConfig.getThirdCode());
                 crCreateOrderDTO.setCreateTime(new Date());
                 crCreateOrderDTO.setHasDivision(Boolean.FALSE);
                 crCreateOrderDTO.setOutTradeNo(jsonNode.get("chnltrxid").asText());
                 crCreateOrderDTO.setMchChannelUser(cusid);
                 crCreateOrderDTO.setFinishTime(new Date(jsonNode.get("paytime").asLong()));
                 crCreateOrderDTO.setMchId(mchInfoVO.getId());
-                crCreateOrderDTO.setMchNo(mchInfoVO.getMchNo());
+                crCreateOrderDTO.setMchNo(mchInterfaceConfig.getMchNo());
                 crCreateOrderDTO.setIsvId(mchInfoVO.getIsvId());
                 crCreateOrderDTO.setMchType(mchInfoVO.getType());
                 crCreateOrderDTO.setInterfaceCode(interfaceCode);
@@ -317,10 +328,10 @@ public class ChannelNoticeController {
                 crCreateOrderDTO.setChannelResult(data);
                 crCreateOrderDTO.setType(OrderType.CONSUMPTION.getCode());
                 crCreateOrderDTO.setSubType(OrderSubType.ORDER_COMPLETED.getCode());
-                crCreateOrderDTO.setTradeType(TradeType.WECHAT_PAY.getCode());
                 crCreateOrderDTO.setProductType(ProductType.OFFLINE_PAYMENT.getCode());
-//                String tradeType = getTradeType(jsonNode.get("trxcode").asText());
-//                crCreateOrderDTO.setTradeType(tradeType);
+                String tradeType = getTradeType(jsonNode.get("trxcode").asText());
+                crCreateOrderDTO.setTradeType(tradeType);
+                crCreateOrderDTO.setChannelMchNo(mchInterfaceConfig.getThirdCode());
                 // TODO 应用信息待处理
                 crCreateOrderDTO.setState(PayState.findState(jsonNode.get("trxstatus").asText()).getCode());
                 Boolean result = orderApi.qCrCreateOrder(crCreateOrderDTO);
@@ -328,12 +339,105 @@ public class ChannelNoticeController {
             }
             // 接受到推送通知,首先验签
         } catch (Exception e) {
-            e.printStackTrace();
-            String error = e.toString();
-            log.info("回调执行失败:{}", error);
+            log.info("支付回调失败:", e);
+            String error = getStackTraceAsString(e);
             callbackHandlerLog.setHandlerError(error);
+        } finally {
             callbackHandlerLogService.save(callbackHandlerLog);
+        }
+        return "success";
+    }
 
+
+    /**
+     * @return
+     */
+    @IgnoreHandlerResponse
+    @PostMapping("/test/{interfaceCode}/{payingAgency}/{payType}")
+    public String test(@PathVariable("payingAgency") Integer payingAgency,
+                       @PathVariable("payType") Integer payType,
+                       @PathVariable("interfaceCode") String interfaceCode,
+                       HttpServletRequest request) throws IOException {
+        BufferedReader reader = request.getReader();
+        String data = reader.lines().collect(Collectors.joining(System.lineSeparator()));
+
+
+        log.info("获取到的回调信息：{}", data);
+        JsonNode jsonNode = JsonUtil.readTree(data);
+        CallbackHandlerLog callbackHandlerLog = new CallbackHandlerLog();
+        callbackHandlerLog.setHasHandler(Boolean.FALSE);
+        callbackHandlerLog.setPayType(payType);
+        callbackHandlerLog.setPayingAgency(payingAgency);
+        callbackHandlerLog.setCallbackContext(data);
+        callbackHandlerLog.setInterfaceCode(interfaceCode);
+        try {
+            // 支付流水号
+            String trxId = jsonNode.get("transaction_id").asText();
+            callbackHandlerLog.setTrxId(trxId);
+
+            // 收银宝商户号
+            String cusid = jsonNode.get("merchant_no").asText();
+            CallbackHandlerLog info = callbackHandlerLogService.getInfo(payingAgency, payType, trxId, interfaceCode);
+            if (ObjectUtils.isEmpty(info)) {
+                MchInterfaceConfigVO mchInterfaceConfig = payInterfaceApi.mchInterfaceConfig(interfaceCode, cusid);
+                // TODO 后续进行优化
+                IsvInterfaceConfigVO isvInterfaceConfig = payInterfaceApi.isvInterfaceConfig(interfaceCode, cusid);
+                // 未处理当前请求或是处理失败 再一次处理请求
+                Assert.isNull(mchInterfaceConfig, "当前线下码牌商户号:[" + cusid + "]及支付接口：[" + interfaceCode + "]  未配置");
+                Assert.isNull(isvInterfaceConfig, "当前线下码牌商户号:[" + cusid + "]服务商及支付接口：[" + interfaceCode + "]  未配置");
+                callbackHandlerLog.setMchNo(mchInterfaceConfig.getMchNo());
+                // 预先保存
+                // 根据支付接口以及通联收银宝账号获取接口信息
+                // 获取商户信息
+                MchInfoVO mchInfoVO = mchInfoApi.mchInfo(mchInterfaceConfig.getMchId());
+                // 获取公钥
+                String appPubKey = isvInterfaceConfig.getConfig().get("rsaPublicKey");
+                //请求数据验签解密使用公钥
+//                String signType = params.get("signtype");
+//                boolean isSign = SybUtil.validSign(params, appPubKey, signType);
+                PayingAgency payingAgencyType = PayingAgency.byAgencyCode(payingAgency);
+//                Assert.isFalse(isSign, ApiException.supplier(NoticeError.PARAMETER_CHECK_ERROR, payingAgencyType.getMsg()));
+                // 开始创建订单
+                CrCreateOrderDTO crCreateOrderDTO = new CrCreateOrderDTO();
+                crCreateOrderDTO.setChannelOrderNo(trxId);
+                crCreateOrderDTO.setTradeUser(jsonNode.get("account").asText());
+                crCreateOrderDTO.setCreateTime(new Date());
+                crCreateOrderDTO.setHasDivision(Boolean.FALSE);
+                crCreateOrderDTO.setOutTradeNo(jsonNode.get("channel_order_no").asText());
+                crCreateOrderDTO.setMchChannelUser(cusid);
+                crCreateOrderDTO.setFinishTime(DateUtil.parseDateTime(jsonNode.get("pay_time").asText()));
+                crCreateOrderDTO.setCreateTime(DateUtil.parseDateTime(jsonNode.get("create_time").asText()));
+                crCreateOrderDTO.setMchId(mchInfoVO.getId());
+                crCreateOrderDTO.setMchNo(mchInterfaceConfig.getMchNo());
+                crCreateOrderDTO.setIsvId(mchInfoVO.getIsvId());
+                crCreateOrderDTO.setMchType(mchInfoVO.getType());
+                crCreateOrderDTO.setInterfaceCode(interfaceCode);
+                crCreateOrderDTO.setMchName(mchInfoVO.getMchName());
+                PayWayCode payWayCode = PayWayCode.payWayCode(payType);
+                crCreateOrderDTO.setWayCode(payWayCode.getCode());
+                crCreateOrderDTO.setMchFeeRate(mchInterfaceConfig.getMchFeeRate());
+                crCreateOrderDTO.setTotalAmount(jsonNode.get("amount").asLong());
+                crCreateOrderDTO.setPayAmount(jsonNode.get("amount").asLong());
+                crCreateOrderDTO.setPromotionAmount(0L);
+                crCreateOrderDTO.setChannelResult(data);
+                crCreateOrderDTO.setType(OrderType.CONSUMPTION.getCode());
+                crCreateOrderDTO.setSubType(OrderSubType.ORDER_COMPLETED.getCode());
+                crCreateOrderDTO.setProductType(ProductType.OFFLINE_PAYMENT.getCode());
+                crCreateOrderDTO.setChannelMchNo(mchInterfaceConfig.getThirdCode());
+                String tradeType = getTradeType(jsonNode.get("transaction_type").asText());
+                crCreateOrderDTO.setTradeType(tradeType);
+                // TODO 应用信息待处理
+                crCreateOrderDTO.setState(PayOrderState.SUCCESS.getCode());
+                Boolean result = orderApi.qCrCreateOrder(crCreateOrderDTO);
+                callbackHandlerLog.setHasHandler(result);
+            }
+            // 接受到推送通知,首先验签
+        } catch (Exception e) {
+            log.info("支付回调失败:", e);
+            String error = getStackTraceAsString(e);
+            callbackHandlerLog.setHandlerError(error);
+        } finally {
+            callbackHandlerLogService.save(callbackHandlerLog);
         }
         return "success";
     }
@@ -349,7 +453,7 @@ public class ChannelNoticeController {
 
     static {
         TRADE_TYPE_MAP.put("VSP501", TradeType.WECHAT_PAY.getCode());
-        TRADE_TYPE_MAP.put("VSP501", TradeType.WECHAT_CANCEL.getCode());
+        TRADE_TYPE_MAP.put("VSP502", TradeType.WECHAT_CANCEL.getCode());
         TRADE_TYPE_MAP.put("VSP503", TradeType.WECHAT_REFUND.getCode());
         TRADE_TYPE_MAP.put("VSP511", TradeType.ALIPAY_PAY.getCode());
         TRADE_TYPE_MAP.put("VSP512", TradeType.ALIPAY_CANCEL.getCode());
@@ -375,4 +479,13 @@ public class ChannelNoticeController {
 //        VSP622	分期撤销
 //        VSP623  分期退货
     }
+
+
+    private String getStackTraceAsString(Throwable throwable) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        throwable.printStackTrace(pw);
+        return sw.toString();
+    }
+
 }

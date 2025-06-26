@@ -1,31 +1,26 @@
-package com.baosight.payment.pojo.entity;
+package com.baosight.payment.pojo.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baosight.database.base.BasePO;
+import com.baosight.web.serializer.CustomLongSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 回调处理记录表
- *
- * @author L.J.Ran
- * @TableName callback_handler_log
+ * @program: payment-center
+ * @description:
+ * @author: L.J.Ran
+ * @create: 2025/6/11
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName(value = "callback_handler_log")
-public class CallbackHandlerLog extends BasePO {
+public class CallbackHandlerLogDetailVO extends BasePO {
     /**
      *
      */
-    @TableId(type = IdType.ASSIGN_ID)
+    @JsonSerialize(using = CustomLongSerializer.class)
     private Long id;
 
-    /**
-     *
-     */
     private Boolean hasHandler;
 
     /**

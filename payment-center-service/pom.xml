@@ -11,7 +11,7 @@
 
     <artifactId>payment-center-service</artifactId>
 
-    <version>1.0.61-SNAPSHOT</version>
+    <version>1.0.69-SNAPSHOT</version>
 
     <properties>
         <buildNumber>1</buildNumber>
@@ -84,6 +84,16 @@
             <groupId>com.baosight.payment</groupId>
             <artifactId>pay-center-settlement</artifactId>
             <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>11.9.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-mysql</artifactId>
+            <version>11.9.1</version>
         </dependency>
     </dependencies>
 

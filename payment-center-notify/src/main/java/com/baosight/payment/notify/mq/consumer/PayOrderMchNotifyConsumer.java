@@ -49,7 +49,7 @@ public class PayOrderMchNotifyConsumer implements RocketMQListener<MessageWrappe
                 return;
             }
             //1. (发送结果最多7次)
-            Integer currentCount = record.getNotifyCount() + 1;
+            Integer currentCount = record.getNotifyCount();
             payMchNotifyRecordService.updateNotifyResult(notifyId, NotifyState.PROCESSING, "", "");
 
             String notifyUrl = record.getNotifyUrl();
@@ -81,7 +81,7 @@ public class PayOrderMchNotifyConsumer implements RocketMQListener<MessageWrappe
             }
 
             //通知次数 >= 最大通知次数时， 更新响应结果为异常， 不在继续通知
-            if (currentCount >= record.getNotifyCountLimit()) {
+            if (currentCount+1 >= record.getNotifyCountLimit()) {
                 payMchNotifyRecordService.updateNotifyResult(notifyId, NotifyState.FAIL, res, notifyUrl);
                 notifyHandler.updateNotifySent(record.getOrderId(), NotifyState.FAIL, notifyUrl);
                 return;

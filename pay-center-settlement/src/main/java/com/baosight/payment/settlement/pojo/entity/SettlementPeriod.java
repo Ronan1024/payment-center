@@ -1,15 +1,15 @@
 package com.baosight.payment.settlement.pojo.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * 结算账期
+ * @author L.J.Ran
  * @TableName settlement_period
  */
 @TableName(value ="settlement_period")

@@ -3,6 +3,7 @@ package com.baosight.payment.notify.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baosight.payment.enums.NotifyState;
 import com.baosight.payment.notify.pojo.entity.PayMchNotifyRecord;
+import com.baosight.payment.notify.pojo.vo.OrderNotifyRecordVO;
 import com.baosight.payment.notify.pojo.vo.PayMchNotifyRecordVO;
 
 import java.util.Date;
@@ -39,4 +40,11 @@ public interface PayMchNotifyRecordService extends IService<PayMchNotifyRecord> 
      * @param now 当前时间
      */
     List<PayMchNotifyRecordVO> mchNotifyRecordList(Date now);
+
+    /**
+     * 获取指定订单的通知记录信息
+     *
+     * @param orderId 订单id
+     */
+    OrderNotifyRecordVO orderNotifyRecordInfo(Long orderId);
 }

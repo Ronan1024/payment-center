@@ -7,6 +7,11 @@ package com.baosight.payment.settlement.constant;
  * @create: 2025/4/16
  */
 public class SettlementMQConstant {
+
+    private SettlementMQConstant(){
+        throw new IllegalStateException("Utility class");
+    }
+
     /**
      * 可结算订单主题
      */

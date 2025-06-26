@@ -43,7 +43,6 @@ public class TongLianClient {
 
 
     public Response sendRequest(SendBuild sendBuild, String url) {
-        System.out.println(JsonUtil.toJson(config));
         Request request = new Request();
         request.setAppId(this.config.getAppId());
         request.setSpAppId(this.config.getSpAppId());

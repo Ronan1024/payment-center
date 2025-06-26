@@ -93,6 +93,12 @@ public class CrCreateOrderDTO {
      */
     private String mchName;
 
+
+    /**
+     * 渠道商户号
+     */
+    private String channelMchNo;
+
     private Integer mchType;
 
     private Long isvId;

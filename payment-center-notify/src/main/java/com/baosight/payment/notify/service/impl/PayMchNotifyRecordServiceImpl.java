@@ -4,14 +4,15 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baosight.payment.enums.NotifyState;
 import com.baosight.payment.notify.constant.NotifyLevelConstant;
+import com.baosight.payment.notify.convert.PayMchNotifyRecordConvert;
 import com.baosight.payment.notify.mapper.PayMchNotifyRecordMapper;
+import com.baosight.payment.notify.pojo.dao.NotifyResponseDAO;
 import com.baosight.payment.notify.pojo.entity.PayMchNotifyRecord;
+import com.baosight.payment.notify.pojo.vo.OrderNotifyRecordVO;
 import com.baosight.payment.notify.pojo.vo.PayMchNotifyRecordVO;
 import com.baosight.payment.notify.service.PayMchNotifyRecordService;
 import com.baosight.utils.json.JsonUtil;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -58,16 +59,22 @@ public class PayMchNotifyRecordServiceImpl extends ServiceImpl<PayMchNotifyRecor
         // 获取已有记录
         PayMchNotifyRecord payMchNotifyRecord = payMchNotifyRecordMapper.selectById(notifyId);
         Integer index = payMchNotifyRecord.getNotifyCount();
-        if (StringUtils.hasText(notifyUrl)) {
-            payMchNotifyRecord.setNotifyUrl(notifyUrl);
+        String url = StringUtils.hasText(notifyUrl) ? notifyUrl : null;
+        payMchNotifyRecord.setNotifyUrl(url);
+        if (notifyState.isIncreaseNotifyCount()) {
+            payMchNotifyRecord.setNotifyCount(index + 1);
         }
-        payMchNotifyRecord.setNotifyCount(index + 1);
         if (!ObjectUtils.isEmpty(payMchNotifyRecord)) {
             if (StringUtils.hasText(res)) {
                 List<NotifyResponseDAO> notifyResponseDAOList = StringUtils.hasText(payMchNotifyRecord.getResResult())
                         ? JsonUtil.parseArray(payMchNotifyRecord.getResResult(), NotifyResponseDAO.class) : new ArrayList<>();
-                NotifyResponseDAO dao = new NotifyResponseDAO().setTime(new Date()).setState(notifyState.getCode())
-                        .setResResult(res).setIndex(notifyResponseDAOList.size() + 1);
+                // 处理当前通知状态
+                NotifyState state = notifyState.equals(NotifyState.SUCCESS) ? NotifyState.SUCCESS : NotifyState.FAIL;
+
+                NotifyResponseDAO dao = new NotifyResponseDAO()
+                        .setTime(new Date()).setState(state.getCode())
+                        .setNotifyUrl(url).setResResult(res).setIndex(notifyResponseDAOList.size() + 1);
+
                 notifyResponseDAOList.add(dao);
                 payMchNotifyRecord.setResResult(JsonUtil.toJson(notifyResponseDAOList));
             }
@@ -93,35 +100,27 @@ public class PayMchNotifyRecordServiceImpl extends ServiceImpl<PayMchNotifyRecor
         return payMchNotifyRecordMapper.getRecordList(now);
     }
 
+    /**
+     * 获取指定订单的通知记录信息
+     *
+     * @param orderId 订单id
+     */
+    @Override
+    public OrderNotifyRecordVO orderNotifyRecordInfo(Long orderId) {
+        PayMchNotifyRecord payMchNotifyRecord = payMchNotifyRecordMapper.selectOne(new LambdaQueryWrapper<PayMchNotifyRecord>()
+                .eq(PayMchNotifyRecord::getOrderId, orderId));
+        if (ObjectUtils.isEmpty(payMchNotifyRecord)) {
+            return null;
+        }
+        OrderNotifyRecordVO result = PayMchNotifyRecordConvert.INSTANCE.toOrderNotifyRecordVO(payMchNotifyRecord);
+        if (StringUtils.hasText(payMchNotifyRecord.getResResult())) {
+            List<NotifyResponseDAO> notifyResponse = JsonUtil.parseArray(payMchNotifyRecord.getResResult(), NotifyResponseDAO.class);
+            result.setNotifyResponseList(notifyResponse);
+        }
 
-    @Data
-    @Accessors(chain = true)
-    private static class NotifyResponseDAO {
-        /**
-         * 序号
-         */
-        private Integer index;
-
-        /**
-         * 时间
-         */
-        private Date time;
-
-        /**
-         * 状态
-         */
-        private Integer state;
-
-        /**
-         * 返回结果
-         */
-        private String resResult;
-
-        /**
-         * 通知地址url
-         */
-        private String notifyUrl;
+        return result;
     }
+
 
 }
 

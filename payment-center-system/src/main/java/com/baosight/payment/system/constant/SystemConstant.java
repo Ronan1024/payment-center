@@ -2,7 +2,14 @@ package com.baosight.payment.system.constant;
 
 import com.baosight.utils.utils.StrFormatter;
 
+/**
+ * @author L.J.Ran
+ */
 public class SystemConstant {
+
+    private SystemConstant(){
+        throw new IllegalStateException("Utility class");
+    }
 
     private static final String BASE = "payment:system:";
 

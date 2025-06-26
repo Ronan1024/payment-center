@@ -25,7 +25,6 @@ import com.baosight.utils.utils.ObjectUtils;
 import com.baosight.web.exception.ApiException;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -54,8 +53,7 @@ public class PayMchAppServiceImpl extends ServiceImpl<PayMchAppMapper, PayMchApp
     private PayInterfaceDefineMapper payInterfaceDefineMapper;
     @Resource
     private PayInterfaceConfigMapper payInterfaceConfigMapper;
-    @Autowired
-    private PayWayMapper payWayMapper;
+    private final PayWayMapper payWayMapper;
 
     /**
      * 创建或者更新支付应用信息

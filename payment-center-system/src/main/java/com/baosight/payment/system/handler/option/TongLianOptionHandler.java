@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,6 +37,6 @@ public class TongLianOptionHandler implements IPayAgencyOption<PayInterfaceConfi
         if (!ObjectUtils.isEmpty(relevanceInfo)) {
             return Arrays.stream(TongLianOption.values()).filter(e -> e.getFunction().apply(relevanceInfo)).map(TongLianOption::getCode).toList();
         }
-        return null;
+        return Collections.emptyList();
     }
 }

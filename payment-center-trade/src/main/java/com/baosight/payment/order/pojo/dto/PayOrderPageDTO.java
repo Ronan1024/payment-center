@@ -48,4 +48,10 @@ public class PayOrderPageDTO extends PageRequest {
      */
     private String channelCode;
 
+
+    /**
+     * 通知状态
+     */
+    private Integer notifyState;
+
 }

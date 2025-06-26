@@ -25,7 +25,6 @@ import com.baosight.utils.utils.Assert;
 import com.baosight.web.exception.ApiException;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -46,8 +45,7 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
     private final PayInterfaceDefineMapper payInterfaceDefineMapper;
     @Resource
     private MchInfoApi mchInfoApi;
-    @Autowired
-    private PayInterfaceConfigMapper payInterfaceConfigMapper;
+    private final PayInterfaceConfigMapper payInterfaceConfigMapper;
 
     /**
      * 新增支付接口参数配置
@@ -111,7 +109,7 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
         // 修改已签约的支付方式
         if (update) {
             payInterfaceConfigMapper.update(new LambdaUpdateWrapper<PayInterfaceConfig>()
-                    .eq(PayInterfaceConfig::getInterfaceId,  payInterfaceDefine.getId())
+                    .eq(PayInterfaceConfig::getInterfaceId, payInterfaceDefine.getId())
                     .set(PayInterfaceConfig::getPayWay, payInterfaceDefine.getPayWay())
             );
         }

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baosight.payment.mapper.CallbackHandlerLogMapper">
+
+    <select id="page" resultType="com.baosight.payment.pojo.vo.CallbackHandlerLogVO">
+        select
+        id,
+        has_handler as hasHandler,
+        paying_agency as payingAgency,
+        pay_type as payType,
+        mch_no as mchNo,
+        trx_id as trxId,
+        interface_code as interfaceCode,
+        create_time as createTime
+        from callback_handler_log
+        <where>
+            <if test="pageDTO.mchNo != null and pageDTO.mchNo != ''">
+                and mch_no = #{pageDTO.mchNo}
+            </if>
+            <if test="pageDTO.trxId != null and pageDTO.trxId != ''">
+                and trx_id = #{pageDTO.trxId}
+            </if>
+            <if test="pageDTO.payingAgency != null">
+                and paying_agency = #{pageDTO.payingAgency}
+            </if>
+            <if test="pageDTO.payType != null">
+                and pay_type = #{pageDTO.payType}
+            </if>
+            <if test="pageDTO.interfaceCode != null and pageDTO.interfaceCode != ''">
+                and interface_code = #{pageDTO.interfaceCode}
+            </if>
+            <if test="pageDTO.hasHandler != null">
+                and has_handler = #{pageDTO.hasHandler}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+</mapper>

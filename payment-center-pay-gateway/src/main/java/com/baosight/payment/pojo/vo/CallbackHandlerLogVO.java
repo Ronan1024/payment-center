@@ -1,6 +1,8 @@
 package com.baosight.payment.pojo.vo;
 
 import com.baosight.database.base.BasePO;
+import com.baosight.web.serializer.CustomLongSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,14 +16,10 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class CallbackHandlerLogVO extends BasePO {
 
+    @JsonSerialize(using = CustomLongSerializer.class)
     private Long id;
 
     private Boolean hasHandler;
-
-    /**
-     * 处理异常信息
-     */
-    private String handlerError;
 
     /**
      * 支付机构
@@ -33,10 +31,6 @@ public class CallbackHandlerLogVO extends BasePO {
      */
     private Integer payType;
 
-    /**
-     * 回调内容
-     */
-    private String callbackContext;
 
     /**
      * 商户号

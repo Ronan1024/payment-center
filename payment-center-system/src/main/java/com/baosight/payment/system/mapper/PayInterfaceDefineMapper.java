@@ -13,10 +13,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface PayInterfaceDefineMapper extends BaseMapper<PayInterfaceDefine> {
 
-//    /**
-//     * 获取支付接口列表
-//     */
-//    IPage<PayInterfaceDefinePageVO> page(@Param("page") Page<PayInterfaceDefinePageVO> page, @Param("pageDTO") PayInterfacePageDTO pageDTO);
 }
 
 

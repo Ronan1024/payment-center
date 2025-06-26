@@ -25,5 +25,6 @@
         from pay_mch_notify_record
         where next_notify_time &lt;= #{now}
           and state = 1
+          and notify_count &lt; notify_count_limit
     </select>
 </mapper>

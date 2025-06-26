@@ -92,6 +92,7 @@ public class PayOrderPageVO {
      * 支付订单状态
      */
     private Integer state;
+
     /**
      * 特定渠道发起额外参数
      */
@@ -152,4 +153,8 @@ public class PayOrderPageVO {
      */
     private Date updateTime;
 
+    /**
+     * 通知状态
+     */
+    private Integer notifyState;
 }

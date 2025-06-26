@@ -3,10 +3,17 @@ package com.baosight.payment.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baosight.database.page.PageResponse;
+import com.baosight.database.utils.PageUtil;
+import com.baosight.payment.convert.CallbackHandlerLogConvert;
 import com.baosight.payment.mapper.CallbackHandlerLogMapper;
+import com.baosight.payment.pojo.dto.CallbackHandlerLogDTO;
 import com.baosight.payment.pojo.entity.CallbackHandlerLog;
+import com.baosight.payment.pojo.vo.CallbackHandlerLogDetailVO;
+import com.baosight.payment.pojo.vo.CallbackHandlerLogVO;
 import com.baosight.payment.service.CallbackHandlerLogService;
 import com.baosight.utils.utils.ObjectUtils;
+import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -20,7 +27,8 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor
 public class CallbackHandlerLogServiceImpl extends ServiceImpl<CallbackHandlerLogMapper, CallbackHandlerLog> implements CallbackHandlerLogService {
 
-    private final CallbackHandlerLogMapper callbackHandlerLogMapper;
+    @Resource
+    private  CallbackHandlerLogMapper callbackHandlerLogMapper;
 
     /**
      * 根据支付机构、支付类型、商户号和交易ID获取回调处理记录
@@ -61,6 +69,32 @@ public class CallbackHandlerLogServiceImpl extends ServiceImpl<CallbackHandlerLo
                 .set(StringUtils.hasText(error), CallbackHandlerLog::getHandlerError, error)
         ) > 0;
     }
+
+    /**
+     * 分页查询回调处理记录
+     *
+     * @param pageDTO 分页查询参数
+     */
+    @Override
+    public PageResponse<CallbackHandlerLogVO> callbackHandlerPage(CallbackHandlerLogDTO pageDTO) {
+        PageUtil<CallbackHandlerLogVO> pageUtil = new PageUtil<>(pageDTO);
+        return pageUtil.builder(callbackHandlerLogMapper.page(pageUtil.Page(), pageDTO)).build();
+    }
+
+    /**
+     * 根据ID获取回调处理记录详情
+     *
+     * @param id 回调ID
+     */
+    @Override
+    public CallbackHandlerLogDetailVO detail(Long id) {
+        CallbackHandlerLog callbackHandlerLog = callbackHandlerLogMapper.selectById(id);
+        if (ObjectUtils.isEmpty(callbackHandlerLog)) {
+            return null;
+        }
+        return CallbackHandlerLogConvert.INSTANCE.toCallbackHandlerLogDetailVO(callbackHandlerLog);
+    }
+
 }
 
 
