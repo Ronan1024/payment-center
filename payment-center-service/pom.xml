@@ -11,7 +11,7 @@
 
     <artifactId>payment-center-service</artifactId>
 
-    <version>1.0.69-SNAPSHOT</version>
+    <version>1.0.70-SNAPSHOT</version>
 
     <properties>
         <buildNumber>1</buildNumber>

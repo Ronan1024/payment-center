@@ -5,7 +5,6 @@ import com.baosight.common.exception.ServiceException;
 import com.baosight.payment.api.MchInfoApi;
 import com.baosight.payment.api.PayInterfaceApi;
 import com.baosight.payment.chanel.IChannelNoticeService;
-import com.baosight.payment.controller.refund.ChannelRefundNoticeController;
 import com.baosight.payment.enums.*;
 import com.baosight.payment.error.NoticeError;
 import com.baosight.payment.notify.api.NotifyApi;
@@ -33,7 +32,6 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -74,10 +72,9 @@ public class ChannelNoticeController {
 
     @Resource
     private MchInfoApi mchInfoApi;
+
     @Resource
     private NotifyApi notifyApi;
-    @Autowired
-    private ChannelRefundNoticeController channelRefundNoticeController;
 
     // TODO 根据接口code与收银宝号获取支付配置
     // TODO 根据收银宝号获取商家信息
@@ -132,7 +129,6 @@ public class ChannelNoticeController {
 
             callbackHandlerLog.setCallbackContext(notifyParam);
             callbackHandlerLog.setInterfaceCode(interfaceCode);
-//            callbackHandlerLog.setMchNo(mchInterfaceConfig.getMchNo());
             // 预先保存
 
 
@@ -184,6 +180,7 @@ public class ChannelNoticeController {
                 UpdateOrderState updateOrderState = new UpdateOrderState();
                 updateOrderState.setOrderId(payOrderId);
                 updateOrderState.setOrderState(notifyResult.getPayOrderState());
+                updateOrderState.setChannelMchNo(parseParams.getChannelMchNo());
                 updateOrderState.setChannelUser(parseParams.getChannelUserId());
                 updateOrderState.setFinishTime(parseParams.getFinishTime());
                 updateOrderState.setType(parseParams.getType());

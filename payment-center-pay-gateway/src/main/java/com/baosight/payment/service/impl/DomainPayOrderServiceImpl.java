@@ -27,6 +27,7 @@ import com.baosight.spring.base.utils.ApplicationContextHolder;
 import com.baosight.utils.utils.Assert;
 import com.baosight.utils.utils.ObjectUtils;
 import com.baosight.web.exception.ApiException;
+import com.baosight.web.properties.ProjectInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,7 @@ public class DomainPayOrderServiceImpl implements DomainPayOrderService {
     private final OrderApi orderApi;
     private final MchAppConfigApi mchAppConfigApi;
     private final AppMchPassageApi appMchPassageApi;
+    private final ProjectInfo projectInfo;
 //    private final PayMchPassageService payMchPassageService;
 
     /**
@@ -163,7 +165,7 @@ public class DomainPayOrderServiceImpl implements DomainPayOrderService {
             // TODO 商户信息
             String newPayOrderId = paymentService.customPayOrderId(unifiedOrder, payOrder, mchInfo);
 
-            CreateOrderVO createOrderResult = null;
+            CreateOrderVO createOrderResult;
 //            if (isNewOrder) {
             if (StringUtils.hasText(newPayOrderId)) {
                 // 自定义订单号 处理支付订单号

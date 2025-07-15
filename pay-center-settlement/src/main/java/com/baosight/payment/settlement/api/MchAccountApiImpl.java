@@ -45,16 +45,17 @@ public class MchAccountApiImpl implements MchAccountApi {
                 accountManager.save(mchAccount);
             }
             AtomicReference<Money> money = new AtomicReference<>(new Money());
-            e.getAmount().forEach(amount -> {
+            List<MchAccountRecord> accountRecordList = e.getAmount().stream().map(amount -> {
                 MchAccountRecord mchAccountRecord = new MchAccountRecord();
                 mchAccountRecord.setMchId(e.getMchId());
                 mchAccountRecord.setType(e.getType());
                 mchAccountRecord.setCreateTime(new Date());
                 mchAccountRecord.setAmount(amount.getAmount());
                 mchAccountRecord.setApplyState(AppleState.SUCCESS.getCode());
-                mchAccountRecordManager.save(mchAccountRecord);
-                money.set(money.get().add(amount));
-            });
+                return mchAccountRecord;}).toList();
+            e.getAmount().forEach(amount -> money.set(money.get().add(amount)));
+
+            mchAccountRecordManager.saveBatch(accountRecordList);
             Money balance = new Money(mchAccount.getBalance());
             mchAccount.setBalance(balance.add(money.get()).getAmount());
             accountManager.updateById(mchAccount);

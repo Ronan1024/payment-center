@@ -196,6 +196,7 @@ public class OrderApiImpl implements OrderApi {
         order.setExpiredTime(payOrder.getExpiredTime());
         order.setTradeType(payOrder.getTradeType());
         order.setTradeMode(payOrder.getTradeMode());
+        order.setProductType(payOrder.getProductType());
         order.setType(payOrder.getType());
         order.setSubType(payOrder.getSubType());
         // TODO 待优化
@@ -230,6 +231,8 @@ public class OrderApiImpl implements OrderApi {
         payOrder.setPayAgencyChannelOrder(updateOrderState.getPayAgencyChannelOrder());
         payOrder.setChannelMchNo(updateOrderState.getChannelMchNo());
         payOrder.setSubType(updateOrderState.getSubType());
+        payOrder.setType(updateOrderState.getType());
+        payOrder.setTradeMode(updateOrderState.getTradeMode());
         if (updateOrderState.getOrderState().equals(PayOrderState.SUCCESS.getCode()) && payOrder.getSubType().equals(OrderSubType.WECHAT_ORDER_COMPLETED.getCode())) {
             payOrder.setDivisionState(DivisionState.WAITING.getCode());
             DateTime dateTime = DateUtil.offsetDay(new Date(), 1);

@@ -63,8 +63,6 @@ public class CashController {
     private final MchInfoApi mchInfoApi;
     private final CallbackHandlerLogService callbackHandlerLogService;
     private final NotifyApi notifyApi;
-//    @Resource
-//    private CallBackHandlerApi callBackHandlerApi;
 
     @Value("${pay.notifyUrl}")
     private String notifyUrl;
@@ -95,7 +93,6 @@ public class CashController {
         try {
             Money balance = new Money(mchAccount.getBalance());
             Assert.isTrue(balance.compareTo(money) < 0, ApiException.supplier(AccountError.ACCOUNT_BALANCE_INSUFFICIENT));
-
             TongLianIsvAndMchConfigDAO mchConfig = mchAppConfigApi.tongLianIsvAndMchConfig(mchInfoVO.getId(), PayInterfaceCode.TONG_LIAN_PAY.getCode(), mchInfoVO.getIsvId());
             TongLianIsvConfigDAO isvConfig = mchConfig.isvConfig();
             Map<String, Object> map = new HashMap<>();
@@ -107,7 +104,6 @@ public class CashController {
             JsonNode mchBankCardNo = mchAppConfigApi.getMchBankCardNo(mchInfoVO.getId());
             String bankCardNo = mchBankCardNo.get("bankCardNo").asText();
             String acctNum = DemoSM2Util.decryptEcb(isvConfig.getSecretKey(), bankCardNo);
-//        map.put("couponAmount", "0");
             map.put("respUrl", notifyUrl + "/api/cash/notify");
             map.put("receiveAcctType", "1");
             map.put("acctNum", acctNum);

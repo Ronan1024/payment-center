@@ -98,6 +98,9 @@ public class TlPayNoticeService implements IChannelNoticeService {
                 if (channelParamInfo.get("chnlTransCode").asText().equals("VSP683")) {
                     parseChannelParamDAO.setSubType(OrderSubType.WECHAT_ORDER_COMPLETED.getCode());
                 }
+                if (channelParamInfo.has("chnlMchtNo") && channelParamInfo.get("chnlMchtNo").isTextual()) {
+                    parseChannelParamDAO.setChannelMchNo(channelParamInfo.get("chnlMchtNo").asText());
+                }
             }
 
             if (notifyParamJsonNode.get("transCode").equals("2085")) {

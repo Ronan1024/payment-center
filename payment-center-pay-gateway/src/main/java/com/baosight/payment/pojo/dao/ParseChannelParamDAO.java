@@ -75,6 +75,10 @@ public class ParseChannelParamDAO {
      */
     private Integer subType;
 
+    /**
+     * 渠道商户编号
+     */
+    private String channelMchNo;
 
 
     /**

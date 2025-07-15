@@ -183,64 +183,77 @@ public class DivisionTask {
                 log.info("开始处理回盘文件");
                 String file = response.get("file").asText();
                 log.info("解析到的文件数据: {}", file);
-                List<DivisionFileParse> divisionFileParseList = fileParses(file);
-                log.info("解析到的数据：{}", divisionFileParseList);
-                if (!CollectionUtils.isEmpty(divisionFileParseList)) {
-                    List<Long> successOrderList = new ArrayList<>();
-                    Map<Long, String> failOrderList = new HashMap<>();
-                    Map<Long, DivisionFileParse> parseMap = divisionFileParseList.stream().collect(Collectors.toMap(DivisionFileParse::getOrderId, divisionFileParse -> divisionFileParse));
-                    List<OrderDivisionRecord> orderDivisionRecordList = orderDivisionRecordMapper.selectList(new LambdaQueryWrapper<OrderDivisionRecord>()
-                            .eq(OrderDivisionRecord::getBatchId, e.getId()));
 
-                    orderDivisionRecordList.forEach(orderDivisionRecord -> {
-                        DivisionFileParse divisionFileParse = parseMap.get(orderDivisionRecord.getOrderId());
-                        if (divisionFileParse.getTradeStatus().equals(1)) {
-                            successOrderList.add(orderDivisionRecord.getOrderId());
-                        } else if (divisionFileParse.getTradeStatus().equals(2)) {
-                            failOrderList.put(divisionFileParse.orderId, divisionFileParse.failReason);
-                        }
-                    });
-                    // 修改成功
-                    if (!CollectionUtils.isEmpty(successOrderList)) {
-                        orderDivisionRecordMapper.update(new LambdaUpdateWrapper<OrderDivisionRecord>()
-                                .in(OrderDivisionRecord::getOrderId, successOrderList)
-                                .set(OrderDivisionRecord::getState, DivisionState.DIVISION_SUCCESS.getCode())
-                        );
-                        List<PayOrder> payOrders = payOrderMapper.selectByIds(successOrderList);
-                        Map<Long, List<PayOrder>> collect = payOrders.stream().collect(Collectors.groupingBy(PayOrder::getMchId));
-                        List<MchAccountDTO> mchAccountDTOList = new ArrayList<>();
-                        collect.forEach((k, v) -> {
-                            payOrderMapper.update(new LambdaUpdateWrapper<PayOrder>()
-                                    .in(PayOrder::getId, v.stream().map(PayOrder::getId).toList())
-                                    .set(PayOrder::getDivisionState, DivisionState.DIVISION_SUCCESS.getCode())
-                            );
-                            MchAccountDTO mchAccountDTO = new MchAccountDTO();
-                            mchAccountDTO.setType(AccountType.SUCCESS.getCode());
-                            mchAccountDTO.setMchId(k);
-                            List<Money> list = v.stream().map(order -> {
-                                DivisionFileParse divisionFileParse = parseMap.get(order.getId());
-                                return divisionFileParse.getAmount();
-                            }).toList();
-                            mchAccountDTO.setAmount(list);
-                            mchAccountDTOList.add(mchAccountDTO);
+                log.info("开始处理分账任务：{}, 批次号{}", e.getDate(), e.getId());
+                try {
+                    List<DivisionFileParse> divisionFileParseList = fileParses(file);
+                    log.info("解析到的数据：{}", divisionFileParseList);
+                    if (!CollectionUtils.isEmpty(divisionFileParseList)) {
+                        List<Long> successOrderList = new ArrayList<>();
+                        Map<Long, String> failOrderList = new HashMap<>();
+                        Map<Long, DivisionFileParse> parseMap = divisionFileParseList.stream().collect(Collectors.toMap(DivisionFileParse::getOrderId, divisionFileParse -> divisionFileParse));
+                        List<OrderDivisionRecord> orderDivisionRecordList = orderDivisionRecordMapper.selectList(new LambdaQueryWrapper<OrderDivisionRecord>()
+                                .eq(OrderDivisionRecord::getBatchId, e.getId()));
+
+                        orderDivisionRecordList.forEach(orderDivisionRecord -> {
+                            DivisionFileParse divisionFileParse = parseMap.get(orderDivisionRecord.getOrderId());
+                            if (divisionFileParse.getTradeStatus().equals(1)) {
+                                successOrderList.add(orderDivisionRecord.getOrderId());
+                            } else if (divisionFileParse.getTradeStatus().equals(2)) {
+                                failOrderList.put(divisionFileParse.orderId, divisionFileParse.failReason);
+                            }
                         });
-                        mchAccountApi.changeMchAccount(mchAccountDTOList);
-
-
-                    }
-                    if (!CollectionUtils.isEmpty(failOrderList)) {
-                        failOrderList.forEach((k, v) -> {
+                        // 修改成功
+                        if (!CollectionUtils.isEmpty(successOrderList)) {
                             orderDivisionRecordMapper.update(new LambdaUpdateWrapper<OrderDivisionRecord>()
-                                    .eq(OrderDivisionRecord::getOrderId, k)
-                                    .set(OrderDivisionRecord::getState, DivisionState.DIVISION_FAILURE.getCode())
-                                    .set(OrderDivisionRecord::getErrMsg, v)
+                                    .in(OrderDivisionRecord::getOrderId, successOrderList)
+                                    .set(OrderDivisionRecord::getState, DivisionState.DIVISION_SUCCESS.getCode())
                             );
-                        });
-                        payOrderMapper.update(new LambdaUpdateWrapper<PayOrder>()
-                                .in(PayOrder::getId, failOrderList.keySet())
-                                .set(PayOrder::getDivisionState, DivisionState.DIVISION_FAILURE.getCode())
-                        );
+                            List<PayOrder> payOrders = payOrderMapper.selectByIds(successOrderList);
+                            Map<Long, List<PayOrder>> collect = payOrders.stream().collect(Collectors.groupingBy(PayOrder::getMchId));
+                            List<MchAccountDTO> mchAccountDTOList = new ArrayList<>();
+                            collect.forEach((k, v) -> {
+                                payOrderMapper.update(new LambdaUpdateWrapper<PayOrder>()
+                                        .in(PayOrder::getId, v.stream().map(PayOrder::getId).toList())
+                                        .set(PayOrder::getDivisionState, DivisionState.DIVISION_SUCCESS.getCode())
+                                );
+                                MchAccountDTO mchAccountDTO = new MchAccountDTO();
+                                mchAccountDTO.setType(AccountType.SUCCESS.getCode());
+                                mchAccountDTO.setMchId(k);
+                                List<Money> list = v.stream().map(order -> {
+                                    DivisionFileParse divisionFileParse = parseMap.get(order.getId());
+                                    return divisionFileParse.getAmount();
+                                }).toList();
+                                mchAccountDTO.setAmount(list);
+                                mchAccountDTOList.add(mchAccountDTO);
+                            });
+                            Boolean account = mchAccountApi.changeMchAccount(mchAccountDTOList);
+                            if (account && CollectionUtils.isEmpty(failOrderList)) {
+                                orderDivisionBatchMapper.update(new LambdaUpdateWrapper<OrderDivisionBatch>()
+                                        .eq(OrderDivisionBatch::getId, e.getId())
+                                        .set(OrderDivisionBatch::getDivisionState, DivisionState.DIVISION_SUCCESS.getCode())
+                                );
+                            }
+                        }
+                        if (!CollectionUtils.isEmpty(failOrderList)) {
+                            failOrderList.forEach((k, v) -> {
+                                orderDivisionRecordMapper.update(new LambdaUpdateWrapper<OrderDivisionRecord>()
+                                        .eq(OrderDivisionRecord::getOrderId, k)
+                                        .set(OrderDivisionRecord::getState, DivisionState.DIVISION_FAILURE.getCode())
+                                        .set(OrderDivisionRecord::getErrMsg, v)
+                                );
+                            });
+                            payOrderMapper.update(new LambdaUpdateWrapper<PayOrder>()
+                                    .in(PayOrder::getId, failOrderList.keySet())
+                                    .set(PayOrder::getDivisionState, DivisionState.DIVISION_FAILURE.getCode())
+                            );
+                        }
                     }
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                    log.info("分账任务处理失败：{}, 批次号{}", e.getDate(), e.getId());
+                    throw exception;
+
                 }
             } else {
                 log.error("批量分账回盘文件下载 请求失败 批次号：{} 异常信息: {}", e.getId(), response.getResult());
@@ -320,7 +333,7 @@ public class DivisionTask {
     }
 
 
-    public static void main(String[] args) {
+    public static void main1(String[] args) {
         //{"file":"MTkxMjE3NjY2MzU5MjIyNjgxN3wyMDI1MDQyMDE5MDYxNzIwOTIwMDUxNDI2OHwyMDI1MDQxNjAwMTAxNzIwODUwMTUxNjQ4N3xudWxsfDB8fHwyfG9yZ1Jlc3BUcmFjZU51be+8mjIwMjUwNDE3MDk0MDA1MjA4NTAxODQ1MzQ05peg57uT566X6YeR6aKd77yM5LiN5YWB6K645YiG6LSmCjE5MTIzMjgwODUxNTU2NjM4NzR8MjAyNTA0MjAxOTA2MTcyMDkyMDA1MTQyNjl8MjAyNTA0MTYxMDExNTkyMDg1MDE4NDc2Njd8bnVsbHwwfHx8MnxvcmdSZXNwVHJhY2VOdW3vvJoyMDI1MDQxNzA5MzcwNjIwODUwMTUxNTIzNeaXoOe7k+eul+mHkemine+8jOS4jeWFgeiuuOWIhui0pgoxOTEyMzI4Mjk4ODk3Mzk1NzE0fDIwMjUwNDIwMTkwNjE3MjA5MjAwNTE0MjcwfDIwMjUwNDE2MTAxMjUwMjA4NTAxODQ3NzY0fG51bGx8MHx8fDJ8b3JnUmVzcFRyYWNlTnVt77yaMjAyNTA0MTcwOTM3MDYyMDg1MDE4NDUyMzfml6Dnu5Pnrpfph5Hpop3vvIzkuI3lhYHorrjliIbotKYK","respCode":"00000","batchNo":"1913912096831361026","transDate":"20250420","respMsg":"交易成功"}
 //        String base64Str = "MTkxMjE3NjY2MzU5MjIyNjgxN3wyMDI1MDQxNzE2NTcyOTIwOTIwMDU3MzAwNXwyMDI1MDQxNjAwMTAxNzIwODUwMTUxNjQ4N3xudWxsfDB8fHwyfG9yZ1Jlc3BUcmFjZU51be+8mjIwMjUwNDE3MDk0MDA1MjA4NTAxODQ1MzQ05peg57uT566X6YeR6aKd77yM5LiN5YWB6K645YiG6LSmCg==";
 //        String base64Str = "MTkxMjE3NjY2MzU5MjIyNjgxN3wyMDI1MDQyMTEzNDM1NzIwOTIwMDUxOTE4M3wyMDI1MDQxNjAwMTAxNzIwODUwMTUxNjQ4N3xudWxsfDB8fHwyfG9yZ1Jlc3BUcmFjZU51be+8mjIwMjUwNDE3MDk0MDA1MjA4NTAxODQ1MzQ05peg57uT566X6YeR6aKd77yM5LiN5YWB6K645YiG6LSmCjE5MTIzMjgwODUxNTU2NjM4NzR8MjAyNTA0MjExMzQzNTcyMDkyMDA1MTkxODR8MjAyNTA0MTYxMDExNTkyMDg1MDE4NDc2Njd8bnVsbHwwfHx8MnxvcmdSZXNwVHJhY2VOdW3vvJoyMDI1MDQxNzA5MzcwNjIwODUwMTUxNTIzNeaXoOe7k+eul+mHkemine+8jOS4jeWFgeiuuOWIhui0pgoxOTEyMzI4Mjk4ODk3Mzk1NzE0fDIwMjUwNDIxMTM0MzU3MjA5MjAwNTE5MTg1fDIwMjUwNDE2MTAxMjUwMjA4NTAxODQ3NzY0fG51bGx8MHx8fDJ8b3JnUmVzcFRyYWNlTnVt77yaMjAyNTA0MTcwOTM3MDYyMDg1MDE4NDUyMzfml6Dnu5Pnrpfph5Hpop3vvIzkuI3lhYHorrjliIbotKYK";
@@ -357,6 +370,46 @@ public class DivisionTask {
                 DivisionFileParse divisionFileParse = new DivisionFileParse();
                 String[] split = line.split("\\|");
                 divisionFileParse.setOrderId(Long.valueOf(split[0]));
+                Integer orderState = Integer.valueOf(split[7]);
+                if (orderState.equals(1)) {
+                    // 交易成功
+                    String orderAmount = split[3];
+                    Money divide = new Money(orderAmount).divide(new BigDecimal(100));
+                    divisionFileParse.setAmount(divide);
+                } else if (orderState.equals(2)) {
+                    // 交易失败
+                    String failReason = split[8];
+                    divisionFileParse.setFailReason(failReason);
+                } else {
+                    // 处理中
+                }
+                divisionFileParse.setTradeStatus(orderState);
+                result.add(divisionFileParse);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
+    public static void main(String[] args) {
+        String file = "MTkyMjYyODgxODU4OTUwMzQ5MHwyMDI1MDUyNDA5NTAwMDIwOTIwMDMzODY0MXwyMDI1MDUyMzA5NDQ0OTIwODUwMTY0NjY1MXxudWxsfDB8fHwyfG9yZ1Jlc3BUcmFjZU51be+8mjIwMjUwNTIzMDk0NDQ5MjA4NTAxNjQ2NjUx5YiG6LSm5qCH6K+G6Z2e5b6F5YiG6LSmCg==";
+        byte[] decodedBytes = Base64.getDecoder().decode(file);
+        List<DivisionFileParse> result = new ArrayList<>();
+
+        try (InputStream inputStream = new ByteArrayInputStream(decodedBytes);
+             InputStreamReader isr = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+             BufferedReader reader = new BufferedReader(isr)) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println("读取到一行: " + line);
+                DivisionFileParse divisionFileParse = new DivisionFileParse();
+                String[] split = line.split("\\|");
+                divisionFileParse.setOrderId(Long.valueOf(split[0]));
+
+
                 if (StringUtils.hasText(split[3])) {
                     Money divide = new Money(split[3]).divide(new BigDecimal(100));
                     divisionFileParse.setAmount(divide);
@@ -370,8 +423,8 @@ public class DivisionTask {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
     }
+
 
     @Data
     static class DivisionFileParse {
@@ -388,7 +441,17 @@ public class DivisionTask {
          * 失败原因
          */
         private String failReason;
-
+        /**
+         * 渠道订单号
+         */
+        private String channelOrderId;
+        /**
+         * 渠道原订单号
+         */
+        private String channelOriginalOrderId;
+        /**
+         * 订单金额
+         */
         private Money amount;
     }
 }

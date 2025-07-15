@@ -59,7 +59,7 @@ public class TongLianClient {
         assert result != null;
         Response response = new Response();
         JsonNode jsonNode = JsonUtil.readTree(result);
-        if (jsonNode.get("code").asText().equals("00000")) {
+        if ("00000".equals(jsonNode.get("code").asText())) {
             JsonNode bizData = JsonUtil.readTree(jsonNode.get("bizData").asText());
             List<String> successCode = Arrays.asList("66666", "00000");
             if (successCode.contains(bizData.get("respCode").asText())) {

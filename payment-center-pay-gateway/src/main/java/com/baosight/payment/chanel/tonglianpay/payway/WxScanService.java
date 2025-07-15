@@ -1,5 +1,6 @@
 package com.baosight.payment.chanel.tonglianpay.payway;
 
+import cn.hutool.core.text.StrFormatter;
 import com.baosight.common.exception.ServiceException;
 import com.baosight.distributedid.toolkit.SnowflakeIdUtil;
 import com.baosight.payment.access.tl.model.TongLianIsvConfigDAO;
@@ -45,6 +46,13 @@ public class WxScanService implements IPaymentService {
 
     @Value("${pay.tl_url}")
     private String tlUrl;
+
+    @Value("${pay.server}")
+    private String serverIp;
+
+    @Value("${pay.client}")
+    private String clientIp;
+
 
     /**
      * 获取到接口code
@@ -93,9 +101,20 @@ public class WxScanService implements IPaymentService {
             // 获取用户信息
             TongLianClient.SendBuild sendBuild = new TongLianClient.SendBuild(SnowflakeIdUtil.nextId(), "2085", map);
             TongLianClient tongLianClient = new TongLianClient(isvConfig);
-            TongLianClient.Response response = tongLianClient.sendRequest(sendBuild, tlUrl);
-            // TODO 记录调用信息
+            TongLianClient.Response response = projectInfo.hasDev() ? new TongLianClient.Response() : tongLianClient.sendRequest(sendBuild, tlUrl);
             log.info("通联支付响应: {}", response);
+            if (projectInfo.hasDev()) {
+                response.setSuccess(Boolean.TRUE);
+                String respTraceNum = SnowflakeIdUtil.nextIdStr();
+                String format = StrFormatter.format(serverIp + "/pay/pay.html?ip={}&orderId={}&reqOrderId={}&mchId={}", clientIp, respTraceNum, createOrder.getOrderId(), mchInfo.getId());
+                Map<String, Object> responseMap = new HashMap<>();
+                responseMap.put("respTraceNum", respTraceNum);
+                Map<String, Object> channelInfoParam = new HashMap<>();
+                channelInfoParam.put("chnlPayInfo", format);
+                responseMap.put("chnlFrontParamInfo", JsonUtil.toJson(channelInfoParam));
+                response.setResult(JsonUtil.readTree(JsonUtil.toJson(responseMap)));
+            }
+
             if (Boolean.TRUE.equals(response.getSuccess())) {
                 // 支付中
                 result.setChannelState(ChannelState.PROCESSING.getCode());
