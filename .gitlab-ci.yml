@@ -3,62 +3,23 @@ stages:
   - package
   - upload
 
-variables:
-  PROJECT_NAME: myapp
-  IMAGE_TAG: $CI_COMMIT_SHORT_SHA
-  IMAGE_FILE: $PROJECT_NAME-$CI_COMMIT_SHORT_SHA.tar
-  MINIO_ENDPOINT: http://10.125.123.1:8000
-  MINIO_BUCKET: project
-  MINIO_ALIAS: minio
-  MINIO_PATH: $MINIO_BUCKET/$PROJECT_NAME/
-  MINIO_ACCESS_KEY: XIUwEanTcEtnhRLn8zGw
-  MINIO_SECRET_KEY: oChE7enH39GwQaxBRP8n3sc2UFueqdEkOrNOEJjS
-before_script:
-  - echo "Start pipeline for commit: $CI_COMMIT_MESSAGE"
-
-build:
+build-job:
   stage: build
-  only:
-    refs:
-      - dev
-    variables:
-      - $CI_COMMIT_MESSAGE =~ /(feat|fix)/
   script:
-    - mvn clean package -DskipTests
-    - docker build -t $PROJECT_NAME:$IMAGE_TAG .
+    - echo "构建项目"
+    - echo "Commit Message:$CI_COMMIT_MESSAGE"
+    - echo "Compile complete."
+    - echo "Commit message:$CI_COMMIT_MESSAGE"
 
-package:
+
+package-job:
   stage: package
-  only:
-    refs:
-      - dev
-    variables:
-      - $CI_COMMIT_MESSAGE =~ /(feat|fix)/
   script:
-    - docker save $PROJECT_NAME:$IMAGE_TAG -o $IMAGE_FILE
-    - ls -lh $IMAGE_FILE
+    - echo "打包项目"
+    - echo "打包中...."
 
-upload:
+upload-job:
   stage: upload
-  only:
-    refs:
-      - dev
-    variables:
-      - $CI_COMMIT_MESSAGE =~ /(feat|fix)/
   script:
-    # 安装 MinIO CLI
-    - curl -sLO https://dl.min.io/client/mc/release/linux-amd64/mc
-    - chmod +x mc && mv mc /usr/local/bin/mc
-
-    # 设置认证（不需要匿名！）
-    - mc alias set $MINIO_ALIAS $MINIO_ENDPOINT $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
-
-    # 确保 bucket 存在
-    - mc mb --ignore-existing $MINIO_ALIAS/$MINIO_BUCKET
-
-    # 上传镜像 tar 文件
-    - mc cp $IMAGE_FILE $MINIO_ALIAS/$MINIO_BUCKET/$PROJECT_NAME/
-
-    # 列出上传结果
-    - mc ls $MINIO_ALIAS/$MINIO_BUCKET/$PROJECT_NAME/
-
+    - echo "上传项目"
+    - echo "上传中"
