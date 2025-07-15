@@ -13,8 +13,9 @@ variables:
   MINIO_PATH: $MINIO_BUCKET/$PROJECT_NAME/
   MINIO_ACCESS_KEY: XIUwEanTcEtnhRLn8zGw
   MINIO_SECRET_KEY: oChE7enH39GwQaxBRP8n3sc2UFueqdEkOrNOEJjS
+  
 before_script:
-  - echo "Start pipeline for commit: $CI_COMMIT_MESSAGE"
+  echo "Start pipeline for commit: $CI_COMMIT_MESSAGE"
 
 build:
   stage: build
