@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.baosight.payment</groupId>
-    <artifactId>payment-center</artifactId>
+    <artifactId>payment-center-pom</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
     <modules>
         <module>payment-center-system</module>
-        <module>payment-center-service</module>
+        <module>payment-center</module>
         <module>payment-center-common</module>
         <module>payment-center-mch</module>
         <module>payment-center-access</module>
