@@ -42,6 +42,7 @@ pipeline {
     stage('Build') {
       steps {
         script {
+          sh "ls -al"
           sh "cd ${env.SCOPE}"
           sh "ls -al"
           sh 'mvn clean package -DskipTests'
