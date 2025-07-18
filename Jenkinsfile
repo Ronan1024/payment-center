@@ -66,16 +66,18 @@ pipeline {
     stage('Build Docker') {
       steps {
         script {
-          def imageName = "${env.PROJECT_NAME}:${env.PROJECT_VERSION}"
-          def imageTar = "${env.PROJECT_NAME}.tar"
-          sh "ls -al"
-          sh "docker build -t ${imageName} ."
+          dir("${env.SCOPE}") {
+            def imageName = "${env.PROJECT_NAME}:${env.PROJECT_VERSION}"
+            def imageTar = "${env.PROJECT_NAME}.tar"
+            sh "ls -al"
+            sh "docker build -t ${imageName} ."
 
-          sh "docker save -o ${imageTar} ${imageName}"
-          sh """
-            /var/jenkins_home/tool/mc alias set minio ${env.MINIO_ENDPOINT} ${env.ACCESS_KEY} ${env.SECRET_KEY}
-            /var/jenkins_home/tool/mc cp ./${imageTar} minio/${env.BUCKET}/saas/backend/docker/${env.PROJECT_VERSION}/${imageTar}
-          """
+            sh "docker save -o ${imageTar} ${imageName}"
+            sh """
+              /var/jenkins_home/tool/mc alias set minio ${env.MINIO_ENDPOINT} ${env.ACCESS_KEY} ${env.SECRET_KEY}
+              /var/jenkins_home/tool/mc cp ./${imageTar} minio/${env.BUCKET}/saas/backend/docker/${env.PROJECT_VERSION}/${imageTar}
+            """
+          }
         }
       }
     }
