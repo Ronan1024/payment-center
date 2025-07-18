@@ -43,6 +43,7 @@ pipeline {
       steps {
         script {
           sh "ls -al"
+          sh "mvn clean install"
           dir("${env.SCOPE}") {
             sh "ls -al"
             sh 'mvn clean package -DskipTests'
