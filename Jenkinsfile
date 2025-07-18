@@ -43,20 +43,21 @@ pipeline {
       steps {
         script {
           sh "ls -al"
-          sh "cd ${env.SCOPE}"
-          sh "ls -al"
-          sh 'mvn clean package -DskipTests'
-          def artifactId = sh(script: "mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout", returnStdout: true).trim()
-          def version = sh(script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout", returnStdout: true).trim()
-          env.PROJECT_VERSION = version
-          env.PROJECT_NAME = artifactId
-          def jarName = "${artifactId}.jar"
-          def uploadUrl = "${env.MINIO_ENDPOINT}/${env.BUCKET}/saas/jar/${version}/${jarName}"
-          echo "Uploading ${jarName} to ${uploadUrl}"
-          sh """
-            /var/jenkins_home/tool/mc alias set minio ${env.MINIO_ENDPOINT} ${env.ACCESS_KEY} ${env.SECRET_KEY}
-            /var/jenkins_home/tool/mc cp target/${jarName} minio/${env.BUCKET}/saas/backend/jar/${version}/${jarName}
-          """
+          dir("${env.SCOPE}") {
+            sh "ls -al"
+            sh 'mvn clean package -DskipTests'
+            def artifactId = sh(script: "mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout", returnStdout: true).trim()
+            def version = sh(script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout", returnStdout: true).trim()
+            env.PROJECT_VERSION = version
+            env.PROJECT_NAME = artifactId
+            def jarName = "${artifactId}.jar"
+            def uploadUrl = "${env.MINIO_ENDPOINT}/${env.BUCKET}/saas/jar/${version}/${jarName}"
+            echo "Uploading ${jarName} to ${uploadUrl}"
+            sh """
+              /var/jenkins_home/tool/mc alias set minio ${env.MINIO_ENDPOINT} ${env.ACCESS_KEY} ${env.SECRET_KEY}
+              /var/jenkins_home/tool/mc cp target/${jarName} minio/${env.BUCKET}/saas/backend/jar/${version}/${jarName}
+            """
+          }
         }
       }
     }
