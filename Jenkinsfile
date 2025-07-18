@@ -1,0 +1,80 @@
+pipeline {
+  agent any
+
+  tools {
+    maven 'maven3'
+  }
+  environment {
+    MR_TITLE = "${gitlabMergeRequestTitle}"
+    MINIO_ENDPOINT = "http://10.125.123.1:8000"
+    BUCKET         = "project"
+    ACCESS_KEY     = "upload"
+    SECRET_KEY     = "UAnRGYKxAsgEM73wV1j30PPyImffpEqprW1yvPDw"
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Extract Scope') {
+      steps {
+        script {
+          echo "Merge Request Title: ${MR_TITLE}"
+
+          def matcher = MR_TITLE =~ /(feat|fix)\(([^)]+)\):/
+          if (matcher.find()) {
+            def type = matcher[0][1]  // feat or fix
+            def scope = matcher[0][2] // xxx
+            echo "Type: ${type}, Scope: ${scope}"
+            env.SCOPE = scope
+          } else {
+            echo "Title does not match feat(xxx): or fix(xxx): format"
+            currentBuild.result = 'ABORTED'
+            error("Invalid MR title format.")
+          }
+        }
+      }
+    }
+
+    stage('Build') {
+      steps {
+        script {
+          sh "cd ${env.SCOPE}"
+          sh "ls -al"
+          sh 'mvn clean package -DskipTests'
+          def artifactId = sh(script: "mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout", returnStdout: true).trim()
+          def version = sh(script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout", returnStdout: true).trim()
+          env.PROJECT_VERSION = version
+          env.PROJECT_NAME = artifactId
+          def jarName = "${artifactId}.jar"
+          def uploadUrl = "${env.MINIO_ENDPOINT}/${env.BUCKET}/saas/jar/${version}/${jarName}"
+          echo "Uploading ${jarName} to ${uploadUrl}"
+          sh """
+            /var/jenkins_home/tool/mc alias set minio ${env.MINIO_ENDPOINT} ${env.ACCESS_KEY} ${env.SECRET_KEY}
+            /var/jenkins_home/tool/mc cp target/${jarName} minio/${env.BUCKET}/saas/backend/jar/${version}/${jarName}
+          """
+        }
+      }
+    }
+
+    stage('Build Docker') {
+      steps {
+        script {
+          def imageName = "${env.PROJECT_NAME}:${env.PROJECT_VERSION}"
+          def imageTar = "${env.PROJECT_NAME}.tar"
+          sh "ls -al"
+          sh "docker build -t ${imageName} ."
+
+          sh "docker save -o ${imageTar} ${imageName}"
+          sh """
+            /var/jenkins_home/tool/mc alias set minio ${env.MINIO_ENDPOINT} ${env.ACCESS_KEY} ${env.SECRET_KEY}
+            /var/jenkins_home/tool/mc cp ./${imageTar} minio/${env.BUCKET}/saas/backend/docker/${env.PROJECT_VERSION}/${imageTar}
+          """
+        }
+      }
+    }
+  }
+}

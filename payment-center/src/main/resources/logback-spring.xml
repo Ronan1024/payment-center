@@ -1,6 +1,6 @@
 <configuration scan="true" scanPeriod="60 seconds" debug="false">
     <springProperty scope="context" name="app.name" source="spring.application.name"/>
-    <property name="PROJECT_PATH" value="./${app.name}/log/"/>
+    <property name="PROJECT_PATH" value="./log/"/>
     <property name="LOG_FILE_MAX_HISTORY" value="30"/>
     <property name="LOG_FILE_MAX_SIZE" value="50MB"/>
 

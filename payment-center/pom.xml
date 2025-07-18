@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.baosight.payment</groupId>
-        <artifactId>payment-center</artifactId>
+        <artifactId>payment-center-pom</artifactId>
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>payment-center-service</artifactId>
+    <artifactId>payment-center</artifactId>
 
     <version>1.0.70-SNAPSHOT</version>
 
@@ -98,7 +98,7 @@
     </dependencies>
 
     <build>
-        <finalName>pay-service-${project.version}</finalName>
+        <finalName>${project.name}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
