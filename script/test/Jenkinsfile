@@ -84,7 +84,12 @@ pipeline {
     stage('RUN Docker') {
       steps {
         script {
-          sh "curl -H "Content-Type: application/json" -X POST -d '{"appName": "${env.PROJECT_NAME}","version": "${env.PROJECT_VERSION}"}'  http://10.125.123.11:6000/api/run"
+          sh """
+             curl -H "Content-Type: application/json" \
+               -X POST \
+               -d '{\"appName\": \"${env.PROJECT_NAME}\", \"version\": \"${env.PROJECT_VERSION}\"}' \
+               http://10.125.123.11:6000/api/run
+          """
         }
       }
     }
