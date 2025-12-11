@@ -1,6 +1,6 @@
 package com.baosight.payment.order.manager;
 
-import com.baosight.database.page.PageResponse;
+import com.baosight.database.core.page.PageResponse;
 import com.baosight.payment.order.api.vo.OrderVO;
 import com.baosight.payment.order.pojo.dto.PayOrderPageDTO;
 import com.baosight.payment.order.pojo.vo.PayOrderInfoVO;

@@ -2,8 +2,8 @@ package com.baosight.payment.order.manager.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baosight.database.page.PageResponse;
-import com.baosight.database.utils.PageUtil;
+import com.baosight.database.core.page.PageResponse;
+import com.baosight.database.core.page.PageUtil;
 import com.baosight.payment.annotation.Manager;
 import com.baosight.payment.enums.DivisionState;
 import com.baosight.payment.enums.PayOrderState;
@@ -74,8 +74,8 @@ public class PayOrderManagerImpl implements PayOrderManager {
     public Boolean updateOrderCheckState(List<Long> orderIdList) {
         int update = payOrderMapper.update(new LambdaUpdateWrapper<PayOrder>()
                 .in(PayOrder::getId, orderIdList)
-                .set(PayOrder::getState, PayOrderState.SUCCESS.getCode())
-                .set(PayOrder::getDivisionState, DivisionState.WAITING.getCode())
+                .set(PayOrder::getState, PayOrderState.SUCCESS.code())
+                .set(PayOrder::getDivisionState, DivisionState.WAITING.code())
         );
         return update == orderIdList.size();
     }

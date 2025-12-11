@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.baosight.payment</groupId>
         <artifactId>payment-center-pom</artifactId>
-        <version>1.0.0</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>pay-center-check</artifactId>
@@ -19,10 +19,11 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.baosight.saas</groupId>
-            <artifactId>saas-common-auth</artifactId>
-        </dependency>
+<!--    <dependencies>-->
+<!--        <dependency>-->
+<!--            <groupId>com.baosight.saas</groupId>-->
+<!--            <artifactId>saas-common-auth</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-common</artifactId>
@@ -83,7 +84,6 @@
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>pay-center-settlement</artifactId>
-            <version>1.0.0</version>
         </dependency>
     </dependencies>
 </project>

@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.baosight.payment</groupId>
         <artifactId>payment-center-pom</artifactId>
-        <version>1.0.0</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>payment-center-notify</artifactId>
@@ -19,10 +19,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>com.baosight.saas</groupId>
-            <artifactId>saas-common-auth</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.baosight.saas</groupId>-->
+<!--            <artifactId>saas-common-auth</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-common</artifactId>
@@ -39,12 +39,12 @@
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-mch-api</artifactId>
-            <version>1.0.0</version>
+            <version>${payment-center-api.version}</version>
         </dependency>
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-isv-api</artifactId>
-            <version>1.0.0</version>
+            <version>${payment-center-api.version}</version>
         </dependency>
         <dependency>
             <groupId>com.baosight.mq.rocket</groupId>
@@ -63,13 +63,17 @@
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-order-api</artifactId>
-            <version>1.0.0</version>
+            <version>${payment-center-api.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-settlement-api</artifactId>
-            <version>1.0.0</version>
+            <version>${payment-center-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baosight.framework.database</groupId>
+            <artifactId>database-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>com.xuxueli</groupId>

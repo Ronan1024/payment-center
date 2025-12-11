@@ -64,7 +64,7 @@ public class DivisionTask {
     public void orderDivisionHandler() {
         log.info("开始执行分账任务");
         List<PayOrder> orderList = payOrderMapper.selectList(new LambdaQueryWrapper<PayOrder>()
-                .eq(PayOrder::getDivisionState, DivisionState.WAITING.getCode())
+                .eq(PayOrder::getDivisionState, DivisionState.WAITING.code())
                 .eq(PayOrder::getHasDivision, Boolean.TRUE)
                 .le(PayOrder::getDivisionValidTime, new Date())
         );
@@ -76,7 +76,7 @@ public class DivisionTask {
             String format = DateUtil.format(new Date(), DatePattern.NORM_DATE_PATTERN);
             List<Long> orderIdList = v.stream().map(PayOrder::getId).toList();
             OrderDivisionBatch orderDivisionBatch = new OrderDivisionBatch();
-            orderDivisionBatch.setDivisionState(DivisionState.WAITING.getCode());
+            orderDivisionBatch.setDivisionState(DivisionState.WAITING.code());
             orderDivisionBatch.setClientId(k);
             orderDivisionBatch.setDate(format);
             orderDivisionBatchMapper.insert(orderDivisionBatch);
@@ -96,7 +96,7 @@ public class DivisionTask {
                 subAccountInfo.setOrgRespTraceNum(e.getChannelOrderNo());
                 return subAccountInfo.toString();
             }).toList();
-            TongLianIsvAndMchConfigDAO tongLianIsvAndMchConfigDAO = mchAppConfigApi.tongLianIsvAndMchConfig(null, PayInterfaceCode.TONG_LIAN_PAY.getCode(), k);
+            TongLianIsvAndMchConfigDAO tongLianIsvAndMchConfigDAO = mchAppConfigApi.tongLianIsvAndMchConfig(null, PayInterfaceCode.TONG_LIAN_PAY.code(), k);
             map.put("batchNo", String.valueOf(orderDivisionBatch.getId()));
             String string = writeListToByteString(list);
             log.info("分账文件数据: {}", string);
@@ -115,12 +115,12 @@ public class DivisionTask {
             log.info("分账返回结果 : {}", response.getResult());
             log.info("分账请求返回结果信息:{}", response);
             if (Boolean.TRUE.equals(response.getSuccess())) {
-                orderDivisionBatch.setDivisionState(DivisionState.DIVISION_ING.getCode());
+                orderDivisionBatch.setDivisionState(DivisionState.DIVISION_ING.code());
                 v.forEach(e -> {
                     OrderDivisionRecord divisionRecord = new OrderDivisionRecord();
                     divisionRecord.setOrderId(e.getId());
                     divisionRecord.setBatchId(orderDivisionBatch.getId());
-                    divisionRecord.setState(DivisionState.DIVISION_ING.getCode());
+                    divisionRecord.setState(DivisionState.DIVISION_ING.code());
                     divisionRecord.setDate(format);
                     divisionRecord.setChannelOrderId(e.getChannelOrderNo());
                     orderDivisionRecordMapper.insert(divisionRecord);
@@ -128,14 +128,14 @@ public class DivisionTask {
                 });
                 payOrderMapper.update(new LambdaUpdateWrapper<PayOrder>()
                         .in(PayOrder::getId, orderIdList)
-                        .set(PayOrder::getDivisionState, DivisionState.DIVISION_ING.getCode()));
+                        .set(PayOrder::getDivisionState, DivisionState.DIVISION_ING.code()));
                 log.info("分账成功");
             } else {
-                orderDivisionBatch.setDivisionState(DivisionState.DIVISION_FAILURE.getCode());
+                orderDivisionBatch.setDivisionState(DivisionState.DIVISION_FAILURE.code());
                 orderDivisionBatch.setFailMsg(response.getErrorMsg());
                 payOrderMapper.update(new LambdaUpdateWrapper<PayOrder>()
                         .in(PayOrder::getId, orderIdList)
-                        .set(PayOrder::getDivisionState, DivisionState.DIVISION_FAILURE.getCode()));
+                        .set(PayOrder::getDivisionState, DivisionState.DIVISION_FAILURE.code()));
                 log.info("分账失败");
             }
             orderDivisionBatchMapper.updateById(orderDivisionBatch);
@@ -157,7 +157,7 @@ public class DivisionTask {
             batchIdList = Arrays.stream(param.split(",")).map(Long::valueOf).toList();
         }
         List<OrderDivisionBatch> orderDivisionBatcheList = orderDivisionBatchMapper.selectList(new LambdaQueryWrapper<OrderDivisionBatch>()
-                .eq(OrderDivisionBatch::getDivisionState, DivisionState.CHANNEL_HANDLER_SUCCESS.getCode())
+                .eq(OrderDivisionBatch::getDivisionState, DivisionState.CHANNEL_HANDLER_SUCCESS.code())
                 .in(!ObjectUtils.isEmpty(batchIdList), OrderDivisionBatch::getId, batchIdList));
 
         if (CollectionUtils.isEmpty(orderDivisionBatcheList)) {
@@ -166,7 +166,7 @@ public class DivisionTask {
 
         // 开始处理
         orderDivisionBatcheList.forEach(e -> {
-            TongLianIsvAndMchConfigDAO tongLianIsvAndMchConfigDAO = mchAppConfigApi.tongLianIsvAndMchConfig(null, PayInterfaceCode.TONG_LIAN_PAY.getCode(), e.getClientId());
+            TongLianIsvAndMchConfigDAO tongLianIsvAndMchConfigDAO = mchAppConfigApi.tongLianIsvAndMchConfig(null, PayInterfaceCode.TONG_LIAN_PAY.code(), e.getClientId());
             TongLianClient tongLianClient = new TongLianClient(tongLianIsvAndMchConfigDAO.isvConfig());
             Map<String, Object> map = new HashMap<>();
             map.put("batchNo", String.valueOf(e.getId()));
@@ -207,7 +207,7 @@ public class DivisionTask {
                         if (!CollectionUtils.isEmpty(successOrderList)) {
                             orderDivisionRecordMapper.update(new LambdaUpdateWrapper<OrderDivisionRecord>()
                                     .in(OrderDivisionRecord::getOrderId, successOrderList)
-                                    .set(OrderDivisionRecord::getState, DivisionState.DIVISION_SUCCESS.getCode())
+                                    .set(OrderDivisionRecord::getState, DivisionState.DIVISION_SUCCESS.code())
                             );
                             List<PayOrder> payOrders = payOrderMapper.selectByIds(successOrderList);
                             Map<Long, List<PayOrder>> collect = payOrders.stream().collect(Collectors.groupingBy(PayOrder::getMchId));
@@ -215,10 +215,10 @@ public class DivisionTask {
                             collect.forEach((k, v) -> {
                                 payOrderMapper.update(new LambdaUpdateWrapper<PayOrder>()
                                         .in(PayOrder::getId, v.stream().map(PayOrder::getId).toList())
-                                        .set(PayOrder::getDivisionState, DivisionState.DIVISION_SUCCESS.getCode())
+                                        .set(PayOrder::getDivisionState, DivisionState.DIVISION_SUCCESS.code())
                                 );
                                 MchAccountDTO mchAccountDTO = new MchAccountDTO();
-                                mchAccountDTO.setType(AccountType.SUCCESS.getCode());
+                                mchAccountDTO.setType(AccountType.SUCCESS.code());
                                 mchAccountDTO.setMchId(k);
                                 List<Money> list = v.stream().map(order -> {
                                     DivisionFileParse divisionFileParse = parseMap.get(order.getId());
@@ -231,7 +231,7 @@ public class DivisionTask {
                             if (account && CollectionUtils.isEmpty(failOrderList)) {
                                 orderDivisionBatchMapper.update(new LambdaUpdateWrapper<OrderDivisionBatch>()
                                         .eq(OrderDivisionBatch::getId, e.getId())
-                                        .set(OrderDivisionBatch::getDivisionState, DivisionState.DIVISION_SUCCESS.getCode())
+                                        .set(OrderDivisionBatch::getDivisionState, DivisionState.DIVISION_SUCCESS.code())
                                 );
                             }
                         }
@@ -239,13 +239,13 @@ public class DivisionTask {
                             failOrderList.forEach((k, v) -> {
                                 orderDivisionRecordMapper.update(new LambdaUpdateWrapper<OrderDivisionRecord>()
                                         .eq(OrderDivisionRecord::getOrderId, k)
-                                        .set(OrderDivisionRecord::getState, DivisionState.DIVISION_FAILURE.getCode())
+                                        .set(OrderDivisionRecord::getState, DivisionState.DIVISION_FAILURE.code())
                                         .set(OrderDivisionRecord::getErrMsg, v)
                                 );
                             });
                             payOrderMapper.update(new LambdaUpdateWrapper<PayOrder>()
                                     .in(PayOrder::getId, failOrderList.keySet())
-                                    .set(PayOrder::getDivisionState, DivisionState.DIVISION_FAILURE.getCode())
+                                    .set(PayOrder::getDivisionState, DivisionState.DIVISION_FAILURE.code())
                             );
                         }
                     }

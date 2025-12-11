@@ -46,7 +46,7 @@ public class PayOrderServiceManagerImpl implements PayOrderServiceManager {
         //发送商户通知
         PayOrderNotifyDTO payOrderNotifyDTO = new PayOrderNotifyDTO();
         payOrderNotifyDTO.setNotifyUrl(notifyUrl);
-        payOrderNotifyDTO.setOrderType(notifyType.getCode());
+        payOrderNotifyDTO.setOrderType(notifyType.code());
         payOrderNotifyDTO.setOrderId(payOrderId);
         payOrderNotifyDTO.setMchId(mchId);
         payOrderNotifyDTO.setAppId(appId);

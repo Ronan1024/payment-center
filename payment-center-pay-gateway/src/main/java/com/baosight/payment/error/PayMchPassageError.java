@@ -1,9 +1,9 @@
 package com.baosight.payment.error;
 
-import com.baosight.utils.enums.IBaseEnum;
+import com.baosight.web.core.exception.IErrorEnum;
 
 
-public enum PayMchPassageError implements IBaseEnum<String> {
+public enum PayMchPassageError implements IErrorEnum<String> {
     /**
      * 商户应用不支持该支付方式
      */

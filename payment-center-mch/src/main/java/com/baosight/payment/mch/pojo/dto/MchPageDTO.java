@@ -1,6 +1,7 @@
 package com.baosight.payment.mch.pojo.dto;
 
-import com.baosight.database.page.PageRequest;
+
+import com.baosight.database.core.page.PageRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

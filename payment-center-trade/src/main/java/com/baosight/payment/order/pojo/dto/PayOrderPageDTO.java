@@ -1,7 +1,7 @@
 package com.baosight.payment.order.pojo.dto;
 
-import com.baosight.database.page.PageRequest;
-import com.baosight.web.serializer.CustomLongSerializer;
+import com.baosight.database.core.page.PageRequest;
+import com.baosight.web.core.serializer.CustomLongSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

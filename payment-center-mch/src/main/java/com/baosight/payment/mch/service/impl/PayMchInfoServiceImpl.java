@@ -2,8 +2,8 @@ package com.baosight.payment.mch.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.baosight.database.page.PageResponse;
-import com.baosight.database.utils.PageUtil;
+import com.baosight.database.core.page.PageResponse;
+import com.baosight.database.core.page.PageUtil;
 import com.baosight.distributedid.toolkit.SnowflakeIdUtil;
 import com.baosight.payment.enums.MchType;
 import com.baosight.payment.isv.api.IsvInfoApi;
@@ -18,9 +18,8 @@ import com.baosight.payment.mch.pojo.vo.PayMchInfoVO;
 import com.baosight.payment.mch.pojo.vo.PayMchListVO;
 import com.baosight.payment.mch.service.PayMchInfoService;
 import com.baosight.payment.utils.IdGenUtil;
-import com.baosight.saas.context.SystemUserContext;
 import com.baosight.utils.utils.Assert;
-import com.baosight.web.exception.ApiException;
+import com.baosight.web.core.exception.ApiException;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -55,10 +54,10 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
         PageResponse<PayMchListVO> build = pageUtil.builder(payMchInfoMapper.page(pageUtil.Page(), mchPage)).build();
         List<PayMchListVO> list = build.getList();
         if (!CollectionUtils.isEmpty(list)) {
-            List<Long> isvId = list.stream().filter(e -> e.getType().equals(MchType.SUB_MERCHANT.getCode())).map(PayMchListVO::getIsvId).toList();
+            List<Long> isvId = list.stream().filter(e -> e.getType().equals(MchType.SUB_MERCHANT.code())).map(PayMchListVO::getIsvId).toList();
             List<IsvInfoVO> isvInfoVOList = isvInfoApi.isvInfoList(isvId);
             Map<Long, IsvInfoVO> isvInfoMap = isvInfoVOList.stream().collect(Collectors.toMap(IsvInfoVO::getId, e -> e));
-            list.stream().filter(e -> e.getType().equals(MchType.SUB_MERCHANT.getCode())).filter(e -> isvInfoMap.containsKey(e.getIsvId()))
+            list.stream().filter(e -> e.getType().equals(MchType.SUB_MERCHANT.code())).filter(e -> isvInfoMap.containsKey(e.getIsvId()))
                     .forEach(e -> {
                         IsvInfoVO isvInfoVO = isvInfoMap.get(e.getIsvId());
                         e.setIsvName(isvInfoVO.getName());
@@ -82,13 +81,14 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
                 .eq(PayMchInfo::getContactTel, mchInfoDTO.getContactTel()));
         Assert.notNull(payMchInfo, ApiException.supplier(MchError.MCH_INFO_EXIST));
         payMchInfo = PayMchInfoConvert.INSTANCE.toPayMchInfo(mchInfoDTO);
-        payMchInfo.setCreateBy(SystemUserContext.getUserId());
-        payMchInfo.setCreateByName(SystemUserContext.getUsername());
-        if (mchInfoDTO.getType().equals(MchType.MERCHANT.getCode())) {
+        //TODO 用户信息
+//        payMchInfo.setCreateBy(SystemUserContext.getUserId());
+//        payMchInfo.setCreateByName(SystemUserContext.getUsername());
+        if (mchInfoDTO.getType().equals(MchType.MERCHANT.code())) {
             payMchInfo.setIsvId(null);
         }
 
-        String prefix = mchInfoDTO.getType().equals(MchType.MERCHANT.getCode()) ? "N" : "S";
+        String prefix = mchInfoDTO.getType().equals(MchType.MERCHANT.code()) ? "N" : "S";
         String mchNo = IdGenUtil.generateId(SnowflakeIdUtil.nextId());
         payMchInfo.setMchNo(prefix + mchNo);
         return payMchInfoMapper.insert(payMchInfo) > 0;
@@ -99,7 +99,7 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
      * 处理特约商户
      */
     private final Consumer<MchInfoDTO> handlerSpecialMch = (e) -> {
-        if (e.getType().equals(MchType.SUB_MERCHANT.getCode())) {
+        if (e.getType().equals(MchType.SUB_MERCHANT.code())) {
             Assert.isNull(e.getIsvId(), ApiException.supplier(MchError.ISV_INFO_IS_NULL));
             IsvInfoVO isvInfoVO = isvInfoApi.isvInfoById(e.getIsvId());
             Assert.isNull(isvInfoVO, ApiException.supplier(MchError.ISV_INFO_IS_NULL));
@@ -115,7 +115,7 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
     public PayMchInfoVO info(Long id) {
         PayMchInfo payMchInfo = payMchInfoMapper.selectById(id);
         PayMchInfoVO result = PayMchInfoConvert.INSTANCE.toPayMchInfoVO(payMchInfo);
-        if (result.getType().equals(MchType.SUB_MERCHANT.getCode())) {
+        if (result.getType().equals(MchType.SUB_MERCHANT.code())) {
             IsvInfoVO isvInfoVO = isvInfoApi.isvInfoById(result.getIsvId());
             result.setIsvName(isvInfoVO.getName());
         }

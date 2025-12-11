@@ -45,7 +45,7 @@ public class TradingFlowManagerImpl extends ServiceImpl<TradingFlowMapper, Tradi
         Money multiply = money.multiply(channelCost);
         Money canSettleAmount = money.subtract(multiply);
         tradingFlow.setCanSettleAmount(canSettleAmount.multiply(100).getAmount().longValue());
-        tradingFlow.setState(TradingFlowState.PENDING.getCode());
+        tradingFlow.setState(TradingFlowState.PENDING.code());
         tradingFlow.setTradingState(registerTradingFlow.getTradingState());
         tradingFlow.setChannelMchNo(registerTradingFlow.getChannelMchNo());
         return tradingFlowMapper.insert(tradingFlow) > 0;

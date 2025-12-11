@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.baosight.saas.constant.LoginType.SYSTEM;
 
 /**
  * 平台通知记录管理
+ *
  * @program: payment-center
  * @description:
  * @author: L.J.Ran
@@ -19,7 +19,8 @@ import static com.baosight.saas.constant.LoginType.SYSTEM;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(SYSTEM + "/notify/record/manage")
+//@RequestMapping(SYSTEM + "/notify/record/manage")
+@RequestMapping("/notify/record/manage")
 public class SystemNotifyRecordController {
 
     private final PayMchNotifyRecordService payMchNotifyRecordService;

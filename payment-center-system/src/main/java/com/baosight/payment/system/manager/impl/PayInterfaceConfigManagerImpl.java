@@ -15,8 +15,6 @@ import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
 import com.baosight.payment.system.pojo.entity.PayTongLianRelevance;
 import com.baosight.payment.system.pojo.entity.PayWay;
 import com.baosight.payment.vo.MchInterfaceConfigVO;
-import com.baosight.saas.entity.DynamicForm;
-import com.baosight.utils.json.JsonUtil;
 import com.baosight.utils.stream.StreamBuild;
 import com.baosight.utils.utils.Assert;
 import com.baosight.utils.utils.ObjectUtils;
@@ -26,10 +24,10 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * @program: payment-center
@@ -54,7 +52,7 @@ public class PayInterfaceConfigManagerImpl implements PayInterfaceConfigManager 
     public int saveInterfaceConfig(PayInterfaceConfig payInterfaceConfig, List<PayWay> payWayList) {
         // 支付机构分组
         List<String> distinctList = StreamBuild.of(payWayList).map(PayWay::getPayingAgency).toDistinctList();
-        distinctList.stream().filter(e -> e.equals(PayingAgency.TONG_LIAN.getCode())).forEach(e -> {
+        distinctList.stream().filter(e -> e.equals(PayingAgency.TONG_LIAN.code())).forEach(e -> {
             PayTongLianRelevance payTongLianRelevance = payTongLianRelevanceMapper.selectOne(new LambdaQueryWrapper<PayTongLianRelevance>()
                     .eq(PayTongLianRelevance::getMchId, payInterfaceConfig.getClientId()));
             if (!ObjectUtils.isEmpty(payTongLianRelevance)) {
@@ -101,11 +99,13 @@ public class PayInterfaceConfigManagerImpl implements PayInterfaceConfigManager 
      */
     @Override
     public TongLianIsvConfigDAO tongLianIsvConfig(Long isvId, String interfaceCode, Long interfaceId) {
-        LambdaQueryWrapper<PayInterfaceConfig> queryWrapper = getConfigQueryWrapper(interfaceCode, interfaceId, isvId, PayClientType.SERVICE_PROVIDER.getCode());
+        LambdaQueryWrapper<PayInterfaceConfig> queryWrapper = getConfigQueryWrapper(interfaceCode, interfaceId, isvId, PayClientType.SERVICE_PROVIDER.code());
         PayInterfaceConfig payInterfaceConfig = payInterfaceConfigMapper.selectOne(queryWrapper);
-        List<DynamicForm> dynamicFormList = JsonUtil.parseArray(payInterfaceConfig.getInterfaceParams(), DynamicForm.class);
-        Map<String, Object> isv = dynamicFormList.stream().collect(Collectors.toMap(DynamicForm::getName, DynamicForm::getValue));
-        return JsonUtil.parse(JsonUtil.toJson(isv), TongLianIsvConfigDAO.class);
+        //TODO 根据接口参数动态生成配置
+//        List<DynamicForm> dynamicFormList = JsonUtil.parseArray(payInterfaceConfig.getInterfaceParams(), DynamicForm.class);
+//        Map<String, Object> isv = dynamicFormList.stream().collect(Collectors.toMap(DynamicForm::getName, DynamicForm::getValue));
+//        return JsonUtil.parse(JsonUtil.toJson(isv), TongLianIsvConfigDAO.class);
+        return null;
     }
 
     /**
@@ -120,11 +120,13 @@ public class PayInterfaceConfigManagerImpl implements PayInterfaceConfigManager 
         if (ObjectUtils.isEmpty(mchId)) {
             return null;
         }
-        LambdaQueryWrapper<PayInterfaceConfig> queryWrapper = getConfigQueryWrapper(interfaceCode, interfaceId, mchId, PayClientType.SUB_MERCHANT.getCode());
+        LambdaQueryWrapper<PayInterfaceConfig> queryWrapper = getConfigQueryWrapper(interfaceCode, interfaceId, mchId, PayClientType.SUB_MERCHANT.code());
         PayInterfaceConfig payInterfaceConfig = payInterfaceConfigMapper.selectOne(queryWrapper);
-        List<DynamicForm> dynamicFormList = JsonUtil.parseArray(payInterfaceConfig.getInterfaceParams(), DynamicForm.class);
-        Map<String, Object> mch = dynamicFormList.stream().collect(Collectors.toMap(DynamicForm::getName, DynamicForm::getValue));
-        return JsonUtil.parse(JsonUtil.toJson(mch), TongLianMchConfigDAO.class);
+        // TODO 根据接口参数动态生成配置
+//        List<DynamicForm> dynamicFormList = JsonUtil.parseArray(payInterfaceConfig.getInterfaceParams(), DynamicForm.class);
+//        Map<String, Object> mch = dynamicFormList.stream().collect(Collectors.toMap(DynamicForm::getName, DynamicForm::getValue));
+//        return JsonUtil.parse(JsonUtil.toJson(mch), TongLianMchConfigDAO.class);
+        return null;
     }
 
     /**
@@ -136,7 +138,7 @@ public class PayInterfaceConfigManagerImpl implements PayInterfaceConfigManager 
     public List<MchInterfaceConfigVO> mchConfig(String interfaceCode) {
         List<PayInterfaceConfig> payInterfaceConfigs = payInterfaceConfigMapper.selectList(new LambdaQueryWrapper<PayInterfaceConfig>()
                 .eq(PayInterfaceConfig::getInterfaceCode, interfaceCode)
-                .eq(PayInterfaceConfig::getClientType, PayClientType.SERVICE_PROVIDER.getCode())
+                .eq(PayInterfaceConfig::getClientType, PayClientType.SERVICE_PROVIDER.code())
         );
 
         if (CollectionUtils.isEmpty(payInterfaceConfigs)) {
@@ -191,8 +193,10 @@ public class PayInterfaceConfigManagerImpl implements PayInterfaceConfigManager 
 
 
     public final Function<String, Map<String, String>> parseInterfaceParam = e -> {
-        List<DynamicForm> dynamicFormList = JsonUtil.parseArray(e, DynamicForm.class);
-        return dynamicFormList.stream().collect(Collectors.toMap(DynamicForm::getName, va -> String.valueOf(va.getValue())));
+        // TODO 根据接口参数动态生成配置
+//        List<DynamicForm> dynamicFormList = JsonUtil.parseArray(e, DynamicForm.class);
+//        return dynamicFormList.stream().collect(Collectors.toMap(DynamicForm::getName, va -> String.valueOf(va.getValue())));
+        return new HashMap<>();
     };
 
 

@@ -1,6 +1,6 @@
 //package com.baosight.payment.controller;
 //
-//import com.baosight.database.page.PageResponse;
+//import com.baosight.database.core.page.PageResponse;
 //import com.baosight.payment.pojo.dto.CreateIsvDTO;
 //import com.baosight.payment.pojo.dto.IsvPageDTO;
 //import com.baosight.payment.pojo.vo.PayIsvInfoVO;

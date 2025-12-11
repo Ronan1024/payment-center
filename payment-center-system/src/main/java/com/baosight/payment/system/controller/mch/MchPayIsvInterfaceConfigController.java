@@ -7,8 +7,7 @@ import com.baosight.payment.system.pojo.vo.PayInterfaceConfigListVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigVO;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
 import com.baosight.payment.vo.MchInfoVO;
-import com.baosight.saas.context.SystemUserContext;
-import com.baosight.utils.enums.IBaseEnum;
+import com.ronan.common.enums.IBaseEnum;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.baosight.saas.constant.BaseUrlConstant.SYSTEM;
 
 /**
  * 商户支付配置控制器
@@ -25,7 +23,7 @@ import static com.baosight.saas.constant.BaseUrlConstant.SYSTEM;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(SYSTEM + "/mch/pay/isv/config/manage")
+@RequestMapping( "/mch/pay/isv/config/manage")
 public class MchPayIsvInterfaceConfigController {
     private final PayInterfaceConfigService payInterfaceConfigService;
     @Resource
@@ -40,7 +38,8 @@ public class MchPayIsvInterfaceConfigController {
     @GetMapping("/{interfaceId}")
     public PayInterfaceConfigVO getIsvConfigInfo(@PathVariable(value = "interfaceId") Long interfaceId) {
         // TODO 当前默认服务商 后期需要进行变更
-        Long companyId = SystemUserContext.getCompanyId();
+//        Long companyId = SystemUserContext.getCompanyId();
+        Long companyId = 0L;
         return payInterfaceConfigService.getConfigInfo(PayClientType.SERVICE_PROVIDER, companyId, interfaceId);
     }
 

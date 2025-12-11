@@ -1,7 +1,7 @@
 package com.baosight.payment.check.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baosight.database.base.BasePO;
+import com.baosight.database.mybatis.handler.BasePO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

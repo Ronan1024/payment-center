@@ -93,10 +93,10 @@ public class TlPayNoticeService implements IChannelNoticeService {
                 parseChannelParamDAO.setPayAgencyChannelOrder(channelParamInfo.get("chnlTrxid").asText());
                 parseChannelParamDAO.setChannelUserId(channelParamInfo.get("payAcctNo").asText());
                 if (channelParamInfo.get("chnlTransCode").asText().equals("VSP681")) {
-                    parseChannelParamDAO.setSubType(OrderSubType.WECHAT_PRE_CONSUMPTION.getCode());
+                    parseChannelParamDAO.setSubType(OrderSubType.WECHAT_PRE_CONSUMPTION.code());
                 }
                 if (channelParamInfo.get("chnlTransCode").asText().equals("VSP683")) {
-                    parseChannelParamDAO.setSubType(OrderSubType.WECHAT_ORDER_COMPLETED.getCode());
+                    parseChannelParamDAO.setSubType(OrderSubType.WECHAT_ORDER_COMPLETED.code());
                 }
                 if (channelParamInfo.has("chnlMchtNo") && channelParamInfo.get("chnlMchtNo").isTextual()) {
                     parseChannelParamDAO.setChannelMchNo(channelParamInfo.get("chnlMchtNo").asText());
@@ -105,7 +105,7 @@ public class TlPayNoticeService implements IChannelNoticeService {
 
             if (notifyParamJsonNode.get("transCode").equals("2085")) {
                 // 消费
-                parseChannelParamDAO.setType(OrderType.CONSUMPTION.getCode());
+                parseChannelParamDAO.setType(OrderType.CONSUMPTION.code());
             }
 
             return parseChannelParamDAO;
@@ -130,18 +130,18 @@ public class TlPayNoticeService implements IChannelNoticeService {
         result.setChannelErrMsg(params.getErrMsg());
         if (params.getChannelState().equals("1")) {
             result.setChannelState(ChannelState.SUCCESS.getCode());
-            if (params.getSubType().equals(OrderSubType.WECHAT_PRE_CONSUMPTION.getCode())) {
-                result.setPayOrderState(PayOrderState.PRE_CONSUMPTION.getCode());
+            if (params.getSubType().equals(OrderSubType.WECHAT_PRE_CONSUMPTION.code())) {
+                result.setPayOrderState(PayOrderState.PRE_CONSUMPTION.code());
             } else {
-                result.setPayOrderState(PayOrderState.SUCCESS.getCode());
+                result.setPayOrderState(PayOrderState.SUCCESS.code());
             }
         } else if (params.getChannelState().equals("2")) {
             result.setChannelState(ChannelState.FAIL.getCode());
-            result.setPayOrderState(PayOrderState.FAIL.getCode());
+            result.setPayOrderState(PayOrderState.FAIL.code());
             result.setChannelErrMsg(params.getErrMsg());
         } else {
             result.setChannelState(ChannelState.PROCESSING.getCode());
-            result.setPayOrderState(PayOrderState.PAYING.getCode());
+            result.setPayOrderState(PayOrderState.PAYING.code());
         }
         result.setChannelOrderNo(params.getChannelOrderId());
         result.setResponseEntity(textResp("success"));

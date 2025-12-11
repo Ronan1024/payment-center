@@ -26,7 +26,7 @@ import com.baosight.payment.vo.MchInfoVO;
 import com.baosight.spring.base.utils.ApplicationContextHolder;
 import com.baosight.utils.utils.Assert;
 import com.baosight.utils.utils.ObjectUtils;
-import com.baosight.web.exception.ApiException;
+import com.baosight.web.core.exception.ApiException;
 import com.baosight.web.properties.ProjectInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -89,10 +89,10 @@ public class DomainPayOrderServiceImpl implements DomainPayOrderService {
             String appNo = unifiedOrder.getAppId();
             MchInfoVO mchInfo = mchInfoApi.mchInfoBuMchNO(unifiedOrder.getMchId());
             Assert.isNull(mchInfo, ApiException.supplier(PayOrderError.MCH_NOT_FOUND));
-            Assert.isFalse(mchInfo.getState().equals(State.NORMAL.getCode()), ApiException.supplier(PayOrderError.MCH_STATUS_ERROR, mchInfo.getMchName()));
+            Assert.isFalse(mchInfo.getState().equals(State.NORMAL.code()), ApiException.supplier(PayOrderError.MCH_STATUS_ERROR, mchInfo.getMchName()));
             Long mchId = mchInfo.getId();
             MchAppInfoVO mchApp = mchAppConfigApi.mchApiInfo(mchInfo.getId(), appNo);
-            Assert.isTrue(mchApp == null || !mchApp.getState().equals(State.NORMAL.getCode()), ApiException.supplier(PayOrderError.APP_STATE_ERROR, mchApp.getAppName()));
+            Assert.isTrue(mchApp == null || !mchApp.getState().equals(State.NORMAL.code()), ApiException.supplier(PayOrderError.APP_STATE_ERROR, mchApp.getAppName()));
             // 只有新订单模式，进行校验
 //            if (isNewOrder) {
             int orderCount = orderApi.getPayOrderCount(mchId, unifiedOrder.getOutTradeNo());
@@ -236,7 +236,7 @@ public class DomainPayOrderServiceImpl implements DomainPayOrderService {
         // 查询查询订单详情
         payOrder = payOrderServiceManager.payOrderInfo(payOrder.getId());
         //设置订单状态
-        payOrder.setState(PayOrderState.SUCCESS.getCode());
+        payOrder.setState(PayOrderState.SUCCESS.code());
 
         //TODO 自动分账 处理逻辑， 不影响主订单任务
 //        this.updatePayOrderAutoDivision(payOrder);
@@ -268,7 +268,7 @@ public class DomainPayOrderServiceImpl implements DomainPayOrderService {
         } else {
             createOrderDTO.setMchFeeRate(0L);
         }
-        createOrderDTO.setState(PayOrderState.INIT.getCode());
+        createOrderDTO.setState(PayOrderState.INIT.code());
         createOrderDTO.setSubject(unifiedOrder.getSubject());
         createOrderDTO.setBody(unifiedOrder.getBody());
         // TODO 分账待处理 ： 是否参与分账 ，  订单分账模式， 订单分账状态
@@ -276,8 +276,8 @@ public class DomainPayOrderServiceImpl implements DomainPayOrderService {
         createOrderDTO.setHasDivision(Boolean.TRUE);
         createOrderDTO.setNotifyUrl(unifiedOrder.getNotifyUrl());
         createOrderDTO.setReturnUrl(unifiedOrder.getReturnUrl());
-        createOrderDTO.setType(OrderType.CONSUMPTION.getCode());
-        createOrderDTO.setProductType(ProductType.ONLINE_PAYMENT.getCode());
+        createOrderDTO.setType(OrderType.CONSUMPTION.code());
+        createOrderDTO.setProductType(ProductType.ONLINE_PAYMENT.code());
         Date nowDate = new Date();
         if (unifiedOrder.getExpiredTime() != null) {
             createOrderDTO.setExpiredTime(DateUtil.offsetSecond(nowDate, unifiedOrder.getExpiredTime()));
@@ -303,7 +303,7 @@ public class DomainPayOrderServiceImpl implements DomainPayOrderService {
 //        Assert.isFalse(paymentService.isSupport(wayCode), ApiException.supplier(PayOrderError.PAY_WAY_NOT_SUPPORT));
         // TODO 支付配置待处理
 //普通商户
-        if (Objects.equals(mchInfoVO.getType(), MchType.MERCHANT.getCode())) {
+        if (Objects.equals(mchInfoVO.getType(), MchType.MERCHANT.code())) {
 //            if (configContextQueryService.queryNormalMchParams(mchAppConfigContext.getMchNo(), mchAppConfigContext.getAppId(), ifCode) == null) {
 //                throw new BizException("商户应用参数未配置");
 //            }
@@ -345,7 +345,7 @@ public class DomainPayOrderServiceImpl implements DomainPayOrderService {
         // TODO 待记录上游返回结果信息
         //明确成功
         if (ChannelState.SUCCESS.getCode().equals(channelResult.getChannelState())) {
-            updateOrderState.setOrderState(PayOrderState.SUCCESS.getCode());
+            updateOrderState.setOrderState(PayOrderState.SUCCESS.code());
             orderApi.updateInitOrderStateThrowException(updateOrderState);
 
             //TODO 订单支付成功，其他业务逻辑
@@ -353,7 +353,7 @@ public class DomainPayOrderServiceImpl implements DomainPayOrderService {
 
             //明确失败
         } else if (ChannelState.FAIL.getCode() == channelResult.getChannelState()) {
-            updateOrderState.setOrderState(PayOrderState.FAIL.getCode());
+            updateOrderState.setOrderState(PayOrderState.FAIL.code());
 
             orderApi.updateInitOrderStateThrowException(updateOrderState);
 
@@ -362,9 +362,9 @@ public class DomainPayOrderServiceImpl implements DomainPayOrderService {
                 || ChannelState.UNKNOWN.getCode() == channelResult.getChannelState()
                 || ChannelState.CHANNEL_ERROR.getCode() == channelResult.getChannelState()) {
 
-            updateOrderState.setOrderState(PayOrderState.PAYING.getCode());
+            updateOrderState.setOrderState(PayOrderState.PAYING.code());
             orderApi.updateInitOrderStateThrowException(updateOrderState);
-            channelResult.setPayOrderState(PayOrderState.PAYING.getCode());
+            channelResult.setPayOrderState(PayOrderState.PAYING.code());
             // 系统异常：  订单不再处理。  为： 生成状态
         } else if (ChannelState.SYSTEM_ERROR.getCode() == channelResult.getChannelState()) {
 

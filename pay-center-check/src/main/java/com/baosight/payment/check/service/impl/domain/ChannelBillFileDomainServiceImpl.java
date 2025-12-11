@@ -1,7 +1,7 @@
 package com.baosight.payment.check.service.impl.domain;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.baosight.database.page.PageResponse;
+import com.baosight.database.core.page.PageResponse;
 import com.baosight.payment.check.manager.ChannelBillFileManager;
 import com.baosight.payment.check.mapper.ChannelBillFileMapper;
 import com.baosight.payment.check.pojo.dto.ChannelBillFilePageDTO;

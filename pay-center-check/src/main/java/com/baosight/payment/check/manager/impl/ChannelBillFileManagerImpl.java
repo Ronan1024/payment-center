@@ -1,7 +1,7 @@
 package com.baosight.payment.check.manager.impl;
 
-import com.baosight.database.page.PageResponse;
-import com.baosight.database.utils.PageUtil;
+import com.baosight.database.core.page.PageResponse;
+import com.baosight.database.core.page.PageUtil;
 import com.baosight.payment.annotation.Manager;
 import com.baosight.payment.check.convert.ChannelBillFileConvert;
 import com.baosight.payment.check.error.BillError;
@@ -11,7 +11,7 @@ import com.baosight.payment.check.pojo.dto.ChannelBillFilePageDTO;
 import com.baosight.payment.check.pojo.entity.ChannelBillFile;
 import com.baosight.payment.check.pojo.vo.ChannelBillFileVO;
 import com.baosight.utils.utils.Assert;
-import com.baosight.web.exception.ApiException;
+import com.baosight.web.core.exception.ApiException;
 import lombok.RequiredArgsConstructor;
 
 /**

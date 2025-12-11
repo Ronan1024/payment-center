@@ -78,7 +78,7 @@ public class MembershipAndAccountHandler {
         Map<String, String> map = new HashMap<>(3);
         map.put("reqTraceNum", String.valueOf(reqTraceNum));
         map.put("signNum", signNum);
-        map.put("infoType", String.valueOf(infoType.getCode()));
+        map.put("infoType", String.valueOf(infoType.code()));
         return new TongLianClient.SendBuild(reqTraceNum, transCode, JsonUtil.toJson(map));
     }
 

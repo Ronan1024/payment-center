@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.baosight.saas.constant.LoginType.SYSTEM;
 
 /**
  * @program: payment-center
@@ -14,7 +13,7 @@ import static com.baosight.saas.constant.LoginType.SYSTEM;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(SYSTEM + "/pm/mch/pay/passage/config/manage")
+@RequestMapping( "/pm/mch/pay/passage/config/manage")
 public class SystemMchPayPassageConfigController {
 
 

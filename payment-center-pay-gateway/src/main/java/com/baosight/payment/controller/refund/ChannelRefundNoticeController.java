@@ -14,8 +14,8 @@ import com.baosight.payment.pojo.entity.CallbackHandlerLog;
 import com.baosight.payment.pojo.vo.RefundOrderChannelHandlerResult;
 import com.baosight.payment.service.CallbackHandlerLogService;
 import com.baosight.spring.base.utils.ApplicationContextHolder;
-import com.baosight.utils.enums.IBaseEnum;
-import com.baosight.web.exception.ApiException;
+import com.baosight.web.core.exception.ApiException;
+import com.ronan.common.enums.IBaseEnum;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -162,9 +162,9 @@ public class ChannelRefundNoticeController {
         if (channelRetMsg.getChannelState() == ChannelState.SUCCESS.getCode()) {
             updateOrderSuccess = payRefundOrderServiceManager.updateRefundOrderState(updateRefundOrderState);
             // 通知商户系统
-            if (updateOrderSuccess && StringUtils.hasText(refundOrder.getNotifyUrl()) && updateRefundOrderState.getRefundState().equals(RefundOrderState.REFUNDED.getCode())) {
+            if (updateOrderSuccess && StringUtils.hasText(refundOrder.getNotifyUrl()) && updateRefundOrderState.getRefundState().equals(RefundOrderState.REFUNDED.code())) {
                 //发送商户通知
-                payOrderNotifyDTO.setOrderType(NotifyType.REFUND_SUCCESS.getCode());
+                payOrderNotifyDTO.setOrderType(NotifyType.REFUND_SUCCESS.code());
                 notifyApi.payOrderNotify(payOrderNotifyDTO);
             }
 
@@ -177,7 +177,7 @@ public class ChannelRefundNoticeController {
             // 通知商户系统
             if (StringUtils.hasText(refundOrder.getNotifyUrl())) {
                 //发送商户通知
-                payOrderNotifyDTO.setOrderType(NotifyType.REFUND_SUCCESS.getCode());
+                payOrderNotifyDTO.setOrderType(NotifyType.REFUND_SUCCESS.code());
                 notifyApi.payOrderNotify(payOrderNotifyDTO);
             }
         }

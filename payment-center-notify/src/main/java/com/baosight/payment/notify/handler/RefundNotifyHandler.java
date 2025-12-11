@@ -8,7 +8,7 @@ import com.baosight.payment.notify.pojo.dao.PayOrderNotifyDAO;
 import com.baosight.payment.notify.utils.OkHttp;
 import com.baosight.payment.order.api.RefundOrderApi;
 import com.baosight.payment.order.api.vo.PayRefundOrderVO;
-import com.baosight.utils.enums.IBaseEnum;
+import com.ronan.common.enums.IBaseEnum;
 import com.baosight.utils.json.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -72,6 +72,6 @@ public class RefundNotifyHandler implements INotifyHandler {
      */
     @Override
     public Boolean updateNotifySent(Long orderId, NotifyState notifyState, String notifyUrl) {
-        return refundOrderApi.updateNotifySent(orderId, notifyState.getCode());
+        return refundOrderApi.updateNotifySent(orderId, notifyState.code());
     }
 }

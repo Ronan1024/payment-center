@@ -1,6 +1,7 @@
 package com.baosight.payment.vo;
 
-import com.baosight.web.serializer.CustomLongSerializer;
+
+import com.baosight.web.core.serializer.CustomLongSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 

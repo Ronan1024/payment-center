@@ -32,7 +32,7 @@ public class PayMchPassageServiceImpl extends ServiceImpl<PayMchPassageMapper, P
     public List<PayMchPassage> getPayPassageByAppId(Long appId, Long mchId) {
         return payMchPassageMapper.selectList(new LambdaQueryWrapper<PayMchPassage>()
                 .eq(PayMchPassage::getMchId, mchId)
-                .eq(PayMchPassage::getState, State.NORMAL.getCode())
+                .eq(PayMchPassage::getState, State.NORMAL.code())
                 .eq(PayMchPassage::getAppId, appId)
         );
     }

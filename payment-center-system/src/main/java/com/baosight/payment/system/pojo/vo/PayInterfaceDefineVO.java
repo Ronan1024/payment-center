@@ -1,7 +1,6 @@
 package com.baosight.payment.system.pojo.vo;
 
-import com.baosight.saas.entity.DynamicForm;
-import com.baosight.web.serializer.CustomLongSerializer;
+import com.baosight.web.core.serializer.CustomLongSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
@@ -33,17 +32,17 @@ public class PayInterfaceDefineVO {
     /**
      * 服务商支付参数配置
      */
-    private List<DynamicForm> facilitatorParams;
+//    private List<DynamicForm> facilitatorParams;
 
     /**
      * 子商户支付参数配置
      */
-    private List<DynamicForm> subMchParams;
+//    private List<DynamicForm> subMchParams;
 
     /**
      * 普通商户支付参数配置
      */
-    private List<DynamicForm> normalMchParams;
+//    private List<DynamicForm> normalMchParams;
 
     /**
      * 备注

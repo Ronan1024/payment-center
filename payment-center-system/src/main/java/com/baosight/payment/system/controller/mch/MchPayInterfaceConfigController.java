@@ -8,8 +8,6 @@ import com.baosight.payment.system.pojo.vo.PayInterfaceDefineVO;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
 import com.baosight.payment.system.service.PayInterfaceDefineService;
 import com.baosight.payment.system.service.app.PayInterfaceConfigAppService;
-import com.baosight.saas.constant.BaseUrlConstant;
-import com.baosight.saas.context.SystemUserContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +22,7 @@ import java.util.Map;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(BaseUrlConstant.SYSTEM + "/isv/pay/interface/define")
+@RequestMapping( "/isv/pay/interface/define")
 public class MchPayInterfaceConfigController {
 
     private final PayInterfaceDefineService payInterfaceDefineService;
@@ -54,7 +52,9 @@ public class MchPayInterfaceConfigController {
     @GetMapping("/service/provider/list")
     public List<PayInterfaceDefineListVO> payInterfaceDefineList() {
         List<PayInterfaceDefineListVO> result = payInterfaceDefineService.getPayInterfaceDefineList(PayClientType.SERVICE_PROVIDER);
-        Long mchId = SystemUserContext.getCompanyId();
+//        Long mchId = SystemUserContext.getCompanyId();
+        // TODO 商户id
+        Long mchId = 0L;
         // 获取支付参数信息
         Map<Long, PayInterfaceConfig> payConfigurationMap = payInterfaceConfigService.getPayConfigurationMap(mchId);
         result.stream().filter(e -> payConfigurationMap.containsKey(e.getId())).forEach(e -> e.setEnable(Boolean.TRUE));

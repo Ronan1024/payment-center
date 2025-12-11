@@ -54,7 +54,7 @@ public class TongLianPayReconciliationManagerImpl implements TongLianPayReconcil
      */
     @Override
     public List<MchInterfaceConfigVO> tlPayMchConfigList() {
-        return mchAppConfigApi.isvConfig(PayInterfaceCode.TONG_LIAN_PAY.getCode());
+        return mchAppConfigApi.isvConfig(PayInterfaceCode.TONG_LIAN_PAY.code());
     }
 
     /**
@@ -104,7 +104,7 @@ public class TongLianPayReconciliationManagerImpl implements TongLianPayReconcil
                 parse(channelBill, e, date, mchInterfaceConfig);
                 channelBill.setBillFileId(nextedId);
                 channelBill.setBillFileCode(billFileCode);
-                channelBill.setBillState(ChannelBillHandlerState.PENDING.getCode());
+                channelBill.setBillState(ChannelBillHandlerState.PENDING.code());
                 channelBill.setChannelId(mchInterfaceConfig.getInterfaceId());
                 return channelBill;
             }).forEach(e -> {
@@ -141,7 +141,7 @@ public class TongLianPayReconciliationManagerImpl implements TongLianPayReconcil
         channelBill.setChannelOrderId(split[0]);
         //订单类型
         OrderType apply = orderTypeFunction.apply(split[1]);
-        String orderType = ObjectUtils.isEmpty(apply) ? "empty" : apply.getCode();
+        String orderType = ObjectUtils.isEmpty(apply) ? "empty" : apply.code();
         // TODO 需要根据具体的订单类型逻辑进行处理
         channelBill.setTradingState(2);
         channelBill.setTradeType(orderType);
@@ -158,7 +158,7 @@ public class TongLianPayReconciliationManagerImpl implements TongLianPayReconcil
         //原通联订单号 针对退款订单/提现退票订单，返回原通联订单号；单订单担保确认、单会员担保确认、批量分账的订单，返回原商户订单号；
         //(9) 支付模式：订单的支付模式，对应【支付模式】
         PayWayCode payWayCode = payType.apply(split[8]);
-        channelBill.setPayWay(payWayCode.getCode());
+        channelBill.setPayWay(payWayCode.code());
         //(10) 扩展参数：订单申请上送的“扩展参数-extendParams”信息，原样透传返回给商户；
         channelBill.setMeteDate(split[9]);
         //(11) 结算金额：通过【消费申请】的交易，该笔交易的结算金额；

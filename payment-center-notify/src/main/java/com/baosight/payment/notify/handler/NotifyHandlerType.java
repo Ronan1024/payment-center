@@ -1,7 +1,7 @@
 package com.baosight.payment.notify.handler;
 
 import com.baosight.payment.enums.NotifyType;
-import com.baosight.utils.enums.IBaseEnum;
+import com.ronan.common.enums.IBaseEnum;
 
 /**
  * @program: payment-center
@@ -13,16 +13,16 @@ public enum NotifyHandlerType implements IBaseEnum<Integer> {
     /**
      * 支付
      */
-    PAY(NotifyType.PAY_SUCCESS.getCode(), PayNotifyHandler.MARK),
+    PAY(NotifyType.PAY_SUCCESS.code(), PayNotifyHandler.MARK),
 
     /**
      * 退款
      */
-    REFUND(NotifyType.REFUND_SUCCESS.getCode(), RefundNotifyHandler.MARK),
+    REFUND(NotifyType.REFUND_SUCCESS.code(), RefundNotifyHandler.MARK),
     /**
      * 提现
      */
-    WITHDRAW(NotifyType.WITHDRAW_SUCCESS.getCode(), WithdrawNotifyHandler.MARK)
+    WITHDRAW(NotifyType.WITHDRAW_SUCCESS.code(), WithdrawNotifyHandler.MARK)
     ;
 
 

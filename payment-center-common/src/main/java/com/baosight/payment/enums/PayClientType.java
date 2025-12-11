@@ -1,6 +1,6 @@
 package com.baosight.payment.enums;
 
-import com.baosight.utils.enums.IBaseEnum;
+import com.ronan.common.enums.IBaseEnum;
 
 /**
  * @author L.J.Rab

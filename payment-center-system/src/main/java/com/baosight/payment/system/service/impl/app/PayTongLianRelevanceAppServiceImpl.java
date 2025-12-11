@@ -2,11 +2,11 @@ package com.baosight.payment.system.service.impl.app;
 
 import com.baosight.payment.annotation.ApplicationService;
 import com.baosight.payment.api.MchInfoApi;
+import com.baosight.payment.dao.TongLianIsvAndMchConfigDAO;
 import com.baosight.payment.enums.PayInterfaceCode;
 import com.baosight.payment.enums.PayingAgency;
 import com.baosight.payment.system.error.PayInterfaceConfigError;
 import com.baosight.payment.system.error.PayInterfaceError;
-import com.baosight.payment.dao.TongLianIsvAndMchConfigDAO;
 import com.baosight.payment.system.pojo.entity.PayInterfaceDefine;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigVO;
 import com.baosight.payment.system.pojo.vo.TongLianRelevanceVO;
@@ -16,7 +16,7 @@ import com.baosight.payment.system.service.PayTongLianRelevanceService;
 import com.baosight.payment.system.service.app.PayTongLianRelevanceAppService;
 import com.baosight.payment.vo.MchInfoVO;
 import com.baosight.utils.utils.Assert;
-import com.baosight.web.exception.ApiException;
+import com.baosight.web.core.exception.ApiException;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -75,7 +75,7 @@ public class PayTongLianRelevanceAppServiceImpl implements PayTongLianRelevanceA
      */
     @Override
     public String contractSign(Long mchId) {
-        PayInterfaceDefine payInterfaceDefine = payInterfaceDefineService.payInterfaceDefineByCode(PayInterfaceCode.TONG_LIAN_PAY.getCode());
+        PayInterfaceDefine payInterfaceDefine = payInterfaceDefineService.payInterfaceDefineByCode(PayInterfaceCode.TONG_LIAN_PAY.code());
         Assert.isNull(payInterfaceDefine, ApiException.supplier(PayInterfaceError.PAY_INTERFACE_CHANNEL_NOT_CONFIG));
         MchInfoVO mchInfoVO = mchInfoApi.mchInfo(mchId);
 
@@ -97,7 +97,7 @@ public class PayTongLianRelevanceAppServiceImpl implements PayTongLianRelevanceA
      */
     @Override
     public Boolean confirmBindPhone(Long mchId, String phone, String verifyCode) {
-        PayInterfaceDefine payInterfaceDefine = payInterfaceDefineService.payInterfaceDefineByCode(PayInterfaceCode.TONG_LIAN_PAY.getCode());
+        PayInterfaceDefine payInterfaceDefine = payInterfaceDefineService.payInterfaceDefineByCode(PayInterfaceCode.TONG_LIAN_PAY.code());
         Assert.isNull(payInterfaceDefine, ApiException.supplier(PayInterfaceError.PAY_INTERFACE_CHANNEL_NOT_CONFIG));
         TongLianIsvAndMchConfigDAO mchConfig = payInterfaceConfigService.getTongLianIsvAndMchConfig(mchId, payInterfaceDefine.getId());
         return payTongLianRelevanceService.confirmBindPhone(phone, mchId, verifyCode, mchConfig, Boolean.TRUE);

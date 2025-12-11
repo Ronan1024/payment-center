@@ -3,7 +3,7 @@ package com.baosight.payment.system.controller.system;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
 import com.baosight.payment.system.service.PayTongLianRelevanceService;
 import com.baosight.payment.system.service.app.PayTongLianRelevanceAppService;
-import com.baosight.utils.annotation.Mobile;
+import com.ronan.common.validation.annotation.Mobile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.baosight.saas.constant.BaseUrlConstant.SYSTEM;
 
 /**
  * @program: payment-center
@@ -21,7 +20,8 @@ import static com.baosight.saas.constant.BaseUrlConstant.SYSTEM;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(SYSTEM + "/pm/tl/relevance/manage")
+//@RequestMapping(SYSTEM + "/pm/tl/relevance/manage")
+@RequestMapping( "/pm/tl/relevance/manage")
 public class SystemPayTongLianRelevanceController {
 
     private final PayTongLianRelevanceService payTongLianRelevanceService;

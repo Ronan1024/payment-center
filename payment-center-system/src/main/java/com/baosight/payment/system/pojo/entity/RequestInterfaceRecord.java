@@ -3,7 +3,7 @@ package com.baosight.payment.system.pojo.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baosight.database.base.BasePO;
+import com.baosight.database.mybatis.handler.BasePO;
 import com.baosight.payment.enums.PayingAgency;
 import com.baosight.payment.enums.TongLianInterfaceCode;
 import com.baosight.payment.system.tonglian.TongLianClient;
@@ -57,7 +57,7 @@ public class RequestInterfaceRecord extends BasePO {
         RequestInterfaceRecord requestInterfaceRecord = new RequestInterfaceRecord();
         requestInterfaceRecord.setRequest(request);
         requestInterfaceRecord.setSuccess(response.getSuccess());
-        requestInterfaceRecord.setPayAgency(PayingAgency.TONG_LIAN.getCode());
+        requestInterfaceRecord.setPayAgency(PayingAgency.TONG_LIAN.code());
         requestInterfaceRecord.setInterfaceId(TongLianInterfaceCode.BIND_SYB.getCode());
         requestInterfaceRecord.setResponse(response.getResult().toString());
         return requestInterfaceRecord;

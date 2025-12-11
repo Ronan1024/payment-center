@@ -1,6 +1,6 @@
 package com.baosight.payment.system.error;
 
-import com.baosight.utils.enums.IBaseEnum;
+import com.ronan.common.enums.IBaseEnum;
 
 public enum PaymentError implements IBaseEnum<String> {
     /**

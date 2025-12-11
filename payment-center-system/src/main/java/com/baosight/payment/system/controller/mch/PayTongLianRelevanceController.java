@@ -6,17 +6,16 @@ import com.baosight.payment.system.pojo.vo.PayInterfaceConfigVO;
 import com.baosight.payment.system.pojo.vo.TongLianRelevanceVO;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
 import com.baosight.payment.system.service.PayTongLianRelevanceService;
-import com.baosight.saas.context.SystemUserContext;
-import com.baosight.utils.annotation.Mobile;
+import com.ronan.common.validation.annotation.Mobile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import static com.baosight.saas.constant.BaseUrlConstant.SYSTEM;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(SYSTEM + "/mch/tl/relevance/manage")
+//@RequestMapping(SYSTEM + "/mch/tl/relevance/manage")
+@RequestMapping("/mch/tl/relevance/manage")
 public class PayTongLianRelevanceController {
 
     private final PayTongLianRelevanceService payTongLianRelevanceService;
@@ -24,14 +23,18 @@ public class PayTongLianRelevanceController {
 
     @GetMapping("/info")
     public TongLianRelevanceVO relevanceInfo() {
-        Long mchId = SystemUserContext.getCompanyId();
+//        Long mchId = SystemUserContext.getCompanyId();
+        // TODO 商户id
+        Long mchId = 0L;
         return payTongLianRelevanceService.getRelevanceInfo(mchId);
     }
 
 
     @PostMapping("/bind/syb")
     public Boolean bindSyb() {
-        Long mchId = SystemUserContext.getCompanyId();
+        // TODO 商户id
+        Long mchId = 0L;
+//        Long mchId = SystemUserContext.getCompanyId();
         PayInterfaceConfigVO payInterfaceConfigVO = payInterfaceConfigService.getConfigInfo(mchId, PayingAgency.TONG_LIAN);
 //        return payTongLianRelevanceService.bindSybMerchantCode(mchId, payInterfaceConfigVO);
         return null;
@@ -42,7 +45,9 @@ public class PayTongLianRelevanceController {
      */
     @PostMapping("/bind/phone/{phone}/{hasLegalPerson}")
     public Boolean bindPhone(@PathVariable("phone") @Validated @Mobile String phone, @PathVariable("hasLegalPerson") Boolean hasLegalPerson) {
-        Long mchId = SystemUserContext.getCompanyId();
+//        Long mchId = SystemUserContext.getCompanyId();
+        // TODO 商户id
+        Long mchId = 0L;
         PayInterfaceConfigVO payInterfaceConfigVO = payInterfaceConfigService.getConfigInfo(mchId, PayingAgency.TONG_LIAN);
         return payTongLianRelevanceService.bindPhone(mchId, phone, payInterfaceConfigVO, hasLegalPerson);
     }
@@ -56,7 +61,9 @@ public class PayTongLianRelevanceController {
     @PostMapping("/bind/phone/confirm/{phone}/{verifyCode}")
     public Boolean confirmBindPhone(@PathVariable("phone") @Validated @Mobile String phone,
                                     @PathVariable("verifyCode") String verifyCode) {
-        Long mchId = SystemUserContext.getCompanyId();
+//        Long mchId = SystemUserContext.getCompanyId();
+        // TODO 商户id
+        Long mchId = 0L;
         PayInterfaceConfigVO payInterfaceConfigVO = payInterfaceConfigService.getConfigInfo(mchId, PayingAgency.TONG_LIAN);
         return payTongLianRelevanceService.confirmBindPhone(phone, mchId, verifyCode, payInterfaceConfigVO, Boolean.TRUE);
     }
@@ -66,7 +73,9 @@ public class PayTongLianRelevanceController {
      */
     @PostMapping("/contract/sign")
     public String contractSign(@RequestBody @Validated TongLianAgreementDTO tongLianAgreement) {
-        Long mchId = SystemUserContext.getCompanyId();
+//        Long mchId = SystemUserContext.getCompanyId();
+        // TODO 商户id
+        Long mchId = 0L;
         PayInterfaceConfigVO payInterfaceConfigVO = payInterfaceConfigService.getConfigInfo(mchId, PayingAgency.TONG_LIAN);
         return payTongLianRelevanceService.contractSign(mchId, payInterfaceConfigVO, tongLianAgreement);
     }

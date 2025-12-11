@@ -1,6 +1,6 @@
 //package com.baosight.payment.mch.controller;
 //
-//import com.baosight.database.page.PageResponse;
+//import com.baosight.database.core.page.PageResponse;
 //import com.baosight.payment.mch.pojo.dto.MchAppPageDTO;
 //import com.baosight.payment.mch.pojo.vo.MchAppVO;
 //import com.baosight.payment.mch.service.PayMchAppService;

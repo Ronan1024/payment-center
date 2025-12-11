@@ -1,6 +1,6 @@
 package com.baosight.payment.order.controller.system;
 
-import com.baosight.database.page.PageResponse;
+import com.baosight.database.core.page.PageResponse;
 import com.baosight.payment.order.pojo.dto.PayOrderPageDTO;
 import com.baosight.payment.order.pojo.vo.PayOrderInfoVO;
 import com.baosight.payment.order.pojo.vo.PayOrderPageVO;
@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import static com.baosight.saas.constant.LoginType.SYSTEM;
 
 /**
  * @program: payment-center
@@ -19,7 +18,8 @@ import static com.baosight.saas.constant.LoginType.SYSTEM;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(SYSTEM + "/pay/order/manage")
+//@RequestMapping(SYSTEM + "/pay/order/manage")
+@RequestMapping( "/pay/order/manage")
 public class SystemPayOrderController {
 
     private final TradingPayOrderAppService payOrderAppService;

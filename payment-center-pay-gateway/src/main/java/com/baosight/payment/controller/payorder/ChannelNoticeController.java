@@ -22,12 +22,12 @@ import com.baosight.payment.vo.IsvInterfaceConfigVO;
 import com.baosight.payment.vo.MchInfoVO;
 import com.baosight.payment.vo.MchInterfaceConfigVO;
 import com.baosight.spring.base.utils.ApplicationContextHolder;
-import com.baosight.utils.enums.IBaseEnum;
 import com.baosight.utils.json.JsonUtil;
 import com.baosight.utils.utils.Assert;
-import com.baosight.web.annotation.IgnoreHandlerResponse;
-import com.baosight.web.exception.ApiException;
+import com.baosight.web.core.advice.IgnoreHandlerResponse;
+import com.baosight.web.core.exception.ApiException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.ronan.common.enums.IBaseEnum;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -176,7 +176,7 @@ public class ChannelNoticeController {
             //默认更新成功
             boolean updateOrderSuccess = true;
             // 开始处理订单
-            if (payOrder.getState().equals(PayOrderState.PAYING.getCode()) || payOrder.getState().equals(PayOrderState.PRE_CONSUMPTION.getCode())) {
+            if (payOrder.getState().equals(PayOrderState.PAYING.code()) || payOrder.getState().equals(PayOrderState.PRE_CONSUMPTION.code())) {
                 UpdateOrderState updateOrderState = new UpdateOrderState();
                 updateOrderState.setOrderId(payOrderId);
                 updateOrderState.setOrderState(notifyResult.getPayOrderState());
@@ -238,7 +238,7 @@ public class ChannelNoticeController {
         payOrder = orderApi.orderInfo(payOrder.getId());
 
         //设置订单状态
-        payOrder.setState(PayOrderState.SUCCESS.getCode());
+        payOrder.setState(PayOrderState.SUCCESS.code());
 
         //TODO 自动分账 处理逻辑， 不影响主订单任务
 //        this.updatePayOrderAutoDivision(payOrder);
@@ -246,7 +246,7 @@ public class ChannelNoticeController {
         //发送商户通知
         PayOrderNotifyDTO payOrderNotifyDTO = new PayOrderNotifyDTO();
         payOrderNotifyDTO.setNotifyUrl(payOrder.getNotifyUrl());
-        payOrderNotifyDTO.setOrderType(NotifyType.PAY_SUCCESS.getCode());
+        payOrderNotifyDTO.setOrderType(NotifyType.PAY_SUCCESS.code());
         payOrderNotifyDTO.setOrderId(payOrder.getId());
         payOrderNotifyDTO.setMchId(payOrder.getMchId());
         payOrderNotifyDTO.setAppId(payOrder.getAppId());
@@ -300,7 +300,7 @@ public class ChannelNoticeController {
                 String signType = params.get("signtype");
                 boolean isSign = SybUtil.validSign(params, appPubKey, signType);
                 PayingAgency payingAgencyType = PayingAgency.byAgencyCode(payingAgency);
-                Assert.isFalse(isSign, ApiException.supplier(NoticeError.PARAMETER_CHECK_ERROR, payingAgencyType.getMsg()));
+                Assert.isFalse(isSign, ApiException.supplier(NoticeError.PARAMETER_CHECK_ERROR, payingAgencyType.desc()));
                 // 开始创建订单
                 CrCreateOrderDTO crCreateOrderDTO = new CrCreateOrderDTO();
                 crCreateOrderDTO.setChannelOrderNo(trxId);
@@ -317,20 +317,20 @@ public class ChannelNoticeController {
                 crCreateOrderDTO.setInterfaceCode(interfaceCode);
                 crCreateOrderDTO.setMchName(mchInfoVO.getMchName());
                 PayWayCode payWayCode = PayWayCode.payWayCode(payType);
-                crCreateOrderDTO.setWayCode(payWayCode.getCode());
+                crCreateOrderDTO.setWayCode(payWayCode.code());
                 crCreateOrderDTO.setMchFeeRate(mchInterfaceConfig.getMchFeeRate());
                 crCreateOrderDTO.setTotalAmount(jsonNode.get("amount").asLong());
                 crCreateOrderDTO.setPayAmount(jsonNode.get("amount").asLong());
                 crCreateOrderDTO.setPromotionAmount(0L);
                 crCreateOrderDTO.setChannelResult(data);
-                crCreateOrderDTO.setType(OrderType.CONSUMPTION.getCode());
-                crCreateOrderDTO.setSubType(OrderSubType.ORDER_COMPLETED.getCode());
-                crCreateOrderDTO.setProductType(ProductType.OFFLINE_PAYMENT.getCode());
+                crCreateOrderDTO.setType(OrderType.CONSUMPTION.code());
+                crCreateOrderDTO.setSubType(OrderSubType.ORDER_COMPLETED.code());
+                crCreateOrderDTO.setProductType(ProductType.OFFLINE_PAYMENT.code());
                 String tradeType = getTradeType(jsonNode.get("trxcode").asText());
                 crCreateOrderDTO.setTradeType(tradeType);
                 crCreateOrderDTO.setChannelMchNo(mchInterfaceConfig.getThirdCode());
                 // TODO 应用信息待处理
-                crCreateOrderDTO.setState(PayState.findState(jsonNode.get("trxstatus").asText()).getCode());
+                crCreateOrderDTO.setState(PayState.findState(jsonNode.get("trxstatus").asText()).code());
                 Boolean result = orderApi.qCrCreateOrder(crCreateOrderDTO);
                 callbackHandlerLog.setHasHandler(result);
             }
@@ -411,20 +411,20 @@ public class ChannelNoticeController {
                 crCreateOrderDTO.setInterfaceCode(interfaceCode);
                 crCreateOrderDTO.setMchName(mchInfoVO.getMchName());
                 PayWayCode payWayCode = PayWayCode.payWayCode(payType);
-                crCreateOrderDTO.setWayCode(payWayCode.getCode());
+                crCreateOrderDTO.setWayCode(payWayCode.code());
                 crCreateOrderDTO.setMchFeeRate(mchInterfaceConfig.getMchFeeRate());
                 crCreateOrderDTO.setTotalAmount(jsonNode.get("amount").asLong());
                 crCreateOrderDTO.setPayAmount(jsonNode.get("amount").asLong());
                 crCreateOrderDTO.setPromotionAmount(0L);
                 crCreateOrderDTO.setChannelResult(data);
-                crCreateOrderDTO.setType(OrderType.CONSUMPTION.getCode());
-                crCreateOrderDTO.setSubType(OrderSubType.ORDER_COMPLETED.getCode());
-                crCreateOrderDTO.setProductType(ProductType.OFFLINE_PAYMENT.getCode());
+                crCreateOrderDTO.setType(OrderType.CONSUMPTION.code());
+                crCreateOrderDTO.setSubType(OrderSubType.ORDER_COMPLETED.code());
+                crCreateOrderDTO.setProductType(ProductType.OFFLINE_PAYMENT.code());
                 crCreateOrderDTO.setChannelMchNo(mchInterfaceConfig.getThirdCode());
                 String tradeType = getTradeType(jsonNode.get("transaction_type").asText());
                 crCreateOrderDTO.setTradeType(tradeType);
                 // TODO 应用信息待处理
-                crCreateOrderDTO.setState(PayOrderState.SUCCESS.getCode());
+                crCreateOrderDTO.setState(PayOrderState.SUCCESS.code());
                 Boolean result = orderApi.qCrCreateOrder(crCreateOrderDTO);
                 callbackHandlerLog.setHasHandler(result);
             }
@@ -449,12 +449,12 @@ public class ChannelNoticeController {
     private static final Map<String, String> TRADE_TYPE_MAP = new HashMap<>();
 
     static {
-        TRADE_TYPE_MAP.put("VSP501", TradeType.WECHAT_PAY.getCode());
-        TRADE_TYPE_MAP.put("VSP502", TradeType.WECHAT_CANCEL.getCode());
-        TRADE_TYPE_MAP.put("VSP503", TradeType.WECHAT_REFUND.getCode());
-        TRADE_TYPE_MAP.put("VSP511", TradeType.ALIPAY_PAY.getCode());
-        TRADE_TYPE_MAP.put("VSP512", TradeType.ALIPAY_CANCEL.getCode());
-        TRADE_TYPE_MAP.put("VSP513", TradeType.ALIPAY_REFUND.getCode());
+        TRADE_TYPE_MAP.put("VSP501", TradeType.WECHAT_PAY.code());
+        TRADE_TYPE_MAP.put("VSP502", TradeType.WECHAT_CANCEL.code());
+        TRADE_TYPE_MAP.put("VSP503", TradeType.WECHAT_REFUND.code());
+        TRADE_TYPE_MAP.put("VSP511", TradeType.ALIPAY_PAY.code());
+        TRADE_TYPE_MAP.put("VSP512", TradeType.ALIPAY_CANCEL.code());
+        TRADE_TYPE_MAP.put("VSP513", TradeType.ALIPAY_REFUND.code());
 
     }
 

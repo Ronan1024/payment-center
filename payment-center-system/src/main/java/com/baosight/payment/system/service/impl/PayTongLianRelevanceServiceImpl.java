@@ -5,14 +5,14 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baosight.distributedid.toolkit.SnowflakeIdUtil;
 import com.baosight.payment.api.MchInfoApi;
+import com.baosight.payment.dao.TongLianIsvAndMchConfigDAO;
+import com.baosight.payment.dao.TongLianMchConfigDAO;
 import com.baosight.payment.enums.PayingAgency;
 import com.baosight.payment.system.constant.SystemConstant;
 import com.baosight.payment.system.error.PayingAgencyError;
 import com.baosight.payment.system.error.TongLianError;
 import com.baosight.payment.system.manager.PayTongLianRelevanceManager;
 import com.baosight.payment.system.mapper.PayTongLianRelevanceMapper;
-import com.baosight.payment.dao.TongLianIsvAndMchConfigDAO;
-import com.baosight.payment.dao.TongLianMchConfigDAO;
 import com.baosight.payment.system.pojo.dto.TongLianAgreementDTO;
 import com.baosight.payment.system.pojo.entity.PayTongLianRelevance;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigVO;
@@ -22,11 +22,9 @@ import com.baosight.payment.system.service.PayTongLianRelevanceService;
 import com.baosight.payment.system.tonglian.MembershipAndAccountHandler;
 import com.baosight.payment.system.tonglian.TongLianClient;
 import com.baosight.payment.vo.MchInfoVO;
-import com.baosight.saas.entity.DynamicForm;
-import com.baosight.utils.json.JsonUtil;
 import com.baosight.utils.utils.Assert;
 import com.baosight.utils.utils.ObjectUtils;
-import com.baosight.web.exception.ApiException;
+import com.baosight.web.core.exception.ApiException;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,10 +33,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * @author longjiangran
@@ -317,10 +312,12 @@ public class PayTongLianRelevanceServiceImpl extends ServiceImpl<PayTongLianRele
     }
 
     private TongLianMchConfigDAO handler(PayInterfaceConfigVO payInterfaceConfig) {
-        Assert.isFalse(!ObjectUtils.isEmpty(payInterfaceConfig) && payInterfaceConfig.getPayingAgency().equals(PayingAgency.TONG_LIAN.getCode()), ApiException.supplier(PayingAgencyError.PAYING_AGENCY_ERROR, PayingAgency.TONG_LIAN.getMsg()));
-        List<DynamicForm> interfaceParam = payInterfaceConfig.getInterfaceParam();
-        Map<String, Object> collect = interfaceParam.stream().collect(Collectors.toMap(DynamicForm::getName, DynamicForm::getValue));
-        return JsonUtil.parse(JsonUtil.toJson(collect), TongLianMchConfigDAO.class);
+        Assert.isFalse(!ObjectUtils.isEmpty(payInterfaceConfig) && payInterfaceConfig.getPayingAgency().equals(PayingAgency.TONG_LIAN.code()), ApiException.supplier(PayingAgencyError.PAYING_AGENCY_ERROR, PayingAgency.TONG_LIAN.desc()));
+        // TODO 待处理
+//        List<DynamicForm> interfaceParam = payInterfaceConfig.getInterfaceParam();
+//        Map<String, Object> collect = interfaceParam.stream().collect(Collectors.toMap(DynamicForm::getName, DynamicForm::getValue));
+//        return JsonUtil.parse(JsonUtil.toJson(collect), TongLianMchConfigDAO.class);
+        return null;
     }
 
 }

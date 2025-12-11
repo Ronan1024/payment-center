@@ -38,7 +38,7 @@ public class NotifyApiImpl implements NotifyApi {
         payMchNotifyRecord.setNotifyCountLimit(7);
         payMchNotifyRecord.setOrderId(payOrderNotifyDTO.getOrderId());
         payMchNotifyRecord.setOrderType(payOrderNotifyDTO.getOrderType());
-        payMchNotifyRecord.setState(NotifyState.NOTIFIED.getCode());
+        payMchNotifyRecord.setState(NotifyState.NOTIFIED.code());
         payMchNotifyRecord.setProductType(payOrderNotifyDTO.getProductType());
         payMchNotifyRecord.setNextNotifyTime(NotifyLevelConstant.getNotifyTime(new Date(), payMchNotifyRecord.getNotifyCount()));
         // TODO 处理商户号等问题

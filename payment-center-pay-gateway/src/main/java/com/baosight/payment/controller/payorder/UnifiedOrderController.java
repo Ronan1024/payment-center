@@ -5,7 +5,7 @@ import com.baosight.payment.model.order.UnifiedOrder;
 import com.baosight.payment.pojo.vo.UnifiedOrderResponse;
 import com.baosight.payment.service.domain.DomainPayOrderService;
 import com.baosight.utils.utils.Assert;
-import com.baosight.web.exception.ApiException;
+import com.baosight.web.core.exception.ApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;

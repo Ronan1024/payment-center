@@ -1,7 +1,7 @@
 package com.baosight.payment.check.service.domain;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.baosight.database.page.PageResponse;
+import com.baosight.database.core.page.PageResponse;
 import com.baosight.payment.check.pojo.dto.CheckBatchPageDTO;
 import com.baosight.payment.check.pojo.entity.CheckBatchRecord;
 import com.baosight.payment.check.pojo.vo.CheckBatchListVO;

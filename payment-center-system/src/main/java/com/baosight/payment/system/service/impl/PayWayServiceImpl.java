@@ -2,8 +2,8 @@ package com.baosight.payment.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.baosight.database.page.PageResponse;
-import com.baosight.database.utils.PageUtil;
+import com.baosight.database.core.page.PageResponse;
+import com.baosight.database.core.page.PageUtil;
 import com.baosight.payment.api.MchInfoApi;
 import com.baosight.payment.enums.PayingAgency;
 import com.baosight.payment.system.convert.PayWayConvert;
@@ -15,10 +15,9 @@ import com.baosight.payment.system.pojo.entity.PayWay;
 import com.baosight.payment.system.pojo.vo.PayWayPageVO;
 import com.baosight.payment.system.pojo.vo.PayWayVO;
 import com.baosight.payment.system.service.PayWayService;
-import com.baosight.saas.context.AbstractUserContext;
-import com.baosight.utils.enums.IBaseEnum;
 import com.baosight.utils.utils.Assert;
-import com.baosight.web.exception.ApiException;
+import com.baosight.web.core.exception.ApiException;
+import com.ronan.common.enums.IBaseEnum;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -46,7 +45,8 @@ public class PayWayServiceImpl extends ServiceImpl<PayWayMapper, PayWay> impleme
     public PageResponse<PayWayPageVO> pagePayWay(PayWayPageDTO payWayDTO) {
         PageUtil<PayWayPageVO> pageUtil = new PageUtil<>(payWayDTO);
         PageResponse<PayWayPageVO> build = pageUtil.builder(payWayMapper.page(pageUtil.Page(), payWayDTO)).build();
-        build.getList().forEach(e -> e.setPayingAgencyName(IBaseEnum.getMsg(PayingAgency.class, e.getPayingAgency())));
+        // 设置支付机构名称
+//        build.getList().forEach(e -> e.setPayingAgencyName(IBaseEnum.getMsg(PayingAgency.class, e.getPayingAgency())));
         return build;
     }
 
@@ -65,9 +65,10 @@ public class PayWayServiceImpl extends ServiceImpl<PayWayMapper, PayWay> impleme
         PayWay payWay = new PayWay();
         payWay.setPayCode(payWayDTO.getPayCode());
         payWay.setPayName(payWayDTO.getPayName());
-        payWay.setCreateByName(AbstractUserContext.getUsername());
-        payWay.setCreateBy(AbstractUserContext.getUserId());
-        payWay.setPayingAgency(payingAgency.getCode());
+        // TODO 设置创建人信息
+//        payWay.setCreateByName(AbstractUserContext.getUsername());
+//        payWay.setCreateBy(AbstractUserContext.getUserId());
+        payWay.setPayingAgency(payingAgency.code());
         payWay.setPayingClient(payWayDTO.getPayingClient());
         return payWayMapper.insert(payWay) > 0;
     }
@@ -91,9 +92,10 @@ public class PayWayServiceImpl extends ServiceImpl<PayWayMapper, PayWay> impleme
         Assert.isTrue(count > 0, () -> new ApiException(PayWayError.PAY_WAY_CODE_EXIST));
         payWay.setPayName(payWayDTO.getPayName());
         payWay.setPayCode(payWayDTO.getPayCode());
-        payWay.setUpdateBy(AbstractUserContext.getUserId());
-        payWay.setUpdateByName(AbstractUserContext.getUsername());
-        payWay.setPayingAgency(payingAgency.getCode());
+        // TODO 设置更新人信息
+//        payWay.setUpdateBy(AbstractUserContext.getUserId());
+//        payWay.setUpdateByName(AbstractUserContext.getUsername());
+        payWay.setPayingAgency(payingAgency.code());
         payWay.setPayingClient(payWayDTO.getPayingClient());
         return payWayMapper.updateById(payWay) > 0;
     }
@@ -136,7 +138,8 @@ public class PayWayServiceImpl extends ServiceImpl<PayWayMapper, PayWay> impleme
         PayWay payWay = payWayMapper.selectById(id);
         Assert.isNull(payWay, () -> new ApiException(PayWayError.PAY_WAY_NOT_FOUND));
         payWay.setDisable(!payWay.getDisable());
-        payWay.setUpdateBy(AbstractUserContext.getUserId());
+        // TODO 设置更新人信息
+//        payWay.setUpdateBy(AbstractUserContext.getUserId());
         return payWayMapper.updateById(payWay) > 0;
     }
 

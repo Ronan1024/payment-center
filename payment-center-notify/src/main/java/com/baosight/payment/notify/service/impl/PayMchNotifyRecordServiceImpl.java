@@ -72,14 +72,14 @@ public class PayMchNotifyRecordServiceImpl extends ServiceImpl<PayMchNotifyRecor
                 NotifyState state = notifyState.equals(NotifyState.SUCCESS) ? NotifyState.SUCCESS : NotifyState.FAIL;
 
                 NotifyResponseDAO dao = new NotifyResponseDAO()
-                        .setTime(new Date()).setState(state.getCode())
+                        .setTime(new Date()).setState(state.code())
                         .setNotifyUrl(url).setResResult(res).setIndex(notifyResponseDAOList.size() + 1);
 
                 notifyResponseDAOList.add(dao);
                 payMchNotifyRecord.setResResult(JsonUtil.toJson(notifyResponseDAOList));
             }
             payMchNotifyRecord.setLastNotifyTime(new Date());
-            payMchNotifyRecord.setState(notifyState.getCode());
+            payMchNotifyRecord.setState(notifyState.code());
             if (notifyState == NotifyState.NOTIFIED) {
                 // 修改下一次通知的时间
                 payMchNotifyRecord.setNextNotifyTime(NotifyLevelConstant.getNotifyTime(new Date(), payMchNotifyRecord.getNotifyCount()));

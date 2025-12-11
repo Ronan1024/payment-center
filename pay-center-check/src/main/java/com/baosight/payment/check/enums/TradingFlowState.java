@@ -1,6 +1,6 @@
 package com.baosight.payment.check.enums;
 
-import com.baosight.utils.enums.IBaseEnum;
+import com.ronan.common.enums.IBaseEnum;
 
 /**
  * 交易流水装状态

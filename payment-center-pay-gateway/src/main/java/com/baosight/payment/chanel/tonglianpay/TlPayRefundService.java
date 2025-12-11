@@ -48,7 +48,7 @@ public class TlPayRefundService implements IRefundService {
      **/
     @Override
     public String getInterfaceCode() {
-        return PayInterfaceCode.TONG_LIAN_PAY.getCode();
+        return PayInterfaceCode.TONG_LIAN_PAY.code();
     }
 
     /**
@@ -87,7 +87,7 @@ public class TlPayRefundService implements IRefundService {
             // 处理分账前退款与分账后退款
             Map<String, Object> sepRefundInfo = new HashMap<>();
             Long orderAmount = 0L;
-            if (Boolean.TRUE.equals(payOrder.getHasDivision()) && payOrder.getDivisionState().equals(DivisionState.DIVISION_ING.getCode())) {
+            if (Boolean.TRUE.equals(payOrder.getHasDivision()) && payOrder.getDivisionState().equals(DivisionState.DIVISION_ING.code())) {
                 // 分账退款
                 BigDecimal bigDecimal = new BigDecimal(10);
                 BigDecimal divide = new BigDecimal(120).divide(new BigDecimal(10000), 3, RoundingMode.HALF_UP);

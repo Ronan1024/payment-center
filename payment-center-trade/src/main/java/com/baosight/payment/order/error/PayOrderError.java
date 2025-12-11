@@ -1,7 +1,7 @@
 package com.baosight.payment.order.error;
 
 
-import com.baosight.utils.enums.IBaseEnum;
+import com.baosight.web.core.exception.IErrorEnum;
 
 /**
  * @program: payment-center
@@ -10,7 +10,7 @@ import com.baosight.utils.enums.IBaseEnum;
  * @create: 2025/3/24
  */
 
-public enum PayOrderError implements IBaseEnum<String> {
+public enum PayOrderError implements IErrorEnum<String> {
     /**
      * 订单不存在
      */

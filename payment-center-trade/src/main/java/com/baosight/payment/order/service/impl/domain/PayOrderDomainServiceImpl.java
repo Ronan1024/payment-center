@@ -8,7 +8,7 @@ import com.baosight.payment.order.mapper.PayOrderMapper;
 import com.baosight.payment.order.pojo.entity.PayOrder;
 import com.baosight.payment.order.service.domain.PayOrderDomainService;
 import com.baosight.utils.utils.Assert;
-import com.baosight.web.exception.ApiException;
+import com.baosight.web.core.exception.ApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;

@@ -1,8 +1,8 @@
 package com.baosight.payment.system.error;
 
-import com.baosight.utils.enums.IBaseEnum;
+import com.baosight.web.core.exception.IErrorEnum;
 
-public enum PayInterfaceError implements IBaseEnum<String> {
+public enum PayInterfaceError implements IErrorEnum<String> {
     /**
      * 支付接口名称已存在
      */

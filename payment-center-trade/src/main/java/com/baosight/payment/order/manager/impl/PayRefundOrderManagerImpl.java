@@ -122,7 +122,7 @@ public class PayRefundOrderManagerImpl implements PayRefundOrderManager {
         payRefundOrder.setSuccessTime(updateRefundOrderState.getFinishTime());
         boolean result = payRefundOrderMapper.updateById(payRefundOrder) > 0;
         if (result) {
-            if (updateRefundOrderState.getRefundState().equals(RefundOrderState.REFUND_FAILED.getCode())) {
+            if (updateRefundOrderState.getRefundState().equals(RefundOrderState.REFUND_FAILED.code())) {
                 PayOrder payOrder = payOrderMapper.selectById(payRefundOrder.getPayOrderId());
                 payOrder.setRefundTimes(payOrder.getRefundTimes() - 1);
                 payOrder.setRefundAmount(payOrder.getRefundAmount() - payRefundOrder.getRefundAmount());

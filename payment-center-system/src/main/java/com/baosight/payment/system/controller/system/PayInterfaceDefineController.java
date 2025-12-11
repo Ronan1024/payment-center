@@ -9,7 +9,6 @@ import com.baosight.payment.system.pojo.vo.PayInterfaceDefineVO;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
 import com.baosight.payment.system.service.PayInterfaceDefineService;
 import com.baosight.payment.system.service.PayWayService;
-import com.baosight.saas.constant.BaseUrlConstant;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -26,7 +25,8 @@ import java.util.function.BiConsumer;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(BaseUrlConstant.SYSTEM + "/pm/pay/interface/define")
+//@RequestMapping(BaseUrlConstant.SYSTEM + "/pm/pay/interface/define")
+@RequestMapping( "/pm/pay/interface/define")
 public class PayInterfaceDefineController {
 
     private final PayWayService payWayService;

@@ -1,6 +1,6 @@
 package com.baosight.payment.enums;
 
-import com.baosight.utils.enums.IBaseEnum;
+import com.ronan.common.enums.IBaseEnum;
 
 /**
  * 产品类型 以0开头3位类型

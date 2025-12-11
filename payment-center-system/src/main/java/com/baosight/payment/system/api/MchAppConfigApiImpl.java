@@ -17,17 +17,13 @@ import com.baosight.payment.vo.MchAppConfigInfoVO;
 import com.baosight.payment.vo.MchAppInfoVO;
 import com.baosight.payment.vo.MchInfoVO;
 import com.baosight.payment.vo.MchInterfaceConfigVO;
-import com.baosight.saas.entity.DynamicForm;
-import com.baosight.utils.json.JsonUtil;
-import com.baosight.web.exception.ApiException;
+import com.baosight.web.core.exception.ApiException;
 import com.baosight.web.properties.ProjectInfo;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -68,9 +64,11 @@ public class MchAppConfigApiImpl implements MchAppConfigApi {
     @Override
     public TongLianConfigVO tongLianConfig(Long mchNo) {
         PayInterfaceConfig interfaceConfig = payInterfaceConfigService.getIsvInterfaceConfig(mchNo);
-        List<DynamicForm> dynamicForms = JsonUtil.parseArray(interfaceConfig.getInterfaceParams(), DynamicForm.class);
-        Map<String, Object> collect = dynamicForms.stream().collect(Collectors.toMap(DynamicForm::getName, DynamicForm::getValue));
-        return JsonUtil.parse(JsonUtil.toJson(collect), TongLianConfigVO.class);
+        // TODO: 2021/11/17 通联配置信息获取
+//        List<DynamicForm> dynamicForms = JsonUtil.parseArray(interfaceConfig.getInterfaceParams(), DynamicForm.class);
+//        Map<String, Object> collect = dynamicForms.stream().collect(Collectors.toMap(DynamicForm::getName, DynamicForm::getValue));
+//        return JsonUtil.parse(JsonUtil.toJson(collect), TongLianConfigVO.class);
+        return null;
     }
 
     /**
@@ -112,7 +110,7 @@ public class MchAppConfigApiImpl implements MchAppConfigApi {
 
         long reqTraceNum = SnowflakeIdUtil.nextId();
         String signNum = String.valueOf(mchId);
-        TongLianIsvAndMchConfigDAO tongLianIsvAndMchConfigDAO = this.tongLianIsvAndMchConfig(mchId, PayInterfaceCode.TONG_LIAN_PAY.getCode(), mchInfoVO.getIsvId());
+        TongLianIsvAndMchConfigDAO tongLianIsvAndMchConfigDAO = this.tongLianIsvAndMchConfig(mchId, PayInterfaceCode.TONG_LIAN_PAY.code(), mchInfoVO.getIsvId());
         // 获取用户信息
         String url;
         if (!projectInfo.hasDev()) {

@@ -41,9 +41,9 @@ public interface PayInterfaceDefineConvert {
 
     @Mapping(target = "payWayList", ignore = true)
     @Mapping(target = "hasSubMch", source = "hasIsvMch")
-    @Mapping(target = "facilitatorParams", ignore = true)
-    @Mapping(target = "subMchParams", ignore = true)
-    @Mapping(target = "normalMchParams", ignore = true)
+//    @Mapping(target = "facilitatorParams", ignore = true)
+//    @Mapping(target = "subMchParams", ignore = true)
+//    @Mapping(target = "normalMchParams", ignore = true)
     PayInterfaceDefineVO toPayInterfaceDefineVO(PayInterfaceDefine payInterfaceDefine);
 
     @Mapping(target = "icon", ignore = true)

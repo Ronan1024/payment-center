@@ -1,6 +1,6 @@
 package com.baosight.payment.check.manager;
 
-import com.baosight.database.page.PageResponse;
+import com.baosight.database.core.page.PageResponse;
 import com.baosight.payment.check.pojo.dto.CheckBatchPageDTO;
 import com.baosight.payment.check.pojo.vo.CheckBatchListVO;
 

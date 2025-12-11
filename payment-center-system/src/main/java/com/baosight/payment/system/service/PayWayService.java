@@ -1,6 +1,6 @@
 package com.baosight.payment.system.service;
 
-import com.baosight.database.page.PageResponse;
+import com.baosight.database.core.page.PageResponse;
 import com.baosight.payment.system.pojo.dto.PayWayPageDTO;
 import com.baosight.payment.system.pojo.dto.SavePayWayDTO;
 import com.baosight.payment.system.pojo.entity.PayWay;

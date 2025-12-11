@@ -8,7 +8,7 @@ import com.baosight.payment.notify.pojo.dao.PayOrderNotifyDAO;
 import com.baosight.payment.notify.utils.OkHttp;
 import com.baosight.payment.order.api.OrderApi;
 import com.baosight.payment.order.api.vo.OrderVO;
-import com.baosight.utils.enums.IBaseEnum;
+import com.ronan.common.enums.IBaseEnum;
 import com.baosight.utils.json.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -72,6 +72,6 @@ public class PayNotifyHandler implements INotifyHandler {
      */
     @Override
     public Boolean updateNotifySent(Long orderId, NotifyState notifyState, String notifyUrl) {
-        return orderApi.updateNotifySent(orderId, notifyState.getCode(), notifyUrl);
+        return orderApi.updateNotifySent(orderId, notifyState.code(), notifyUrl);
     }
 }

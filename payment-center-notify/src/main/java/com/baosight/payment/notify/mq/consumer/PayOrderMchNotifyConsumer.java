@@ -10,7 +10,7 @@ import com.baosight.payment.notify.pojo.entity.PayMchNotifyRecord;
 import com.baosight.payment.notify.service.PayMchNotifyConfigService;
 import com.baosight.payment.notify.service.PayMchNotifyRecordService;
 import com.baosight.spring.base.utils.ApplicationContextHolder;
-import com.baosight.utils.enums.IBaseEnum;
+import com.ronan.common.enums.IBaseEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
@@ -40,7 +40,7 @@ public class PayOrderMchNotifyConsumer implements RocketMQListener<MessageWrappe
         Long notifyId = messageWrapper.getMessage();
         PayMchNotifyRecord record = payMchNotifyRecordService.infoId(notifyId);
         try {
-            if (record == null || record.getState() != NotifyState.NOTIFIED.getCode()) {
+            if (record == null || record.getState() != NotifyState.NOTIFIED.code()) {
                 log.error("查询通知记录不存在或状态不是通知中");
                 return;
             }
@@ -57,8 +57,8 @@ public class PayOrderMchNotifyConsumer implements RocketMQListener<MessageWrappe
                 notifyUrl = payMchNotifyConfigService.getMchNotifyUrl(record.getProductType(), record.getMchId(), record.getIsvId());
             }
             NotifyHandlerType notifyHandlerType = IBaseEnum.getByCode(NotifyHandlerType.class, record.getOrderType());
-            log.info("通知处理器：{}, 通知类型：{}", notifyHandlerType.getMsg(), record.getOrderType());
-            INotifyHandler notifyHandler = ApplicationContextHolder.getBean(notifyHandlerType.getMsg(), INotifyHandler.class);
+            log.info("通知处理器：{}, 通知类型：{}", notifyHandlerType.desc(), record.getOrderType());
+            INotifyHandler notifyHandler = ApplicationContextHolder.getBean(notifyHandlerType.desc(), INotifyHandler.class);
 
             // 通知状态修改为处理中
             if (currentCount == 1) {

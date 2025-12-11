@@ -97,7 +97,7 @@ public class OrderApiImpl implements OrderApi {
         if (save) {
             // 记录订单支付日志
             PayOrderNotifyDTO payOrderNotifyDTO = new PayOrderNotifyDTO();
-            payOrderNotifyDTO.setNotifyUrl(null).setOrderType(NotifyType.PAY_SUCCESS.getCode()).setOrderId(payOrder.getId())
+            payOrderNotifyDTO.setNotifyUrl(null).setOrderType(NotifyType.PAY_SUCCESS.code()).setOrderId(payOrder.getId())
                     .setMchId(payOrder.getMchId()).setIsvId(payOrder.getIsvId()).setAppId(payOrder.getAppId()).setProductType(payOrder.getProductType());
             notifyApi.payOrderNotify(payOrderNotifyDTO);
         }
@@ -217,7 +217,7 @@ public class OrderApiImpl implements OrderApi {
     public Boolean updateInitOrderStateThrowException(UpdateOrderState updateOrderState) {
         log.info("更新的数据: {}", updateOrderState);
         PayOrder payOrder = payOrderService.getById(updateOrderState.getOrderId());
-        if (!ObjectUtils.isEmpty(updateOrderState.getSubType()) && updateOrderState.getSubType().equals(OrderSubType.WECHAT_ORDER_COMPLETED.getCode())) {
+        if (!ObjectUtils.isEmpty(updateOrderState.getSubType()) && updateOrderState.getSubType().equals(OrderSubType.WECHAT_ORDER_COMPLETED.code())) {
             payOrder.setChannelOriginId(payOrder.getChannelOrderNo());
         }
         payOrder.setState(updateOrderState.getOrderState());
@@ -233,22 +233,22 @@ public class OrderApiImpl implements OrderApi {
         payOrder.setSubType(updateOrderState.getSubType());
         payOrder.setType(updateOrderState.getType());
         payOrder.setTradeMode(updateOrderState.getTradeMode());
-        if (updateOrderState.getOrderState().equals(PayOrderState.SUCCESS.getCode()) && payOrder.getSubType().equals(OrderSubType.WECHAT_ORDER_COMPLETED.getCode())) {
-            payOrder.setDivisionState(DivisionState.WAITING.getCode());
+        if (updateOrderState.getOrderState().equals(PayOrderState.SUCCESS.code()) && payOrder.getSubType().equals(OrderSubType.WECHAT_ORDER_COMPLETED.code())) {
+            payOrder.setDivisionState(DivisionState.WAITING.code());
             DateTime dateTime = DateUtil.offsetDay(new Date(), 1);
             payOrder.setDivisionValidTime(dateTime);
         }
 
 
         boolean result = payOrderService.updateById(payOrder);
-        if (result && (updateOrderState.getOrderState().equals(PayOrderState.SUCCESS.getCode()) || updateOrderState.getOrderState().equals(PayOrderState.PRE_CONSUMPTION.getCode()))) {
+        if (result && (updateOrderState.getOrderState().equals(PayOrderState.SUCCESS.code()) || updateOrderState.getOrderState().equals(PayOrderState.PRE_CONSUMPTION.code()))) {
             // 记录对账流水
             RegisterTradingFlowDTO registerTradingFlow = PayOrderConvert.INSTANCE.toRegisterTradingFlowDTO(payOrder);
             checkTradingFlowApi.registerTradingFlow(registerTradingFlow);
             // 创建结算受理单, 注册账期
             CreateSettlementRequestDTO createSettlementRequest = new CreateSettlementRequestDTO();
             //TODO 结算类型待处理
-            createSettlementRequest.setType(OrderType.CONSUMPTION.getCode());
+            createSettlementRequest.setType(OrderType.CONSUMPTION.code());
             createSettlementRequest.setFirmTime(updateOrderState.getFinishTime());
             BigDecimal divide = new BigDecimal(payOrder.getPayAmount()).divide(new BigDecimal(100), 2, RoundingMode.HALF_UP);
             createSettlementRequest.setAmount(new Money(divide));

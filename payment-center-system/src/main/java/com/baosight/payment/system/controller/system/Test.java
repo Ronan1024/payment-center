@@ -1,4 +1,4 @@
-package com.baosight.payment.system.controller;
+package com.baosight.payment.system.controller.system;
 
 import com.baosight.distributedid.toolkit.SnowflakeIdUtil;
 import com.baosight.payment.access.tl.model.TongLianIsvConfigDAO;
@@ -6,8 +6,11 @@ import com.baosight.payment.api.MchAppConfigApi;
 import com.baosight.payment.system.enums.TongLianInfoType;
 import com.baosight.payment.system.tonglian.MembershipAndAccountHandler;
 import com.baosight.payment.system.tonglian.TongLianClient;
+import com.baosight.saas.auth.context.UserContext;
+import com.baosight.saas.auth.model.PlatformUserInfo;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author: L.J.Ran
  * @create: 2025/4/22
  */
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping
@@ -26,7 +30,7 @@ public class Test {
     private final MchAppConfigApi mchAppConfigApi;
 
     @GetMapping("/test")
-    public Object test(){
+    public Object test() {
         JsonNode mchBankCardNo = mchAppConfigApi.getMchBankCardNo(1905630620138393601L);
 
         long nextId = SnowflakeIdUtil.nextId();
@@ -50,5 +54,12 @@ public class Test {
         System.out.println(ref.bankCardNo);
         return result;
 
+    }
+
+    @GetMapping("/test2")
+    public String test1() {
+        PlatformUserInfo platformUserInfo = UserContext.INSTANCE.userInfo();
+        log.info("user info: {}", platformUserInfo.toString());
+        return "ok";
     }
 }

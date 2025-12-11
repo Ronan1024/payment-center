@@ -56,7 +56,7 @@ public class WxMiniProgram implements IPaymentService {
      **/
     @Override
     public String getPayInterfaceCode() {
-        return PayInterfaceCode.TONG_LIAN_PAY.getCode();
+        return PayInterfaceCode.TONG_LIAN_PAY.code();
     }
 
 
@@ -72,7 +72,7 @@ public class WxMiniProgram implements IPaymentService {
         log.info("获取到请求参数：{}", unifiedOrder);
         TongLianIsvAndMchConfigDAO tongLianIsvAndMchConfigDAO = mchAppConfigApi.tongLianIsvAndMchConfig(mchInfo.getId(), createOrder.getIfCode(), mchInfo.getIsvId());
         WxMiniProgramDTO wxMiniProgramDTO = JsonUtil.parse(unifiedOrder.getChannelExtra(), WxMiniProgramDTO.class);
-        MchChannelCorrelationVO mchChannelCorrelationVO = mchChannelCorrelationApi.mchChannelCorrelation(mchInfo.getId(), ChannelType.WECHAT.getCode());
+        MchChannelCorrelationVO mchChannelCorrelationVO = mchChannelCorrelationApi.mchChannelCorrelation(mchInfo.getId(), ChannelType.WECHAT.code());
         TongLianMchConfigDAO mchConfig = tongLianIsvAndMchConfigDAO.mchConfig();
         TongLianIsvConfigDAO isvConfig = tongLianIsvAndMchConfigDAO.isvConfig();
         Map<String, Object> payModel = new HashMap<>();
@@ -99,8 +99,8 @@ public class WxMiniProgram implements IPaymentService {
         map.put("goodsName", unifiedOrder.getSubject());
         map.put("goodsDesc", unifiedOrder.getBody());
         OrderChannelHandlerResult result = new OrderChannelHandlerResult();
-        result.setTradeType(TradeType.WECHAT_PAY.getCode());
-        result.setTradeModel(TradeModel.WECHAT_MINI_PROGRAM.getCode());
+        result.setTradeType(TradeType.WECHAT_PAY.code());
+        result.setTradeModel(TradeModel.WECHAT_MINI_PROGRAM.code());
 
         try {
             // 获取用户信息
@@ -115,7 +115,7 @@ public class WxMiniProgram implements IPaymentService {
                 result.setChannelAttach(response.getResult().toString());
                 result.setChannelOrderNo(response.get("respTraceNum").asText());
                 result.setChannelMchNo(mchConfig.getSignNum());
-                result.setType(OrderType.CONSUMPTION.getCode());
+                result.setType(OrderType.CONSUMPTION.code());
                 TongLianResponse tongLianResponse = new TongLianResponse();
                 JsonNode frontParamInfo = JsonUtil.readTree(response.get("chnlFrontParamInfo").asText());
                 tongLianResponse.setUrl(frontParamInfo.get("chnlPayInfo").asText());
@@ -166,7 +166,7 @@ public class WxMiniProgram implements IPaymentService {
      */
     @Override
     public String payWayCode() {
-        return PayWayCode.TONG_LIAN_WX_MINI_PROGRAM.getCode();
+        return PayWayCode.TONG_LIAN_WX_MINI_PROGRAM.code();
     }
 
     /**

@@ -1,7 +1,7 @@
 package com.baosight.payment.settlement.error;
 
 
-import com.baosight.utils.enums.IBaseEnum;
+import com.baosight.web.core.exception.IErrorEnum;
 
 /**
  * @program: payment-center
@@ -9,7 +9,7 @@ import com.baosight.utils.enums.IBaseEnum;
  * @author: L.J.Ran
  * @create: 2025/4/21
  */
-public enum AccountError implements IBaseEnum<String> {
+public enum AccountError implements IErrorEnum<String> {
     /**
      * 商户账号不存在
      */

@@ -1,7 +1,7 @@
 package com.baosight.payment.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.baosight.database.page.PageResponse;
+import com.baosight.database.core.page.PageResponse;
 import com.baosight.payment.pojo.dto.CallbackHandlerLogDTO;
 import com.baosight.payment.pojo.entity.CallbackHandlerLog;
 import com.baosight.payment.pojo.vo.CallbackHandlerLogDetailVO;

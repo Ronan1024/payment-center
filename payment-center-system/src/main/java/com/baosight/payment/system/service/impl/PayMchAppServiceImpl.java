@@ -18,11 +18,9 @@ import com.baosight.payment.system.service.PayMchAppService;
 import com.baosight.payment.system.service.PayMchPassageService;
 import com.baosight.payment.vo.MchAppInfoVO;
 import com.baosight.payment.vo.MchInfoVO;
-import com.baosight.saas.context.AbstractUserContext;
-import com.baosight.saas.context.SystemUserContext;
 import com.baosight.utils.utils.Assert;
 import com.baosight.utils.utils.ObjectUtils;
-import com.baosight.web.exception.ApiException;
+import com.baosight.web.core.exception.ApiException;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -79,8 +77,9 @@ public class PayMchAppServiceImpl extends ServiceImpl<PayMchAppMapper, PayMchApp
             SECURE_RANDOM.nextBytes(randomBytes);
             payMchApp.setAppSecret(Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes).replace("-", ""));
             payMchApp.setAppCode(SnowflakeIdUtil.nextIdStr());
-            payMchApp.setCreateBy(AbstractUserContext.getUserId());
-            payMchApp.setCreatedByName(AbstractUserContext.getUsername());
+            // TODO 设置创建人信息
+//            payMchApp.setCreateBy(AbstractUserContext.getUserId());
+//            payMchApp.setCreatedByName(AbstractUserContext.getUsername());
             payMchApp.setRemark(createAppDTO.getRemark());
             payMchAppMapper.insert(payMchApp);
             // 处理支付渠道
@@ -111,7 +110,7 @@ public class PayMchAppServiceImpl extends ServiceImpl<PayMchAppMapper, PayMchApp
             return new HashSet<>(payWay).containsAll(list);
         }).toList();
         Map<Long, Long> map = new HashMap<>();
-        if (mchInfo.getType().equals(PayClientType.SUB_MERCHANT.getCode())) {
+        if (mchInfo.getType().equals(PayClientType.SUB_MERCHANT.code())) {
             List<Long> list = mchPayInterfaceConfigList.stream().map(PayInterfaceConfig::getInterfaceId).toList();
             List<PayInterfaceConfig> interfaceConfigList = payInterfaceConfigMapper.selectList(new LambdaQueryWrapper<PayInterfaceConfig>()
                     .in(PayInterfaceConfig::getInterfaceId, list)
@@ -132,13 +131,14 @@ public class PayMchAppServiceImpl extends ServiceImpl<PayMchAppMapper, PayMchApp
                 PayMchPassage payMchPassage = new PayMchPassage();
                 payMchPassage.setAppId(appId);
                 payMchPassage.setMchId(mchInfo.getId());
-                payMchPassage.setCreateBy(AbstractUserContext.getUserId());
+                // TODO 设置创建人信息
+//                payMchPassage.setCreateBy(AbstractUserContext.getUserId());
+//                payMchPassage.setCreateByName(AbstractUserContext.getUsername());
                 PayWay payWayEntity = payWayMap.get(way);
                 payMchPassage.setPayWayCode(payWayEntity.getPayCode());
                 payMchPassage.setPayWayId(payWayEntity.getId());
                 payMchPassage.setInterfaceId(e.getInterfaceId());
-                payMchPassage.setCreateByName(AbstractUserContext.getUsername());
-                payMchPassage.setState(State.NORMAL.getCode());
+                payMchPassage.setState(State.NORMAL.code());
                 payMchPassage.setInterfaceCode(e.getInterfaceCode());
                 Long rate = map.getOrDefault(e.getInterfaceId(), null);
                 payMchPassage.setRate(rate);
@@ -154,7 +154,9 @@ public class PayMchAppServiceImpl extends ServiceImpl<PayMchAppMapper, PayMchApp
      */
     @Override
     public MchPayAppInfoVO appInfoBySaasAppId(Integer appId) {
-        Long mchId = SystemUserContext.getCompanyId();
+//        Long mchId = SystemUserContext.getCompanyId();
+        // TODO 商户id
+        Long mchId = 0L;
         SaasAppPayRelevance saasAppPayRelevance = saasAppPayRelevanceMapper.selectOne(new LambdaQueryWrapper<SaasAppPayRelevance>()
                 .eq(SaasAppPayRelevance::getAppId, appId)
                 .eq(SaasAppPayRelevance::getMchId, mchId)
@@ -184,7 +186,9 @@ public class PayMchAppServiceImpl extends ServiceImpl<PayMchAppMapper, PayMchApp
      */
     @Override
     public Boolean saasCreateOrUpdate(CreateAppDTO create, Integer appId) {
-        Long mchId = SystemUserContext.getCompanyId();
+//        Long mchId = SystemUserContext.getCompanyId();
+        // TODO 商户id
+        Long mchId = 0L;
         SaasAppPayRelevance saasAppPayRelevance = saasAppPayRelevanceMapper.selectOne(new LambdaQueryWrapper<SaasAppPayRelevance>()
                 .eq(SaasAppPayRelevance::getAppId, appId)
                 .eq(SaasAppPayRelevance::getMchId, mchId));
@@ -262,7 +266,7 @@ public class PayMchAppServiceImpl extends ServiceImpl<PayMchAppMapper, PayMchApp
         PayMchApp payMchApp = payMchAppMapper.selectOne(new LambdaQueryWrapper<PayMchApp>()
                 .eq(PayMchApp::getMchId, mchNo)
                 .eq(PayMchApp::getAppCode, appNo)
-                .eq(PayMchApp::getState, State.NORMAL.getCode())
+                .eq(PayMchApp::getState, State.NORMAL.code())
         );
         if (ObjectUtils.isEmpty(payMchApp)) {
             return null;

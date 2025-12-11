@@ -1,6 +1,7 @@
 package com.baosight.payment.error;
 
-import com.baosight.utils.enums.IBaseEnum;
+import com.baosight.web.core.exception.IErrorEnum;
+import com.ronan.common.enums.IBaseEnum;
 
 /**
  * @program: payment-center
@@ -9,7 +10,7 @@ import com.baosight.utils.enums.IBaseEnum;
  * @create: 2025/3/19
  */
 
-public enum NoticeError implements IBaseEnum<String> {
+public enum NoticeError implements IErrorEnum<String> {
 
     /**
      * 参数校验失败

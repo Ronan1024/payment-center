@@ -63,14 +63,14 @@ public class OrderDivisionNoticeController {
             if (bizData.get("respCode").asText().equals("00000")){
                 if (bizData.get("fileStatus").asText().equals("1")) {
                     // 处理成功
-                    orderDivisionBatch.setDivisionState(DivisionState.CHANNEL_HANDLER_SUCCESS.getCode());
+                    orderDivisionBatch.setDivisionState(DivisionState.CHANNEL_HANDLER_SUCCESS.code());
                 } else if (bizData.get("fileStatus").asText().equals("2")) {
-                    orderDivisionBatch.setDivisionState(DivisionState.CHANNEL_HANDLER_FAILURE.getCode());
+                    orderDivisionBatch.setDivisionState(DivisionState.CHANNEL_HANDLER_FAILURE.code());
                 } else {
-                    orderDivisionBatch.setDivisionState(DivisionState.DIVISION_CHANNEL_PROCESSING.getCode());
+                    orderDivisionBatch.setDivisionState(DivisionState.DIVISION_CHANNEL_PROCESSING.code());
                 }
             }else {
-                orderDivisionBatch.setDivisionState(DivisionState.CHANNEL_HANDLER_FAILURE.getCode());
+                orderDivisionBatch.setDivisionState(DivisionState.CHANNEL_HANDLER_FAILURE.code());
             }
             orderDivisionBatch.setChannelHandlerResult(bizData.toString());
             orderDivisionBatchMapper.updateById(orderDivisionBatch);

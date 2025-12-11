@@ -8,9 +8,9 @@ import com.baosight.payment.system.pojo.vo.PayInterfaceConfigListVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigVO;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
 import com.baosight.payment.vo.MchInfoVO;
-import com.baosight.utils.enums.IBaseEnum;
 import com.baosight.utils.utils.Assert;
-import com.baosight.web.exception.ApiException;
+import com.baosight.web.core.exception.ApiException;
+import com.ronan.common.enums.IBaseEnum;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.function.LongFunction;
 
-import static com.baosight.saas.constant.BaseUrlConstant.SYSTEM;
 
 /**
  * @program: payment-center
@@ -29,7 +28,8 @@ import static com.baosight.saas.constant.BaseUrlConstant.SYSTEM;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(SYSTEM + "/pm/pay/mch/config/manage")
+//@RequestMapping(SYSTEM + "/pm/pay/mch/config/manage")
+@RequestMapping("/pm/pay/mch/config/manage")
 public class SystemPayMchInterfaceConfigController {
     private final PayInterfaceConfigService payInterfaceConfigService;
     @Resource

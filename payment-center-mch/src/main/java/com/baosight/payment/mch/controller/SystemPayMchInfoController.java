@@ -1,6 +1,7 @@
 package com.baosight.payment.mch.controller;
 
-import com.baosight.database.page.PageResponse;
+
+import com.baosight.database.core.page.PageResponse;
 import com.baosight.payment.mch.pojo.dto.MchInfoDTO;
 import com.baosight.payment.mch.pojo.dto.MchPageDTO;
 import com.baosight.payment.mch.pojo.vo.PayMchInfoVO;
@@ -11,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import static com.baosight.saas.constant.LoginType.SYSTEM;
 
 /**
  * @program: payment-center
@@ -21,7 +21,8 @@ import static com.baosight.saas.constant.LoginType.SYSTEM;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(SYSTEM + "/pm/pay/mch/manage")
+//@RequestMapping(SYSTEM + "/pm/pay/mch/manage")
+@RequestMapping( "/pm/pay/mch/manage")
 public class SystemPayMchInfoController {
 
     @Resource

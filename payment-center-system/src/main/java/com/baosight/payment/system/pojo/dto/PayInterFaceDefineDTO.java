@@ -1,6 +1,5 @@
 package com.baosight.payment.system.pojo.dto;
 
-import com.baosight.saas.entity.DynamicForm;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -27,20 +26,20 @@ public class PayInterFaceDefineDTO {
     @NotNull(message = "是否服务商子商户不能为空")
     private Boolean hasSubMch;
 
-    /**
-     * 服务商支付参数
-     */
-    private List<DynamicForm> facilitatorParams;
-
-    /**
-     * 子商户支付参数
-     */
-    private List<DynamicForm> subMchParams;
-
-    /**
-     * 普通商户支付参数
-     */
-    private List<DynamicForm> normalMchParams;
+//    /**
+//     * 服务商支付参数
+//     */
+//    private List<DynamicForm> facilitatorParams;
+//
+//    /**
+//     * 子商户支付参数
+//     */
+//    private List<DynamicForm> subMchParams;
+//
+//    /**
+//     * 普通商户支付参数
+//     */
+//    private List<DynamicForm> normalMchParams;
 
     /**
      * 备注

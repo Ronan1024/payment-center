@@ -1,7 +1,7 @@
 package com.baosight.payment.isv.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.baosight.database.page.PageResponse;
+import com.baosight.database.core.page.PageResponse;
 import com.baosight.payment.isv.pojo.dto.CreateIsvDTO;
 import com.baosight.payment.isv.pojo.dto.IsvPageDTO;
 import com.baosight.payment.isv.pojo.entity.PayIsvInfo;

@@ -78,7 +78,7 @@ public class TlPayRefundNoticeService implements IChannelRefundNoticeService {
             JsonNode channelParamInfo = JsonUtil.readTree(jsonNode.get("channelParamInfo").asText());
             String chnlTransCode = channelParamInfo.get("chnlTransCode").asText();
             if (chnlTransCode.equals("VSP682") || chnlTransCode.equals("VSP684")) {
-                parseChannelParamDAO.setOrderState(RefundOrderState.REFUNDED.getCode());
+                parseChannelParamDAO.setOrderState(RefundOrderState.REFUNDED.code());
             }
         }
 
@@ -102,12 +102,12 @@ public class TlPayRefundNoticeService implements IChannelRefundNoticeService {
         RefundOrderChannelHandlerResult refundOrderChannelHandlerResult = new RefundOrderChannelHandlerResult();
         refundOrderChannelHandlerResult.setChannelErrCode(parseParams.getErrCode());
         refundOrderChannelHandlerResult.setChannelErrMsg(parseParams.getErrMsg());
-        Integer orderState = ObjectUtils.isEmpty(parseParams.getOrderState()) ? RefundOrderState.REFUNDING.getCode() : parseParams.getOrderState();
+        Integer orderState = ObjectUtils.isEmpty(parseParams.getOrderState()) ? RefundOrderState.REFUNDING.code() : parseParams.getOrderState();
         if (parseParams.getChannelState().equals("1")) {
-            orderState = RefundOrderState.REFUNDED.getCode();
+            orderState = RefundOrderState.REFUNDED.code();
             refundOrderChannelHandlerResult.setChannelState(ChannelState.SUCCESS.getCode());
         } else if (parseParams.getChannelState().equals("2")) {
-            orderState = RefundOrderState.REFUND_FAILED.getCode();
+            orderState = RefundOrderState.REFUND_FAILED.code();
             refundOrderChannelHandlerResult.setChannelState(ChannelState.FAIL.getCode());
         } else {
             refundOrderChannelHandlerResult.setChannelState(ChannelState.PROCESSING.getCode());

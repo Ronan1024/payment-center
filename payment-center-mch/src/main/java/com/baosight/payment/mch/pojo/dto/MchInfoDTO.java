@@ -1,6 +1,6 @@
 package com.baosight.payment.mch.pojo.dto;
 
-import com.baosight.utils.annotation.Mobile;
+import com.ronan.common.validation.annotation.Mobile;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

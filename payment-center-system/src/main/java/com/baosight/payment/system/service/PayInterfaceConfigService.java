@@ -11,7 +11,6 @@ import com.baosight.payment.system.pojo.vo.PayInterfaceConfigVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
 import com.baosight.payment.vo.IsvInterfaceConfigVO;
 import com.baosight.payment.vo.MchInterfaceConfigVO;
-import com.baosight.saas.entity.DynamicForm;
 
 import java.util.List;
 import java.util.Map;
@@ -83,7 +82,7 @@ public interface PayInterfaceConfigService extends IService<PayInterfaceConfig> 
      * @param mchId       商户id
      * @param interfaceId 接口id
      */
-    List<DynamicForm> getDynamicForm(Long mchId, Long interfaceId);
+//    List<DynamicForm> getDynamicForm(Long mchId, Long interfaceId);
 
     /**
      * 获取支付配置列表

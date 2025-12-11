@@ -1,7 +1,7 @@
 package com.baosight.payment.settlement.enums;
 
 
-import com.baosight.utils.enums.IBaseEnum;
+import com.ronan.common.enums.IBaseEnum;
 
 /**
  * @program: payment-center

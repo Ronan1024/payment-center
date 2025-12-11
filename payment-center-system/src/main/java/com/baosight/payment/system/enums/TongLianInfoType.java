@@ -1,7 +1,7 @@
 package com.baosight.payment.system.enums;
 
 import com.baosight.payment.system.pojo.dao.tonglian.TongLianMemberBasicInfoDAO;
-import com.baosight.utils.enums.IBaseEnum;
+import com.ronan.common.enums.IBaseEnum;
 import com.baosight.utils.json.JsonUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 

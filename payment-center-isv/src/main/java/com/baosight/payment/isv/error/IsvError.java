@@ -1,9 +1,9 @@
 package com.baosight.payment.isv.error;
 
-import com.baosight.utils.enums.IBaseEnum;
+import com.baosight.web.core.exception.IErrorEnum;
 
 
-public enum IsvError  implements IBaseEnum<String> {
+public enum IsvError  implements IErrorEnum<String> {
     /**
      * 服务商数据异常
      */

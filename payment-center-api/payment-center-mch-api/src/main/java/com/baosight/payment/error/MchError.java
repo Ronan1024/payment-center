@@ -1,6 +1,6 @@
 package com.baosight.payment.error;
 
-import com.baosight.utils.enums.IBaseEnum;
+import com.baosight.web.core.exception.IErrorEnum;
 
 /**
  * @program: payment-center
@@ -8,7 +8,7 @@ import com.baosight.utils.enums.IBaseEnum;
  * @author: L.J.Ran
  * @create: 2025/3/17
  */
-public enum MchError implements IBaseEnum<String> {
+public enum MchError implements IErrorEnum<String> {
     /**
      *商户不存在
      */

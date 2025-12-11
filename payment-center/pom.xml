@@ -6,12 +6,10 @@
     <parent>
         <groupId>com.baosight.payment</groupId>
         <artifactId>payment-center-pom</artifactId>
-        <version>1.0.0</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>payment-center</artifactId>
-
-    <version>1.0.0</version>
 
     <properties>
         <buildNumber>1</buildNumber>
@@ -27,7 +25,6 @@
         </dependency>
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
-
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
         <dependency>
@@ -42,10 +39,10 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-loadbalancer</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.baosight.saas.oauth</groupId>
-            <artifactId>saas-oauth-feign</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.baosight.saas.oauth</groupId>-->
+<!--            <artifactId>saas-oauth-feign</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-mch</artifactId>
@@ -53,37 +50,35 @@
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-isv</artifactId>
-            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-pay-gateway</artifactId>
-            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-trade</artifactId>
-            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-notify</artifactId>
-            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-accounting</artifactId>
-            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>pay-center-check</artifactId>
-            <version>1.0.0</version>
+            <version>${revision}</version>
         </dependency>
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>pay-center-settlement</artifactId>
-            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baosight.saas.auth.apply</groupId>
+            <artifactId>saas-common-auth-apply</artifactId>
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>

@@ -1,9 +1,10 @@
 package com.baosight.payment.system.error;
 
 
-import com.baosight.utils.enums.IBaseEnum;
+import com.baosight.web.core.exception.IErrorEnum;
+import com.ronan.common.enums.IBaseEnum;
 
-public enum PayWayError implements IBaseEnum<String> {
+public enum PayWayError implements IErrorEnum<String> {
     /**
      * 支付方式不存在
      */

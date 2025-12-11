@@ -6,7 +6,7 @@
 
     <groupId>com.baosight.payment</groupId>
     <artifactId>payment-center-pom</artifactId>
-    <version>1.0.0</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
     <modules>
         <module>payment-center-system</module>
@@ -28,6 +28,7 @@
     </modules>
 
     <properties>
+        <revision>1.1.0</revision>
         <maven-compiler-plugin.version>3.9.0</maven-compiler-plugin.version>
         <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
         <maven.compiler.source>17</maven.compiler.source>
@@ -38,6 +39,13 @@
         <spring-cloud.version>2022.0.5</spring-cloud.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <common-auth.version>1.0.0</common-auth.version>
+        <database-spring.version>1.1.0</database-spring.version>
+        <common.version>1.0.0</common.version>
+        <distributed-id.version>1.0.0</distributed-id.version>
+        <saas-common.version>1.0.3</saas-common.version>
+        <payment-center-api.version>1.0.0</payment-center-api.version>
+        <web-framework.version>1.1.0</web-framework.version>
+        <saas-common-web.version>1.0.3</saas-common-web.version>
     </properties>
 
     <dependencyManagement>
@@ -66,15 +74,20 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.baosight.saas</groupId>-->
+<!--                <artifactId>saas-common-auth</artifactId>-->
+<!--                <version>${common-auth.version}</version>-->
+<!--            </dependency>-->
+            <!--            <dependency>-->
+            <!--                <groupId>com.baosight.database</groupId>-->
+            <!--                <artifactId>database-spring-boot-starter</artifactId>-->
+            <!--                <version>1.0.5</version>-->
+            <!--            </dependency>-->
             <dependency>
-                <groupId>com.baosight.saas</groupId>
-                <artifactId>saas-common-auth</artifactId>
-                <version>${common-auth.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.baosight.database</groupId>
+                <groupId>com.baosight.framework.database</groupId>
                 <artifactId>database-spring-boot-starter</artifactId>
-                <version>1.0.5</version>
+                <version>${database-spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.mapstruct</groupId>
@@ -84,29 +97,59 @@
             <dependency>
                 <groupId>com.baosight.payment</groupId>
                 <artifactId>payment-center-common</artifactId>
-                <version>1.0.0</version>
+                <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.baosight.saas.oauth</groupId>
-                <artifactId>saas-oauth-feign</artifactId>
-                <version>1.0.0</version>
-            </dependency>
+            <!--            <dependency>-->
+            <!--                <groupId>com.baosight.saas.oauth</groupId>-->
+            <!--                <artifactId>saas-oauth-feign</artifactId>-->
+            <!--                <version>1.0.0</version>-->
+            <!--            </dependency>-->
 
             <dependency>
                 <groupId>com.baosight.payment</groupId>
                 <artifactId>payment-center-mch</artifactId>
-                <version>1.0.0</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.baosight.payment</groupId>
                 <artifactId>payment-center-system</artifactId>
-                <version>1.0.0</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.baosight.saas</groupId>
-                <artifactId>saas-common-web</artifactId>
-                <version>1.0.0</version>
+                <groupId>com.baosight.payment</groupId>
+                <artifactId>payment-center-pay-gateway</artifactId>
+                <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.baosight.payment</groupId>
+                <artifactId>pay-center-settlement</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baosight.payment</groupId>
+                <artifactId>payment-center-notify</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baosight.payment</groupId>
+                <artifactId>payment-center-accounting</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baosight.payment</groupId>
+                <artifactId>payment-center-isv</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baosight.payment</groupId>
+                <artifactId>payment-center-trade</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.baosight.saas</groupId>-->
+<!--                <artifactId>saas-common-web</artifactId>-->
+<!--                <version>${project.version}</version>-->
+<!--            </dependency>-->
             <dependency>
                 <groupId>com.baosight.utils</groupId>
                 <artifactId>common-util-validation</artifactId>
@@ -115,8 +158,36 @@
             <dependency>
                 <groupId>com.baosight.distributedid</groupId>
                 <artifactId>distributed-id-spring-boot-starter</artifactId>
-                <version>1.0.0</version>
+                <version>${distributed-id.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.ronan.common</groupId>
+                <artifactId>common-all</artifactId>
+                <version>${common.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.baosight.saas</groupId>
+                <artifactId>saas-common-dependencies</artifactId>
+                <version>${saas-common.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.baosight.payment</groupId>
+                <artifactId>payment-center-api</artifactId>
+                <version>${payment-center-api.version}</version>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.baosight.web.framework</groupId>
+                <artifactId>web-spring-boot-dependencies</artifactId>
+                <version>${web-framework.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
     <build>

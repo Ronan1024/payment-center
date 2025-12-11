@@ -1,8 +1,8 @@
 package com.baosight.payment.check.manager.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baosight.database.page.PageResponse;
-import com.baosight.database.utils.PageUtil;
+import com.baosight.database.core.page.PageResponse;
+import com.baosight.database.core.page.PageUtil;
 import com.baosight.payment.check.manager.ChannelBillManager;
 import com.baosight.payment.check.mapper.ChannelBillMapper;
 import com.baosight.payment.check.pojo.dto.ChannelBillDTO;
@@ -10,7 +10,7 @@ import com.baosight.payment.check.pojo.entity.ChannelBill;
 import com.baosight.payment.check.pojo.vo.ChannelBillListVO;
 import com.baosight.payment.annotation.Manager;
 import com.baosight.payment.enums.PayInterfaceCode;
-import com.baosight.utils.enums.IBaseEnum;
+import com.ronan.common.enums.IBaseEnum;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class ChannelBillManagerImpl implements ChannelBillManager {
         List<ChannelBillListVO> list = build.getList();
         list.forEach(e -> {
             PayInterfaceCode payInterfaceCode = IBaseEnum.getByCode(PayInterfaceCode.class, e.getChannelCode());
-            e.setChannelName(payInterfaceCode.getMsg());
+            e.setChannelName(payInterfaceCode.desc());
         });
 
         return build;

@@ -2,7 +2,7 @@ package com.baosight.payment.order.mapper;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baosight.database.page.PageRequest;
+import com.baosight.database.core.page.PageRequest;
 import com.baosight.payment.order.pojo.entity.OrderDivisionBatch;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baosight.payment.order.pojo.vo.DivisionBatchPageVO;

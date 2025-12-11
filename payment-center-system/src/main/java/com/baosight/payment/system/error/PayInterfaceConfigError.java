@@ -1,6 +1,6 @@
 package com.baosight.payment.system.error;
 
-import com.baosight.utils.enums.IBaseEnum;
+import com.baosight.web.core.exception.IErrorEnum;
 
 /**
  * 支付接口配置异常
@@ -10,7 +10,7 @@ import com.baosight.utils.enums.IBaseEnum;
  * @author: L.J.Ran
  * @create: 2025/3/25
  */
-public enum PayInterfaceConfigError implements IBaseEnum<String> {
+public enum PayInterfaceConfigError implements IErrorEnum<String> {
     /**
      * 商户未配置当前支付接口
      */

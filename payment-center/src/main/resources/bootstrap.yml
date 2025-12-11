@@ -25,39 +25,15 @@ spring:
 pay:
   client: 192.168.137.217
   server: 192.168.137.208
-#  datasource:
-#    url: jdbc:mysql://localhost:3306/pay
-#    username: root
-#    password: 123456
-#  profiles:
-#    active: dev
-#feign:
-#  logger:
-#    level: info
-#pay:
-#  user_url: sss
-#  notifyUrl: ss
-#  tl_url: sss
-#mybatis-plus:
-#  configuration:
-#    ### 开启打印sql配置
-#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-#
-#
-#logging:
-#  level:
-#    root: info  # 全局日志级别
-#    org.springframework.web: DEBUG
-#    org.springframework.http.converter.json: DEBUG
-#rocketmq:
-#  name-server: 127.0.0.1:9876
-#  producer:
-#    group: payment-center-server-common-message-execute-cg
-#    send-message-timeout: 2000
-#    retry-times-when-send-failed: 1
-#    retry-times-when-send-async-failed: 1
-#saas:
-#  ignore:
-#    any-request:
-#      ALL:
-#        - /error
+
+auth:
+  application-name: @artifactId@
+  system:
+    apply-allowed-url: http://oauth-system/authorization/apply/ignore
+    auth-url:
+      - "/system/**"
+    auth-config:
+      payment-center-platform:
+        secret-key: cGF5bWVudC1jZW50ZXItcGxhdGZvcm0=
+        by-package:
+          - com.baosight.payment.system.controller.system

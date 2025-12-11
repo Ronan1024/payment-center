@@ -1,6 +1,6 @@
 package com.baosight.payment.check.error;
 
-import com.baosight.utils.enums.IBaseEnum;
+import com.baosight.web.core.exception.IErrorEnum;
 
 /**
  * @program: payment-center
@@ -8,7 +8,7 @@ import com.baosight.utils.enums.IBaseEnum;
  * @author: L.J.Ran
  * @create: 2025/4/8
  */
-public enum BillError implements IBaseEnum<String> {
+public enum BillError implements IErrorEnum<String> {
     /**
      * 渠道文件或code不能同时为空
      */

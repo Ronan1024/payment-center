@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.baosight.payment</groupId>
         <artifactId>payment-center-pom</artifactId>
-        <version>1.0.0</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>payment-center-pay-gateway</artifactId>
@@ -20,15 +20,11 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.baosight.saas</groupId>
-            <artifactId>saas-common-web</artifactId>
+            <groupId>com.ronan.common.validation</groupId>
+            <artifactId>common-validation</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.baosight.utils</groupId>
-            <artifactId>common-util-validation</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.baosight.database</groupId>
+            <groupId>com.baosight.framework.database</groupId>
             <artifactId>database-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
@@ -39,12 +35,12 @@
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-mch-api</artifactId>
-            <version>1.0.0</version>
+            <version>${payment-center-api.version}</version>
         </dependency>
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-system-api</artifactId>
-            <version>1.0.0</version>
+            <version>${payment-center-api.version}</version>
         </dependency>
         <dependency>
             <groupId>com.baosight.payment</groupId>
@@ -58,7 +54,7 @@
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-order-api</artifactId>
-            <version>1.0.0</version>
+            <version>${payment-center-api.version}</version>
         </dependency>
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
@@ -84,12 +80,13 @@
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-notify-api</artifactId>
-            <version>1.0.0</version>
+            <version>${payment-center-api.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.baosight.saas</groupId>
-            <artifactId>saas-common-auth</artifactId>
-        </dependency>
+<!--    <dependencies>-->
+<!--        <dependency>-->
+<!--            <groupId>com.baosight.saas</groupId>-->
+<!--            <artifactId>saas-common-auth</artifactId>-->
+<!--        </dependency>-->
     </dependencies>
 
 </project>

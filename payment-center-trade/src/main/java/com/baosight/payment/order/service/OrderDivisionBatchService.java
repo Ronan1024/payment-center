@@ -1,7 +1,7 @@
 package com.baosight.payment.order.service;
 
-import com.baosight.database.page.PageRequest;
-import com.baosight.database.page.PageResponse;
+import com.baosight.database.core.page.PageRequest;
+import com.baosight.database.core.page.PageResponse;
 import com.baosight.payment.order.pojo.entity.OrderDivisionBatch;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baosight.payment.order.pojo.vo.DivisionBatchPageVO;

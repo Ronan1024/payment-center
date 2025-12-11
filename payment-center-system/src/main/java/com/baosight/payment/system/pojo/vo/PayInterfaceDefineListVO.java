@@ -1,7 +1,7 @@
 package com.baosight.payment.system.pojo.vo;
 
-import com.baosight.database.base.BasePO;
-import com.baosight.web.serializer.CustomLongSerializer;
+import com.baosight.database.mybatis.handler.BasePO;
+import com.baosight.web.core.serializer.CustomLongSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

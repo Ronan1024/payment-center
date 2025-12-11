@@ -59,7 +59,7 @@ public class WxScanService implements IPaymentService {
      **/
     @Override
     public String getPayInterfaceCode() {
-        return PayInterfaceCode.TONG_LIAN_PAY.getCode();
+        return PayInterfaceCode.TONG_LIAN_PAY.code();
     }
 
     /**
@@ -95,8 +95,8 @@ public class WxScanService implements IPaymentService {
         map.put("goodsName", unifiedOrder.getSubject());
         map.put("goodsDesc", unifiedOrder.getBody());
         OrderChannelHandlerResult result = new OrderChannelHandlerResult();
-        result.setTradeType(TradeType.WECHAT_PAY.getCode());
-        result.setTradeModel(TradeModel.WECHAT_SCAN.getCode());
+        result.setTradeType(TradeType.WECHAT_PAY.code());
+        result.setTradeModel(TradeModel.WECHAT_SCAN.code());
         try {
             // 获取用户信息
             TongLianClient.SendBuild sendBuild = new TongLianClient.SendBuild(SnowflakeIdUtil.nextId(), "2085", map);
@@ -120,7 +120,7 @@ public class WxScanService implements IPaymentService {
                 result.setChannelState(ChannelState.PROCESSING.getCode());
                 result.setChannelAttach(response.getResult().toString());
                 result.setChannelOrderNo(response.get("respTraceNum").asText());
-                result.setType(OrderType.CONSUMPTION.getCode());
+                result.setType(OrderType.CONSUMPTION.code());
                 TongLianResponse tongLianResponse = new TongLianResponse();
                 JsonNode frontParamInfo = JsonUtil.readTree(response.get("chnlFrontParamInfo").asText());
                 tongLianResponse.setUrl(frontParamInfo.get("chnlPayInfo").asText());
@@ -161,7 +161,7 @@ public class WxScanService implements IPaymentService {
      */
     @Override
     public String payWayCode() {
-        return PayWayCode.TONG_LIAN_WX_SCAN.getCode();
+        return PayWayCode.TONG_LIAN_WX_SCAN.code();
     }
 
     /**

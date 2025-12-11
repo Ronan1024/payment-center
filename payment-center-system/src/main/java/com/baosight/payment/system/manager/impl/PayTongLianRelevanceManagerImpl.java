@@ -3,6 +3,7 @@ package com.baosight.payment.system.manager.impl;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baosight.distributedid.toolkit.SnowflakeIdUtil;
 import com.baosight.payment.annotation.Manager;
+import com.baosight.payment.dao.TongLianIsvAndMchConfigDAO;
 import com.baosight.payment.enums.MchType;
 import com.baosight.payment.system.enums.TongLianInfoType;
 import com.baosight.payment.system.error.TongLianError;
@@ -10,14 +11,13 @@ import com.baosight.payment.system.manager.PayTongLianRelevanceManager;
 import com.baosight.payment.system.mapper.PayInterfaceConfigMapper;
 import com.baosight.payment.system.mapper.PayTongLianRelevanceMapper;
 import com.baosight.payment.system.mapper.RequestInterfaceRecordMapper;
-import com.baosight.payment.dao.TongLianIsvAndMchConfigDAO;
 import com.baosight.payment.system.pojo.dao.tonglian.TongLianMemberBasicInfoDAO;
 import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
 import com.baosight.payment.system.pojo.entity.PayTongLianRelevance;
 import com.baosight.payment.system.pojo.entity.RequestInterfaceRecord;
 import com.baosight.payment.system.tonglian.MembershipAndAccountHandler;
 import com.baosight.payment.system.tonglian.TongLianClient;
-import com.baosight.web.exception.ApiException;
+import com.baosight.web.core.exception.ApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -76,7 +76,7 @@ public class PayTongLianRelevanceManagerImpl implements PayTongLianRelevanceMana
             payInterfaceConfigMapper.update(new LambdaUpdateWrapper<PayInterfaceConfig>()
                     .eq(PayInterfaceConfig::getInterfaceId, interfaceId)
                     .eq(PayInterfaceConfig::getClientId, mchId)
-                    .eq(PayInterfaceConfig::getClientType, MchType.SUB_MERCHANT.getCode())
+                    .eq(PayInterfaceConfig::getClientType, MchType.SUB_MERCHANT.code())
                     .set(PayInterfaceConfig::getMchChannelUser, signNum)
             );
         }

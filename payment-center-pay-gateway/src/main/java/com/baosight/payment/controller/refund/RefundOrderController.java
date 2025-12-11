@@ -20,10 +20,10 @@ import com.baosight.payment.pojo.vo.RefundOrderResponse;
 import com.baosight.payment.utils.StringUtil;
 import com.baosight.payment.vo.MchInfoVO;
 import com.baosight.spring.base.utils.ApplicationContextHolder;
-import com.baosight.utils.enums.IBaseEnum;
+import com.ronan.common.enums.IBaseEnum;
 import com.baosight.utils.json.JsonUtil;
 import com.baosight.utils.utils.Assert;
-import com.baosight.web.exception.ApiException;
+import com.baosight.web.core.exception.ApiException;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -73,18 +73,18 @@ public class RefundOrderController {
             OrderVO order = orderApi.orderInfo(mchInfo.getId(), request.getMchOrderNo(), request.getPayOrderId());
 
             Assert.isNull(order, "退款订单不存在");
-            Assert.isFalse(order.getState().equals(PayOrderState.SUCCESS.getCode()) || order.getState().equals(PayOrderState.PRE_CONSUMPTION.getCode()), "订单状态不正确， 无法完成退款");
+            Assert.isFalse(order.getState().equals(PayOrderState.SUCCESS.code()) || order.getState().equals(PayOrderState.PRE_CONSUMPTION.code()), "订单状态不正确， 无法完成退款");
 
-            Assert.isTrue(order.getRefundState().equals(RefundType.REFUND_TYPE_ALL.getCode()) || order.getRefundAmount() >= order.getTotalAmount(), "订单已全额退款，本次申请失败");
+            Assert.isTrue(order.getRefundState().equals(RefundType.REFUND_TYPE_ALL.code()) || order.getRefundAmount() >= order.getTotalAmount(), "订单已全额退款，本次申请失败");
 
             long refundAmount = order.getRefundAmount() + Long.parseLong(request.getRefundAmount());
             Assert.isTrue(refundAmount > order.getTotalAmount(), "申请金额超出订单可退款余额，请检查退款金额");
 
-            Long refundOrderCount = refundOrderApi.refundOrderCount(mchInfo.getId(), request.getMchRefundNo(), RefundOrderState.REFUNDING.getCode());
+            Long refundOrderCount = refundOrderApi.refundOrderCount(mchInfo.getId(), request.getMchRefundNo(), RefundOrderState.REFUNDING.code());
             Assert.isTrue(refundOrderCount > 0, "支付订单具有在途退款申请，请稍后再试");
 
 
-            Long sumSuccessRefundAmount = refundOrderApi.sumRefundAmount(order.getId(), RefundOrderState.REFUNDED.getCode());
+            Long sumSuccessRefundAmount = refundOrderApi.sumRefundAmount(order.getId(), RefundOrderState.REFUNDED.code());
 
             //全部退款金额 （退款订单表）
             Assert.isTrue(sumSuccessRefundAmount >= order.getTotalAmount(), "退款单已完成全部订单退款，本次申请失败");
@@ -183,7 +183,7 @@ public class RefundOrderController {
         //退款金额,单位分
         refundOrder.setRefundAmount(Long.parseLong(request.getRefundAmount()));
         //退款状态:0-订单生成,1-退款中,2-退款成功,3-退款失败
-        refundOrder.setState(RefundOrderState.ORDER_GENERATED.getCode());
+        refundOrder.setState(RefundOrderState.ORDER_GENERATED.code());
         //退款原因
         refundOrder.setRefundReason(request.getRefundReason());
         //渠道订单号
@@ -226,14 +226,14 @@ public class RefundOrderController {
 
         //明确成功
         if (ChannelState.SUCCESS.getCode().equals(handlerResult.getChannelState())) {
-            updateRefundOrderState.setRefundState(RefundOrderState.REFUNDED.getCode());
+            updateRefundOrderState.setRefundState(RefundOrderState.REFUNDED.code());
             updateRefundOrderState.setRefundId(refundOrder.getRefundOrderId());
             refundOrderApi.updateInitOrderStateThrowException(updateRefundOrderState);
             // TODO 发送回调内容
 //            payMchNotifyService.refundOrderNotify(refundOrderService.getById(refundOrder.getRefundOrderId()));
             //明确失败
         } else if (Objects.equals(ChannelState.FAIL.getCode(), handlerResult.getChannelState())) {
-            updateRefundOrderState.setRefundState(RefundOrderState.REFUND_FAILED.getCode());
+            updateRefundOrderState.setRefundState(RefundOrderState.REFUND_FAILED.code());
             updateRefundOrderState.setErrCode(handlerResult.getChannelErrCode());
 
             refundOrderApi.updateInitOrderStateThrowException(updateRefundOrderState);
@@ -244,7 +244,7 @@ public class RefundOrderController {
         } else if (ChannelState.PROCESSING.getCode() == handlerResult.getChannelState() ||
                 ChannelState.UNKNOWN.getCode() == handlerResult.getChannelState() ||
                 ChannelState.CHANNEL_ERROR.getCode() == handlerResult.getChannelState()) {
-            updateRefundOrderState.setRefundState(RefundOrderState.ORDER_GENERATED.getCode());
+            updateRefundOrderState.setRefundState(RefundOrderState.ORDER_GENERATED.code());
             updateRefundOrderState.setRefundId(refundOrder.getRefundOrderId());
             refundOrderApi.updateInitOrderStateThrowException(updateRefundOrderState);
 

@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.baosight.payment</groupId>
         <artifactId>payment-center-pom</artifactId>
-        <version>1.0.0</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>pay-center-channel</artifactId>

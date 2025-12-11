@@ -1,9 +1,10 @@
 package com.baosight.payment.error;
 
-import com.baosight.utils.enums.IBaseEnum;
+import com.baosight.web.core.exception.IErrorEnum;
+import com.ronan.common.enums.IBaseEnum;
 
 
-public enum PayOrderError implements IBaseEnum<String> {
+public enum PayOrderError implements IErrorEnum<String> {
     /**
      * 系统异常
      */

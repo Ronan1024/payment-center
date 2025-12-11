@@ -50,7 +50,7 @@ public class CheckTask {
     public void createAndHandleCheck() {
         try {
             // TODO 临时解决方案待处理 P0
-            List<ChannelBill> channelBillList = channelBillManager.getChannelGroup(ChannelBillHandlerState.PENDING.getCode());
+            List<ChannelBill> channelBillList = channelBillManager.getChannelGroup(ChannelBillHandlerState.PENDING.code());
             channelBillList.forEach(e -> {
                 String checkBatchCode = e.getChannelCode() + "-" + e.getBillDate() + "-" + e.getChannelMchNo() + "-" + e.getTradeType();
                 CheckBatchRecord batchRecord = checkBatchRecordMapper.selectOne(new LambdaQueryWrapper<CheckBatchRecord>()
@@ -58,7 +58,7 @@ public class CheckTask {
                 if (ObjectUtils.isEmpty(batchRecord)) {
                     batchRecord = new CheckBatchRecord();
                     batchRecord.setCheckBatchCode(checkBatchCode);
-                    batchRecord.setState(CheckBatchRecordState.PROCESSING.getCode());
+                    batchRecord.setState(CheckBatchRecordState.PROCESSING.code());
                     batchRecord.setBillDate(e.getBillDate());
                     batchRecord.setInterfaceCode(e.getChannelCode());
                     batchRecord.setInterfaceId(e.getChannelId());
@@ -67,21 +67,21 @@ public class CheckTask {
                 }
 
                 //创建批次并创建对账信息
-                if (e.getTradeType().equals(OrderType.CONSUMPTION.getCode())) {
+                if (e.getTradeType().equals(OrderType.CONSUMPTION.code())) {
                     // 消费订单
                     List<ChannelBill> billList = channelBillMapper.selectList(new LambdaQueryWrapper<ChannelBill>()
                             .eq(ChannelBill::getBillDate, e.getBillDate())
                             .eq(ChannelBill::getTradeType, e.getTradeType())
                             .eq(ChannelBill::getChannelMchNo, e.getChannelMchNo())
                             .eq(ChannelBill::getChannelCode, e.getChannelCode())
-                            .eq(ChannelBill::getBillState, ChannelBillHandlerState.PENDING.getCode()));
+                            .eq(ChannelBill::getBillState, ChannelBillHandlerState.PENDING.code()));
 
                     List<TradingFlow> tradingFlowList = tradingFlowManager.list(new LambdaQueryWrapper<TradingFlow>()
                             .eq(TradingFlow::getTradingType, e.getTradeType())
                             .eq(TradingFlow::getDate, e.getBillDate())
                             .eq(TradingFlow::getChannelMchNo, e.getChannelMchNo())
                             .eq(TradingFlow::getChannelCode, e.getChannelCode())
-                            .eq(TradingFlow::getState, TradingFlowState.PENDING.getCode()));
+                            .eq(TradingFlow::getState, TradingFlowState.PENDING.code()));
 
 
                     Map<Long, TradingFlow> tradingFlowMap = tradingFlowList.stream().collect(Collectors.toMap(TradingFlow::getOrderId, tradingFlow -> tradingFlow));
@@ -108,17 +108,17 @@ public class CheckTask {
                                 if (tradingFlow.getAmount().equals(bill.getTradingAmount()) && tradingFlow.getTradingState().equals(bill.getTradingState())) {
                                     successBillList.add(bill.getId());
                                     successTradingFlowList.add(tradingFlow.getId());
-                                    if (tradingFlow.getTradingType().equals(OrderType.CONSUMPTION.getCode())) {
+                                    if (tradingFlow.getTradingType().equals(OrderType.CONSUMPTION.code())) {
                                         settlementSet.add(tradingFlow.getOrderId());
                                     }else {
                                         settlementSet.add(tradingFlow.getOriginOrderId());
                                     }
                                 } else {
-                                    checkRecord.setCheckState(CheckState.MISTAKE.getCode());
+                                    checkRecord.setCheckState(CheckState.MISTAKE.code());
                                     failBillList.add(bill.getId());
                                 }
                             } else {
-                                checkRecord.setCheckState(CheckState.CHANNEL_OVER.getCode());
+                                checkRecord.setCheckState(CheckState.CHANNEL_OVER.code());
                                 failBillList.add(bill.getId());
                             }
                             checkRecordMapper.insert(checkRecord);
@@ -128,28 +128,28 @@ public class CheckTask {
                         // 处理正常的
                         channelBillMapper.update(new LambdaUpdateWrapper<ChannelBill>()
                                 .in(ChannelBill::getId, successBillList)
-                                .set(ChannelBill::getBillState, ChannelBillHandlerState.COMPLETED.getCode())
+                                .set(ChannelBill::getBillState, ChannelBillHandlerState.COMPLETED.code())
                         );
                         // 对账成功
                         tradingFlowManager.update(new LambdaUpdateWrapper<TradingFlow>()
                                 .in(TradingFlow::getId, successTradingFlowList)
-                                .set(TradingFlow::getState, TradingFlowState.COMPLETED.getCode())
+                                .set(TradingFlow::getState, TradingFlowState.COMPLETED.code())
                         );
                         // TODO 通知结算中心
                     }
                     channelBillMapper.update(new LambdaUpdateWrapper<ChannelBill>()
                             .in(ChannelBill::getId, failBillList)
-                            .set(ChannelBill::getBillState, ChannelBillHandlerState.PROCESSING.getCode())
+                            .set(ChannelBill::getBillState, ChannelBillHandlerState.PROCESSING.code())
                     );
                     if (failBillList.isEmpty()) {
                         checkBatchRecordMapper.update(new LambdaUpdateWrapper<CheckBatchRecord>()
                                 .eq(CheckBatchRecord::getId, batchRecord.getId())
-                                .set(CheckBatchRecord::getState, CheckBatchRecordState.SUCCESS.getCode())
+                                .set(CheckBatchRecord::getState, CheckBatchRecordState.SUCCESS.code())
                         );
                     } else {
                         checkBatchRecordMapper.update(new LambdaUpdateWrapper<CheckBatchRecord>()
                                 .eq(CheckBatchRecord::getId, batchRecord.getId())
-                                .set(CheckBatchRecord::getState, CheckBatchRecordState.DIFFERENCES_PROCESSING.getCode())
+                                .set(CheckBatchRecord::getState, CheckBatchRecordState.DIFFERENCES_PROCESSING.code())
                         );
                     }
                 }

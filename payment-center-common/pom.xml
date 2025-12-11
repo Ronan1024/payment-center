@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.baosight.payment</groupId>
         <artifactId>payment-center-pom</artifactId>
-        <version>1.0.0</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>payment-center-common</artifactId>
@@ -18,22 +18,36 @@
     </properties>
 
     <dependencies>
+
         <dependency>
-            <groupId>com.baosight.saas</groupId>
-            <artifactId>saas-common-web</artifactId>
-            <version>1.0.0</version>
+            <groupId>com.baosight.web.framework</groupId>
+            <artifactId>web-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.baosight.database</groupId>
+            <groupId>com.ronan.common.validation</groupId>
+            <artifactId>common-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ronan.common.enums</groupId>
+            <artifactId>common-enum</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baosight.framework.database</groupId>
             <artifactId>database-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.baosight.utils</groupId>
-            <artifactId>common-util-validation</artifactId>
+            <groupId>com.baosight.framework.database</groupId>
+            <artifactId>database-spring-boot-mybatis</artifactId>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.baosight.distributedid</groupId>
             <artifactId>distributed-id-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.baosight.saas.auth</groupId>
+            <artifactId>saas-common-auth-platform</artifactId>
         </dependency>
     </dependencies>
 

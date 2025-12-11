@@ -1,7 +1,7 @@
 package com.baosight.payment.enums;
 
 
-import com.baosight.utils.enums.IBaseEnum;
+import com.ronan.common.enums.IBaseEnum;
 
 
 public enum PayInterfaceParamType implements IBaseEnum<Integer> {

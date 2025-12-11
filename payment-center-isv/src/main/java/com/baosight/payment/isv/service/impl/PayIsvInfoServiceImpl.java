@@ -2,8 +2,8 @@ package com.baosight.payment.isv.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.baosight.database.page.PageResponse;
-import com.baosight.database.utils.PageUtil;
+import com.baosight.database.core.page.PageResponse;
+import com.baosight.database.core.page.PageUtil;
 import com.baosight.payment.enums.State;
 import com.baosight.payment.isv.convert.PayIsvInfoConvert;
 import com.baosight.payment.isv.error.IsvError;
@@ -14,9 +14,8 @@ import com.baosight.payment.isv.pojo.entity.PayIsvInfo;
 import com.baosight.payment.isv.pojo.vo.PayIsvInfoVO;
 import com.baosight.payment.isv.pojo.vo.PayIsvPageVO;
 import com.baosight.payment.isv.service.PayIsvInfoService;
-import com.baosight.saas.context.AbstractUserContext;
 import com.baosight.utils.utils.Assert;
-import com.baosight.web.exception.ApiException;
+import com.baosight.web.core.exception.ApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -76,9 +75,10 @@ public class PayIsvInfoServiceImpl extends ServiceImpl<PayIsvInfoMapper, PayIsvI
             return Boolean.TRUE;
         }
         payIsvInfo = PayIsvInfoConvert.INSTANCE.toPayIsvInfo(createIsvDTO);
-        Integer state = createIsvDTO.getEnable() ? State.NORMAL.getCode() : State.FORBIDDEN.getCode();
-        payIsvInfo.setCreateBy(AbstractUserContext.getUserId());
-        payIsvInfo.setCreateByName(AbstractUserContext.getUsername());
+        Integer state = createIsvDTO.getEnable() ? State.NORMAL.code() : State.FORBIDDEN.code();
+        //TODO 设置创建人信息
+//        payIsvInfo.setCreateBy(AbstractUserContext.getUserId());
+//        payIsvInfo.setCreateByName(AbstractUserContext.getUsername());
         payIsvInfo.setState(state);
         return payIsvInfoMapper.insert(payIsvInfo) > 0;
     }
@@ -92,7 +92,7 @@ public class PayIsvInfoServiceImpl extends ServiceImpl<PayIsvInfoMapper, PayIsvI
     public Boolean enable(Long isvId) {
         PayIsvInfo payIsvInfo = payIsvInfoMapper.selectById(isvId);
         Assert.isNull(payIsvInfo, ApiException.supplier(IsvError.ISV_DATA_ERROR));
-        Integer state = payIsvInfo.getState().equals(State.NORMAL.getCode()) ? State.FORBIDDEN.getCode() : State.NORMAL.getCode();
+        Integer state = payIsvInfo.getState().equals(State.NORMAL.code()) ? State.FORBIDDEN.code() : State.NORMAL.code();
         payIsvInfo.setState(state);
         return payIsvInfoMapper.updateById(payIsvInfo) > 0;
     }
@@ -124,7 +124,7 @@ public class PayIsvInfoServiceImpl extends ServiceImpl<PayIsvInfoMapper, PayIsvI
     @Override
     public List<PayIsvPageVO> isvList() {
         List<PayIsvInfo> payIsvInfoList = payIsvInfoMapper.selectList(new LambdaQueryWrapper<PayIsvInfo>()
-                .eq(PayIsvInfo::getState, State.NORMAL.getCode())
+                .eq(PayIsvInfo::getState, State.NORMAL.code())
         );
         return payIsvInfoList.stream().map(PayIsvInfoConvert.INSTANCE::toPayIsvPageVO).toList();
 

@@ -1,9 +1,9 @@
 package com.baosight.payment.system.error;
 
-import com.baosight.utils.enums.IBaseEnum;
+import com.baosight.web.core.exception.IErrorEnum;
 
 
-public enum PayingAgencyError implements IBaseEnum<String> {
+public enum PayingAgencyError implements IErrorEnum<String> {
     /**
      * 支付机构异常
      */

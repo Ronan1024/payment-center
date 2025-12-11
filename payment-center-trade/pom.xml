@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.baosight.payment</groupId>
         <artifactId>payment-center-pom</artifactId>
-        <version>1.0.0</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>payment-center-trade</artifactId>
@@ -20,10 +20,11 @@
     <description>交易核心-{处理收单结算信息}</description>
 
     <dependencies>
-        <dependency>
-            <groupId>com.baosight.saas</groupId>
-            <artifactId>saas-common-auth</artifactId>
-        </dependency>
+<!--    <dependencies>-->
+<!--        <dependency>-->
+<!--            <groupId>com.baosight.saas</groupId>-->
+<!--            <artifactId>saas-common-auth</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-common</artifactId>
@@ -65,12 +66,13 @@
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-system-api</artifactId>
-            <version>1.0.0</version>
+            <version>${payment-center-api.version}</version>
         </dependency>
+
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-check-api</artifactId>
-            <version>1.0.0</version>
+            <version>${payment-center-api.version}</version>
         </dependency>
         <dependency>
             <groupId>com.baosight.payment</groupId>

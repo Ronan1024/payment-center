@@ -1,9 +1,9 @@
 package com.baosight.payment.order.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.baosight.database.page.PageRequest;
-import com.baosight.database.page.PageResponse;
-import com.baosight.database.utils.PageUtil;
+import com.baosight.database.core.page.PageRequest;
+import com.baosight.database.core.page.PageResponse;
+import com.baosight.database.core.page.PageUtil;
 import com.baosight.payment.order.mapper.OrderDivisionBatchMapper;
 import com.baosight.payment.order.mapper.OrderDivisionRecordMapper;
 import com.baosight.payment.order.pojo.entity.OrderDivisionBatch;

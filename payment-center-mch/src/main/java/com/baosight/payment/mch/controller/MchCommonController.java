@@ -28,6 +28,6 @@ public class MchCommonController {
      */
     @GetMapping("/type/list")
     public List<MchTypeVO> mchTypeList() {
-        return Arrays.stream(MchType.values()).map(e -> new MchTypeVO(e.getCode(), e.name())).toList();
+        return Arrays.stream(MchType.values()).map(e -> new MchTypeVO(e.code(), e.name())).toList();
     }
 }

@@ -1,6 +1,6 @@
 package com.baosight.payment.enums;
 
-import com.baosight.utils.enums.IBaseEnum;
+import com.ronan.common.enums.IBaseEnum;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -17,7 +17,7 @@ public enum PayState implements IBaseEnum<Integer> {
     /**
      * 交易成功
      */
-    SUCCESS(PayOrderState.SUCCESS.getCode(), "交易成功", List.of("0000")),
+    SUCCESS(PayOrderState.SUCCESS.code(), "交易成功", List.of("0000")),
     ;
     private final List<String> channelPayState;
 

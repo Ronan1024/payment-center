@@ -9,7 +9,6 @@ import com.baosight.payment.system.pojo.vo.PayInterfaceDefineVO;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
 import com.baosight.payment.system.service.PayInterfaceDefineService;
 import com.baosight.payment.system.service.PayWayService;
-import com.baosight.saas.constant.BaseUrlConstant;
 import com.baosight.utils.stream.StreamBuild;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.CollectionUtils;
@@ -26,7 +25,8 @@ import java.util.Map;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(BaseUrlConstant.SYSTEM + "/isv/pay/config")
+//@RequestMapping(SYSTEM + "/isv/pay/config")
+@RequestMapping( "/isv/pay/config")
 public class IsvPayInterfaceConfigController {
 
     private final PayWayService payWayService;

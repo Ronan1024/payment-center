@@ -1,13 +1,13 @@
 package com.baosight.payment.check.controller;
 
-import com.baosight.database.page.PageResponse;
+import com.baosight.database.core.page.PageResponse;
 import com.baosight.payment.check.error.BillError;
 import com.baosight.payment.check.pojo.dto.ChannelBillDTO;
 import com.baosight.payment.check.pojo.vo.ChannelBillListVO;
 import com.baosight.payment.check.service.app.ChannelBillAppService;
 import com.baosight.utils.utils.Assert;
 import com.baosight.utils.utils.ObjectUtils;
-import com.baosight.web.exception.ApiException;
+import com.baosight.web.core.exception.ApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.baosight.saas.constant.BaseUrlConstant.SYSTEM;
 
 /**
  * 渠道账单列表
@@ -27,7 +26,8 @@ import static com.baosight.saas.constant.BaseUrlConstant.SYSTEM;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(SYSTEM + "/channel/bill")
+//@RequestMapping(SYSTEM + "/channel/bill")
+@RequestMapping( "/channel/bill")
 public class SystemChannelBillController {
 
     private final ChannelBillAppService channelBillAppService;

@@ -17,16 +17,12 @@ import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineVO;
 import com.baosight.payment.system.service.PayInterfaceDefineService;
 import com.baosight.payment.vo.MchInfoVO;
-import com.baosight.saas.context.AbstractUserContext;
-import com.baosight.saas.utils.DynamicFormParse;
-import com.baosight.utils.enums.IBaseEnum;
-import com.baosight.utils.json.JsonUtil;
 import com.baosight.utils.utils.Assert;
-import com.baosight.web.exception.ApiException;
+import com.baosight.web.core.exception.ApiException;
+import com.ronan.common.enums.IBaseEnum;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
@@ -58,26 +54,29 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
                 .eq(PayInterfaceDefine::getName, payInterFaceDefine.getName()));
         pauInterfaceVerify(payInterFaceDefine, count);
         PayInterfaceDefine save = PayInterfaceDefineConvert.INSTANCE.toPayInterfaceDefine(payInterFaceDefine);
-        save.setCreateBy(AbstractUserContext.getUserId());
+        // TODO 设置创建人
+//        save.setCreateBy(AbstractUserContext.getUserId());
 
         save.setPayWay(payInterFaceDefine.getPayWayList().stream().map(String::valueOf).collect(Collectors.joining(",")));
-        if (!CollectionUtils.isEmpty(payInterFaceDefine.getFacilitatorParams())) {
-            save.setIsvParams(JsonUtil.toJson(payInterFaceDefine.getFacilitatorParams()));
-        }
-        if (!CollectionUtils.isEmpty(payInterFaceDefine.getSubMchParams())) {
-            save.setIsvSubMchParams(JsonUtil.toJson(payInterFaceDefine.getSubMchParams()));
-        }
-        if (!CollectionUtils.isEmpty(payInterFaceDefine.getNormalMchParams())) {
-            save.setNormalMchParams(JsonUtil.toJson(payInterFaceDefine.getNormalMchParams()));
-        }
+        // TODO 待处理
+//        if (!CollectionUtils.isEmpty(payInterFaceDefine.getFacilitatorParams())) {
+//            save.setIsvParams(JsonUtil.toJson(payInterFaceDefine.getFacilitatorParams()));
+//        }
+//        if (!CollectionUtils.isEmpty(payInterFaceDefine.getSubMchParams())) {
+//            save.setIsvSubMchParams(JsonUtil.toJson(payInterFaceDefine.getSubMchParams()));
+//        }
+//        if (!CollectionUtils.isEmpty(payInterFaceDefine.getNormalMchParams())) {
+//            save.setNormalMchParams(JsonUtil.toJson(payInterFaceDefine.getNormalMchParams()));
+//        }
         return payInterfaceDefineMapper.insert(save) > 0;
     }
 
     private void pauInterfaceVerify(PayInterFaceDefineDTO payInterFaceDefine, Long count) {
         Assert.isTrue(count > 0, () -> new ApiException(PayInterfaceError.PAY_INTERFACE_NAME_EXIST));
-        Assert.isTrue(payInterFaceDefine.getHasMch() && CollectionUtils.isEmpty(payInterFaceDefine.getNormalMchParams()), () -> new ApiException(PayInterfaceError.PAY_INTERFACE_NORMAL_MCH_PARAMS_NULL));
-        Assert.isTrue(payInterFaceDefine.getHasSubMch() && CollectionUtils.isEmpty(payInterFaceDefine.getSubMchParams()), () -> new ApiException(PayInterfaceError.PAY_INTERFACE_ISV_SUB_MCH_PARAMS_NULL));
-        Assert.isNull(CollectionUtils.isEmpty(payInterFaceDefine.getFacilitatorParams()), () -> new ApiException(PayInterfaceError.PAY_INTERFACE_ISV_PARAMS_NULL));
+        // TODO 待处理
+//        Assert.isTrue(payInterFaceDefine.getHasMch() && CollectionUtils.isEmpty(payInterFaceDefine.getNormalMchParams()), () -> new ApiException(PayInterfaceError.PAY_INTERFACE_NORMAL_MCH_PARAMS_NULL));
+//        Assert.isTrue(payInterFaceDefine.getHasSubMch() && CollectionUtils.isEmpty(payInterFaceDefine.getSubMchParams()), () -> new ApiException(PayInterfaceError.PAY_INTERFACE_ISV_SUB_MCH_PARAMS_NULL));
+//        Assert.isNull(CollectionUtils.isEmpty(payInterFaceDefine.getFacilitatorParams()), () -> new ApiException(PayInterfaceError.PAY_INTERFACE_ISV_PARAMS_NULL));
     }
 
     /**
@@ -96,15 +95,17 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
         );
         pauInterfaceVerify(payInterFaceDefineDTO, count);
         PayInterfaceDefineConvert.INSTANCE.copyPayInterfaceDefine(payInterfaceDefine, payInterFaceDefineDTO);
-        payInterfaceDefine.setUpdateBy(AbstractUserContext.getUserId());
+        //TODO 待处理
+//        payInterfaceDefine.setUpdateBy(AbstractUserContext.getUserId());
         payInterfaceDefine.setPayWay(payInterFaceDefineDTO.getPayWayList().stream().map(String::valueOf).collect(Collectors.joining(",")));
-        payInterfaceDefine.setIsvParams(JsonUtil.toJson(payInterFaceDefineDTO.getFacilitatorParams()));
-        if (!CollectionUtils.isEmpty(payInterFaceDefineDTO.getSubMchParams())) {
-            payInterfaceDefine.setIsvSubMchParams(JsonUtil.toJson(payInterFaceDefineDTO.getSubMchParams()));
-        }
-        if (!CollectionUtils.isEmpty(payInterFaceDefineDTO.getNormalMchParams())) {
-            payInterfaceDefine.setNormalMchParams(JsonUtil.toJson(payInterFaceDefineDTO.getNormalMchParams()));
-        }
+        // TODO 待处理
+//        payInterfaceDefine.setIsvParams(JsonUtil.toJson(payInterFaceDefineDTO.getFacilitatorParams()));
+//        if (!CollectionUtils.isEmpty(payInterFaceDefineDTO.getSubMchParams())) {
+//            payInterfaceDefine.setIsvSubMchParams(JsonUtil.toJson(payInterFaceDefineDTO.getSubMchParams()));
+//        }
+//        if (!CollectionUtils.isEmpty(payInterFaceDefineDTO.getNormalMchParams())) {
+//            payInterfaceDefine.setNormalMchParams(JsonUtil.toJson(payInterFaceDefineDTO.getNormalMchParams()));
+//        }
         boolean update = payInterfaceDefineMapper.updateById(payInterfaceDefine) > 0;
         // 修改已签约的支付方式
         if (update) {
@@ -145,14 +146,15 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
         Assert.isNull(payInterfaceDefine, () -> new ApiException(PayInterfaceError.PAY_INTERFACE_NOT_EXIST));
         PayInterfaceDefineVO result = PayInterfaceDefineConvert.INSTANCE.toPayInterfaceDefineVO(payInterfaceDefine);
         result.setPayWayList(Arrays.stream(payInterfaceDefine.getPayWay().split(",")).toList());
+        // TODO 根据不同的支付方式，解析不同的参数 待处理
         if (StringUtils.hasText(payInterfaceDefine.getIsvParams())) {
-            result.setFacilitatorParams(DynamicFormParse.convert(payInterfaceDefine.getIsvParams()));
+//            result.setFacilitatorParams(DynamicFormParse.convert(payInterfaceDefine.getIsvParams()));
         }
         if (StringUtils.hasText(payInterfaceDefine.getIsvSubMchParams())) {
-            result.setSubMchParams(DynamicFormParse.convert(payInterfaceDefine.getIsvSubMchParams()));
+//            result.setSubMchParams(DynamicFormParse.convert(payInterfaceDefine.getIsvSubMchParams()));
         }
         if (StringUtils.hasText(payInterfaceDefine.getNormalMchParams())) {
-            result.setNormalMchParams(DynamicFormParse.convert(payInterfaceDefine.getNormalMchParams()));
+//            result.setNormalMchParams(DynamicFormParse.convert(payInterfaceDefine.getNormalMchParams()));
         }
         return result;
     }

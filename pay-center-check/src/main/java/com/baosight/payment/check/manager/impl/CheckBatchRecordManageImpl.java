@@ -1,7 +1,7 @@
 package com.baosight.payment.check.manager.impl;
 
-import com.baosight.database.page.PageResponse;
-import com.baosight.database.utils.PageUtil;
+import com.baosight.database.core.page.PageResponse;
+import com.baosight.database.core.page.PageUtil;
 import com.baosight.payment.annotation.Manager;
 import com.baosight.payment.check.manager.CheckBatchRecordManage;
 import com.baosight.payment.check.mapper.CheckBatchRecordMapper;

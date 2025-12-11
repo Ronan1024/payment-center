@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.baosight.saas.constant.BaseUrlConstant.SYSTEM;
 
 /**
  * @author L.J.Ran
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(SYSTEM + "/mch/app/manage")
+//@RequestMapping(SYSTEM + "/mch/app/manage")
+@RequestMapping( "/mch/app/manage")
 public class SystemMchPayAppController {
 
     private final PayMchAppService payMchAppService;

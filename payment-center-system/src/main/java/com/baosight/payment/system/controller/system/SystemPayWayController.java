@@ -1,6 +1,6 @@
 package com.baosight.payment.system.controller.system;
 
-import com.baosight.database.page.PageResponse;
+import com.baosight.database.core.page.PageResponse;
 import com.baosight.payment.api.MchInfoApi;
 import com.baosight.payment.enums.PayingAgency;
 import com.baosight.payment.enums.PayingClient;
@@ -15,7 +15,7 @@ import com.baosight.payment.system.service.PayInterfaceConfigService;
 import com.baosight.payment.system.service.PayWayService;
 import com.baosight.payment.vo.MchInfoVO;
 import com.baosight.utils.utils.Assert;
-import com.baosight.web.exception.ApiException;
+import com.baosight.web.core.exception.ApiException;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -25,7 +25,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import static com.baosight.saas.constant.BaseUrlConstant.SYSTEM;
 
 /**
  * 支付方式控制台
@@ -34,7 +33,7 @@ import static com.baosight.saas.constant.BaseUrlConstant.SYSTEM;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(SYSTEM + "/pm/pay/way/manage")
+@RequestMapping( "/pm/pay/way/manage")
 public class SystemPayWayController {
 
     private final PayWayService payWayService;
@@ -102,7 +101,7 @@ public class SystemPayWayController {
      */
     @GetMapping("/pay_agency")
     public List<PayingAgencyVO> payAgency() {
-        return Arrays.stream(PayingAgency.values()).map(e -> new PayingAgencyVO(e.getCode(), e.getMsg())).toList();
+        return Arrays.stream(PayingAgency.values()).map(e -> new PayingAgencyVO(e.code(), e.desc())).toList();
     }
 
 

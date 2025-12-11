@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.baosight.saas.constant.BaseUrlConstant.SYSTEM;
 
 /**
  * 系统服务商支付配置控制器
@@ -21,7 +20,8 @@ import static com.baosight.saas.constant.BaseUrlConstant.SYSTEM;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(SYSTEM + "/pm/pay/isv/config/manage")
+//@RequestMapping(SYSTEM + "/pm/pay/isv/config/manage")
+@RequestMapping("/pm/pay/isv/config/manage")
 public class SystemPayIsvInterfaceConfigController {
     private final PayInterfaceConfigService payInterfaceConfigService;
     private final PayInterfaceConfigAppService payInterfaceConfigAppService;

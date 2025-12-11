@@ -26,8 +26,8 @@ import com.baosight.payment.system.tonglian.utils.DemoSM2Util;
 import com.baosight.payment.vo.MchInfoVO;
 import com.baosight.utils.json.JsonUtil;
 import com.baosight.utils.utils.Assert;
-import com.baosight.web.annotation.IgnoreHandlerResponse;
-import com.baosight.web.exception.ApiException;
+import com.baosight.web.core.advice.IgnoreHandlerResponse;
+import com.baosight.web.core.exception.ApiException;
 import com.baosight.web.properties.ProjectInfo;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.servlet.http.HttpServletRequest;
@@ -85,7 +85,7 @@ public class CashController {
         Money money = new Money(appleCashDTO.getAmount()).divide(100);
         MchAccountRecord mchAccountRecord = new MchAccountRecord();
         mchAccountRecord.setAmount(money.getAmount());
-        mchAccountRecord.setType(AccountType.WITHDRAW.getCode());
+        mchAccountRecord.setType(AccountType.WITHDRAW.code());
         mchAccountRecord.setCreateTime(new Date());
         mchAccountRecord.setMchId(mchInfoVO.getId());
         mchAccountRecord.setNotifyUrl(appleCashDTO.getNotifyUrl());
@@ -93,7 +93,7 @@ public class CashController {
         try {
             Money balance = new Money(mchAccount.getBalance());
             Assert.isTrue(balance.compareTo(money) < 0, ApiException.supplier(AccountError.ACCOUNT_BALANCE_INSUFFICIENT));
-            TongLianIsvAndMchConfigDAO mchConfig = mchAppConfigApi.tongLianIsvAndMchConfig(mchInfoVO.getId(), PayInterfaceCode.TONG_LIAN_PAY.getCode(), mchInfoVO.getIsvId());
+            TongLianIsvAndMchConfigDAO mchConfig = mchAppConfigApi.tongLianIsvAndMchConfig(mchInfoVO.getId(), PayInterfaceCode.TONG_LIAN_PAY.code(), mchInfoVO.getIsvId());
             TongLianIsvConfigDAO isvConfig = mchConfig.isvConfig();
             Map<String, Object> map = new HashMap<>();
             map.put("signNum", mchInfoVO.getId());
@@ -181,7 +181,7 @@ public class CashController {
                     PayOrderNotifyDTO payOrderNotifyDTO = new PayOrderNotifyDTO();
                     payOrderNotifyDTO.setMchId(mchId);
                     payOrderNotifyDTO.setOrderId(accountRecord.getId());
-                    payOrderNotifyDTO.setOrderType(NotifyType.WITHDRAW_SUCCESS.getCode());
+                    payOrderNotifyDTO.setOrderType(NotifyType.WITHDRAW_SUCCESS.code());
                     payOrderNotifyDTO.setNotifyUrl(accountRecord.getNotifyUrl());
                     notifyApi.payOrderNotify(payOrderNotifyDTO);
                 }

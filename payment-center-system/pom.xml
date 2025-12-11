@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.baosight.payment</groupId>
         <artifactId>payment-center-pom</artifactId>
-        <version>1.0.0</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>payment-center-system</artifactId>
@@ -18,10 +18,11 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.baosight.saas</groupId>
-            <artifactId>saas-common-auth</artifactId>
-        </dependency>
+<!--    <dependencies>-->
+<!--        <dependency>-->
+<!--            <groupId>com.baosight.saas</groupId>-->
+<!--            <artifactId>saas-common-auth</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-common</artifactId>
@@ -30,11 +31,11 @@
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.baosight.saas</groupId>
-            <artifactId>saas-common-dynamic-form</artifactId>
-            <version>1.0.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.baosight.saas</groupId>-->
+<!--            <artifactId>saas-common-dynamic-form</artifactId>-->
+<!--            <version>1.0.0</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
@@ -52,12 +53,12 @@
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-system-api</artifactId>
-            <version>1.0.0</version>
+            <version>${payment-center-api.version}</version>
         </dependency>
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-mch-api</artifactId>
-            <version>1.0.0</version>
+            <version>${payment-center-api.version}</version>
         </dependency>
     </dependencies>
 
