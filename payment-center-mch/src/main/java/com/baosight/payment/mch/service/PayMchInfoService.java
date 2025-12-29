@@ -7,6 +7,7 @@ import com.baosight.payment.mch.pojo.dto.MchPageDTO;
 import com.baosight.payment.mch.pojo.entity.PayMchInfo;
 import com.baosight.payment.mch.pojo.vo.PayMchInfoVO;
 import com.baosight.payment.mch.pojo.vo.PayMchListVO;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author longjiangran
@@ -27,6 +28,7 @@ public interface PayMchInfoService extends IService<PayMchInfo> {
      *
      * @param mchInfoDTO 创建商户信息请求体
      */
+    @Transactional
     Boolean createMch(MchInfoDTO mchInfoDTO);
 
     /**
@@ -42,6 +44,7 @@ public interface PayMchInfoService extends IService<PayMchInfo> {
      * @param id         商户ID
      * @param mchInfoDTO 商户信息请求体
      */
+    @Transactional
     Boolean updateMch(Long id, MchInfoDTO mchInfoDTO);
 
     /**
@@ -57,4 +60,11 @@ public interface PayMchInfoService extends IService<PayMchInfo> {
      * @param mchNo 商户号
      */
     PayMchInfo infoByMchNo(String mchNo);
+
+    /**
+     * 根据租户ID获取租户相关的企业及法人信息
+     * @param id
+     * @return
+     */
+    PayMchInfoVO tenantMchInfo(Long id);
 }

@@ -4,6 +4,7 @@ package com.baosight.payment.mch.pojo.vo;
 import com.baosight.web.core.serializer.CustomLongSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 import java.util.Date;
@@ -16,18 +17,29 @@ import java.util.Date;
  */
 @Data
 public class PayMchListVO {
-    @JsonSerialize(using = CustomLongSerializer.class)
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     /**
-     * 服务商名称
+     * 租户账号
      */
-    private String name;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long tenantId;
 
     /**
-     * 服务商简称
+     * 企业名称
      */
-    private String shortName;
+    private String mchName;
+
+    /**
+     * 商户状态
+     */
+    private Integer state;
+
+    /**
+     * 商户类型（2.普通商户 3.特约商户）
+     */
+    private Integer type;
 
     /**
      * 联系人名称
@@ -38,71 +50,6 @@ public class PayMchListVO {
      * 联系人电话
      */
     private String contactTel;
-
-    /**
-     * 联系人邮箱
-     */
-    private String contactEmail;
-
-    /**
-     * 状态
-     */
-    private Integer state;
-
-    /**
-     * 备注
-     */
-    private String remark;
-
-    /**
-     * 创建人
-     */
-    @JsonSerialize(using = CustomLongSerializer.class)
-    private Long createBy;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 更新人
-     */
-    @JsonSerialize(using = CustomLongSerializer.class)
-    private Long updateBy;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
-
-    /**
-     * 创建人名称
-     */
-    private String createByName;
-
-    /**
-     * 更新人名称
-     */
-    private String updateByName;
-
-    /**
-     * 商户类型
-     */
-    private Integer type;
-
-    @JsonIgnore
-    private Long isvId;
-
-    /**
-     * 服务商名称
-     */
-    private String isvName;
-
-    /**
-     * 商户号
-     */
-    private String mchNo;
 
 
 }

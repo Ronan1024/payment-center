@@ -23,18 +23,13 @@ public class PayWayVO extends BasePO {
     private String payName;
 
     /**
+     * 支付类别
+     */
+    private Integer payingCategory;
+
+    /**
      * 是否禁用
      */
     private Boolean disable;
 
-    /**
-     * 创建人
-     */
-    private Long createBy;
-
-    /**
-     * 更新人
-     */
-    @JsonSerialize(using = CustomLongSerializer.class)
-    private Long updateBy;
 }

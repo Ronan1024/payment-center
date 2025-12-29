@@ -25,10 +25,12 @@
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-common</artifactId>
+            <version>1.1.0</version>
         </dependency>
         <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct</artifactId>
+            <groupId>com.baosight.payment</groupId>
+            <artifactId>payment-center-partner-common</artifactId>
+            <version>1.1.0</version>
         </dependency>
 <!--        <dependency>-->
 <!--            <groupId>com.baosight.saas</groupId>-->
@@ -44,6 +46,11 @@
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-isv-api</artifactId>
             <version>${payment-center-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baosight.saas.tenant.api</groupId>
+            <artifactId>saas-tenant-feign</artifactId>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 </project>

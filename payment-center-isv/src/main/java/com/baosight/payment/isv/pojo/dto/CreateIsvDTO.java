@@ -3,6 +3,8 @@ package com.baosight.payment.isv.pojo.dto;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @author L.J.Ran
  */
@@ -17,7 +19,6 @@ public class CreateIsvDTO {
     /**
      * 服务商名称
      */
-    @NotNull(message = "服务商名称不能为空")
     private String name;
 
     /**
@@ -38,11 +39,6 @@ public class CreateIsvDTO {
     private String contactTel;
 
     /**
-     * 联系人邮箱
-     */
-    private String contactEmail;
-
-    /**
      * 是否启用
      */
     @NotNull(message = "是否启用不能为空")
@@ -52,4 +48,75 @@ public class CreateIsvDTO {
      * 备注
      */
     private String remark;
+
+    // 企业信息
+    /**
+     * 企业名称
+     */
+    private Integer enterpriseName;
+
+    /**
+     * 企业性质
+     */
+    private Integer enterpriseDominantType;
+
+    /**
+     * 社会统一信用码
+     */
+    private String unifiedSocialCreditCode;
+
+    /**
+     * 企业状态
+     */
+    private Integer enterpriseStatus;
+
+    /**
+     * 证件类型
+     */
+    private Integer certificateType;
+
+    /**
+     * 企业地址
+     */
+    private String enterpriseAddress;
+
+    /**
+     * 所属行业
+     */
+    private Integer enterpriseIndustry;
+
+    /**
+     * 经营范围
+     */
+    private String businessScope;
+
+    /**
+     * 法人名称
+     */
+    private String representativeName;
+
+    /**
+     * 法人性别
+     */
+    private Integer representativeSex;
+    /**
+     * 法人手机号
+     */
+    private String representativeTel;
+    /**
+     * 证件类型
+     */
+    private Integer representativeCertificateType;
+    /**
+     * 证件号码
+     */
+    private String representativeCertificateId;
+    /**
+     * 证件有效起始日期
+     */
+    private Date representativeCertificateEffectStartTime;
+    /**
+     * 证件有效截至日期
+     */
+    private Date representativeCertificateEffectEndTime;
 }

@@ -7,6 +7,7 @@ import com.baosight.database.mybatis.handler.BasePO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+
 /**
  * 支付服务商信息表
  *
@@ -22,41 +23,62 @@ public class PayMchInfo extends BasePO {
      */
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
-
     /**
-     * 服务商名称
+     * 商户号
+     */
+    private String mchNo;
+    /**
+     * 商户号
      */
     private String mchName;
-
     /**
-     * 服务商简称
+     * 租户ID
      */
-    private String mchShortName;
+    private Long tenantId;
 
     /**
-     * 联系人名称
+     * 租户联系人
      */
     private String contactName;
 
     /**
-     * 联系人电话
+     * 商户类型 2.普通商户 3.特约商户
      */
-    private String contactTel;
+    private Integer type;
 
     /**
-     * 联系人邮箱
-     */
-    private String contactEmail;
-
-    /**
-     * 状态
+     * 商户状态 0：停用 1：正常
      */
     private Integer state;
 
     /**
-     * 备注
+     * 服务商ID
      */
-    private String remark;
+    private Long isvId;
+    /**
+     * 服务商名称
+     */
+    private String isvName;
+
+    /**
+     * 企业信息id
+     */
+    private Long enterpriseInfoId;
+
+    /**
+     * 商户银行信息id
+     */
+    private Long bankAccountInfoId;
+
+    /**
+     * 联系电话（冗余字段，用于页面查询）
+     */
+    private String contactTel;
+
+    /**
+     * 企业名称（冗余字段，用于页面查询）
+     */
+    private String enterpriseName;
 
     /**
      * 创建人
@@ -78,18 +100,4 @@ public class PayMchInfo extends BasePO {
      */
     private String updateByName;
 
-    /**
-     * 商户类型
-     */
-    private Integer type;
-
-    /**
-     * 服务商id
-     */
-    private Long isvId;
-
-    /**
-     * 商户号
-     */
-    private String mchNo;
 }

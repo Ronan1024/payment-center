@@ -1,6 +1,7 @@
 package com.baosight.payment.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.baosight.database.core.page.PageResponse;
 import com.baosight.payment.enums.PayClientType;
 import com.baosight.payment.system.pojo.dto.PayInterFaceDefineDTO;
 import com.baosight.payment.system.pojo.dto.PayInterfaceListDTO;
@@ -30,12 +31,12 @@ public interface PayInterfaceDefineService extends IService<PayInterfaceDefine> 
      * @param id                    支付接口id
      * @param payInterFaceDefineDTO 支付接口更新信息
      */
-    Boolean updatePayInterface(Long id, PayInterFaceDefineDTO payInterFaceDefineDTO);
+    Boolean updatePayInterface(PayInterFaceDefineDTO payInterFaceDefineDTO);
 
     /**
      * 获取支付接口列表
      */
-    List<PayInterfaceDefineListVO> payInterfacePage(PayInterfaceListDTO pageDTO);
+    PageResponse<PayInterfaceDefineListVO> payInterfacePage(PayInterfaceListDTO pageDTO);
 
 
     /**
@@ -92,4 +93,5 @@ public interface PayInterfaceDefineService extends IService<PayInterfaceDefine> 
      * @param code 支付接口code
      */
     PayInterfaceDefine payInterfaceDefineByCode(String code);
+
 }

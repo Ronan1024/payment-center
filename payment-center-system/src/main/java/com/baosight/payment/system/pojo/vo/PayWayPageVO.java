@@ -30,29 +30,8 @@ public class PayWayPageVO {
     private Integer payingClient;
 
     /**
-     * 创建人
+     * 支付类别
      */
-    @JsonSerialize(using = CustomLongSerializer.class)
-    private Long createBy;
+    private Integer payingCategory;
 
-    /**
-     * 更新人
-     */
-    @JsonSerialize(using = CustomLongSerializer.class)
-    private Long updateBy;
-
-    private String payingAgency;
-
-    private String payingAgencyName;
-
-    /**
-     * 创建人名称
-     */
-    private String createByName;
-
-
-    /**
-     * 更新人名称
-     */
-    private String updateByName;
 }

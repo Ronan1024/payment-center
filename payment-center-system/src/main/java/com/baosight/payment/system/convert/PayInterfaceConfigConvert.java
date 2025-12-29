@@ -17,10 +17,10 @@ import org.mapstruct.factory.Mappers;
 public interface PayInterfaceConfigConvert {
     PayInterfaceConfigConvert INSTANCE = Mappers.getMapper(PayInterfaceConfigConvert.class);
 
-    @Mapping(target = "isvId", ignore = true)
-    @Mapping(target = "hasSetting", ignore = true)
-//    @Mapping(target = "interfaceParam", ignore = true)
-    PayInterfaceConfigVO toPayInterfaceConfigVO(PayInterfaceConfig payInterfaceConfig);
+//    @Mapping(target = "isvId", ignore = true)
+//    @Mapping(target = "hasSetting", ignore = true)
+////    @Mapping(target = "interfaceParam", ignore = true)
+//    PayInterfaceConfigVO toPayInterfaceConfigVO(PayInterfaceConfig payInterfaceConfig);
 
     @Mapping(target = "clientId", ignore = true)
     @Mapping(target = "payingAgency", ignore = true)
@@ -61,4 +61,6 @@ public interface PayInterfaceConfigConvert {
     @Mapping(target = "interfaceName", source = "name")
     @Mapping(target = "config", ignore = true)
     IsvInterfaceConfigVO toIsvInterfaceConfigVO(PayInterfaceConfig payInterfaceConfig);
+
+    PayInterfaceConfig toPayInterfaceConfig(PayInterfaceConfigVO payInterfaceConfigVO);
 }

@@ -34,10 +34,9 @@ public interface PayWayService extends IService<PayWay> {
     /**
      * 更新支付方式
      *
-     * @param id        支付方式id
      * @param payWayDTO 支付方式请求数据
      */
-    Boolean updatePayWay(Long id, SavePayWayDTO payWayDTO);
+    Boolean updatePayWay(SavePayWayDTO payWayDTO);
 
     /**
      * 删除支付方式

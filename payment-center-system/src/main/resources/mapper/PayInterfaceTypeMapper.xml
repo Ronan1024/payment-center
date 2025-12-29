@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baosight.payment.system.mapper.PayInterfaceTypeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.baosight.payment.system.pojo.entity.PayInterfaceType">
+        <id column="id" property="id" />
+        <result column="interface_type_code" property="interfaceTypeCode" />
+        <result column="interface_type_name" property="interfaceTypeName" />
+        <result column="disable" property="disable" />
+        <result column="config_way" property="configWay" />
+        <result column="remark" property="remark" />
+        <result column="description" property="description" />
+        <result column="callback_ip" property="callbackIp" />
+        <result column="is_callbak" property="isCallbak" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_by" property="updateBy" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, interface_type_code, interface_type_name, disable, config_way, remark, description, callback_ip, is_callbak, create_time, update_time, create_by, update_by
+    </sql>
+
+    <select id="page" resultType="com.baosight.payment.system.pojo.vo.PayInterfaceTypeVO">
+        select
+        *
+        from pay_interface_type
+        <where>
+            <if test="pageDTO.interfaceTypeCode != null and pageDTO.interfaceTypeCode != ''">
+                and interface_type_code = #{pageDTO.interfaceTypeCode}
+            </if>
+            <if test="pageDTO.interfaceTypeName != null and pageDTO.interfaceTypeName != ''">
+                and interface_type_name like concat('%',#{pageDTO.interfaceTypeName}, '%')
+            </if>
+        </where>
+        order by create_time ASC
+    </select>
+
+</mapper>

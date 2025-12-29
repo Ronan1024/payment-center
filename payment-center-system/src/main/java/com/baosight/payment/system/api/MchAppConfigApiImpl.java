@@ -63,7 +63,7 @@ public class MchAppConfigApiImpl implements MchAppConfigApi {
      */
     @Override
     public TongLianConfigVO tongLianConfig(Long mchNo) {
-        PayInterfaceConfig interfaceConfig = payInterfaceConfigService.getIsvInterfaceConfig(mchNo);
+//        PayInterfaceConfig interfaceConfig = payInterfaceConfigService.getIsvInterfaceConfig(mchNo);
         // TODO: 2021/11/17 通联配置信息获取
 //        List<DynamicForm> dynamicForms = JsonUtil.parseArray(interfaceConfig.getInterfaceParams(), DynamicForm.class);
 //        Map<String, Object> collect = dynamicForms.stream().collect(Collectors.toMap(DynamicForm::getName, DynamicForm::getValue));

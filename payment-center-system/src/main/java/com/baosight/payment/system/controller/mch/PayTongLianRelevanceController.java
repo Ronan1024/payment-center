@@ -35,7 +35,7 @@ public class PayTongLianRelevanceController {
         // TODO 商户id
         Long mchId = 0L;
 //        Long mchId = SystemUserContext.getCompanyId();
-        PayInterfaceConfigVO payInterfaceConfigVO = payInterfaceConfigService.getConfigInfo(mchId, PayingAgency.TONG_LIAN);
+//        PayInterfaceConfigVO payInterfaceConfigVO = payInterfaceConfigService.getConfigInfo(mchId, PayingAgency.TONG_LIAN);
 //        return payTongLianRelevanceService.bindSybMerchantCode(mchId, payInterfaceConfigVO);
         return null;
     }
@@ -47,9 +47,10 @@ public class PayTongLianRelevanceController {
     public Boolean bindPhone(@PathVariable("phone") @Validated @Mobile String phone, @PathVariable("hasLegalPerson") Boolean hasLegalPerson) {
 //        Long mchId = SystemUserContext.getCompanyId();
         // TODO 商户id
-        Long mchId = 0L;
-        PayInterfaceConfigVO payInterfaceConfigVO = payInterfaceConfigService.getConfigInfo(mchId, PayingAgency.TONG_LIAN);
-        return payTongLianRelevanceService.bindPhone(mchId, phone, payInterfaceConfigVO, hasLegalPerson);
+//        Long mchId = 0L;
+//        PayInterfaceConfigVO payInterfaceConfigVO = payInterfaceConfigService.getConfigInfo(mchId, PayingAgency.TONG_LIAN);
+//        return payTongLianRelevanceService.bindPhone(mchId, phone, payInterfaceConfigVO, hasLegalPerson);
+        return Boolean.TRUE;
     }
 
     /**
@@ -63,9 +64,10 @@ public class PayTongLianRelevanceController {
                                     @PathVariable("verifyCode") String verifyCode) {
 //        Long mchId = SystemUserContext.getCompanyId();
         // TODO 商户id
-        Long mchId = 0L;
-        PayInterfaceConfigVO payInterfaceConfigVO = payInterfaceConfigService.getConfigInfo(mchId, PayingAgency.TONG_LIAN);
-        return payTongLianRelevanceService.confirmBindPhone(phone, mchId, verifyCode, payInterfaceConfigVO, Boolean.TRUE);
+//        Long mchId = 0L;
+//        PayInterfaceConfigVO payInterfaceConfigVO = payInterfaceConfigService.getConfigInfo(mchId, PayingAgency.TONG_LIAN);
+//        return payTongLianRelevanceService.confirmBindPhone(phone, mchId, verifyCode, payInterfaceConfigVO, Boolean.TRUE);
+        return Boolean.TRUE;
     }
 
     /**
@@ -75,8 +77,9 @@ public class PayTongLianRelevanceController {
     public String contractSign(@RequestBody @Validated TongLianAgreementDTO tongLianAgreement) {
 //        Long mchId = SystemUserContext.getCompanyId();
         // TODO 商户id
-        Long mchId = 0L;
-        PayInterfaceConfigVO payInterfaceConfigVO = payInterfaceConfigService.getConfigInfo(mchId, PayingAgency.TONG_LIAN);
-        return payTongLianRelevanceService.contractSign(mchId, payInterfaceConfigVO, tongLianAgreement);
+//        Long mchId = 0L;
+//        PayInterfaceConfigVO payInterfaceConfigVO = payInterfaceConfigService.getConfigInfo(mchId, PayingAgency.TONG_LIAN);
+//        return payTongLianRelevanceService.contractSign(mchId, payInterfaceConfigVO, tongLianAgreement);
+        return "";
     }
 }

@@ -1,5 +1,6 @@
 package com.baosight.payment.system.controller.system;
 
+import com.baosight.database.core.page.PageResponse;
 import com.baosight.payment.enums.PayClientType;
 import com.baosight.payment.system.pojo.dto.PayInterFaceDefineDTO;
 import com.baosight.payment.system.pojo.dto.PayInterfaceListDTO;
@@ -8,7 +9,7 @@ import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineVO;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
 import com.baosight.payment.system.service.PayInterfaceDefineService;
-import com.baosight.payment.system.service.PayWayService;
+import com.baosight.security.annotation.AllowAccess;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -19,17 +20,16 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 /**
- * 支付接口定义
+ * 支付接口管理
  *
  * @author L.J.Ran
  */
 @RestController
 @RequiredArgsConstructor
-//@RequestMapping(BaseUrlConstant.SYSTEM + "/pm/pay/interface/define")
 @RequestMapping( "/pm/pay/interface/define")
+@AllowAccess
 public class PayInterfaceDefineController {
 
-    private final PayWayService payWayService;
     private final PayInterfaceDefineService payInterfaceDefineService;
     @Resource
     private PayInterfaceConfigService payInterfaceConfigService;
@@ -38,7 +38,7 @@ public class PayInterfaceDefineController {
      * 获取支付接口列表
      */
     @PostMapping("/page")
-    public List<PayInterfaceDefineListVO> page(@RequestBody @Validated PayInterfaceListDTO pageDTO) {
+    public PageResponse<PayInterfaceDefineListVO> page(@RequestBody @Validated PayInterfaceListDTO pageDTO) {
         return payInterfaceDefineService.payInterfacePage(pageDTO);
     }
 
@@ -57,17 +57,15 @@ public class PayInterfaceDefineController {
      */
     @PostMapping
     public Boolean insert(@RequestBody @Validated PayInterFaceDefineDTO payInterFaceDefine) {
-        payWayService.verify(payInterFaceDefine.getPayWayList());
         return payInterfaceDefineService.insert(payInterFaceDefine);
     }
 
     /**
      * 更新支付接口
      */
-    @PutMapping("/{id}")
-    public Boolean update(@PathVariable("id") Long id, @RequestBody @Validated PayInterFaceDefineDTO payInterFaceDefineDTO) {
-        payWayService.verify(payInterFaceDefineDTO.getPayWayList());
-        return payInterfaceDefineService.updatePayInterface(id, payInterFaceDefineDTO);
+    @PutMapping
+    public Boolean update(@RequestBody @Validated PayInterFaceDefineDTO payInterFaceDefineDTO) {
+        return payInterfaceDefineService.updatePayInterface(payInterFaceDefineDTO);
     }
 
     /**

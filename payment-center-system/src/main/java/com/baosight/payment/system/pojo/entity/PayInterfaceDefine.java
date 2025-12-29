@@ -88,7 +88,7 @@ public class PayInterfaceDefine extends BasePO implements Serializable {
     private String payingAgency;
 
     /**
-     * 支付接口code
+     * 支付接口代码
      */
     private String code;
 
@@ -96,6 +96,21 @@ public class PayInterfaceDefine extends BasePO implements Serializable {
      * 商户支付渠道用户信息
      */
     private String mchChannelUserKey;
+
+    /**
+     * 支付类型ID
+     */
+    private Long payInterfaceTypeId;
+
+    /**
+     * 支付类型ID
+     */
+    private Long payWayId;
+
+    /**
+     * 应用场景
+     */
+    private Integer scenario;
 
     @Serial
     @TableField(exist = false)

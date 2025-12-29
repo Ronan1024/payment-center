@@ -4,21 +4,27 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baosight.database.core.page.PageResponse;
 import com.baosight.database.core.page.PageUtil;
+import com.baosight.payment.enums.MchType;
 import com.baosight.payment.enums.State;
 import com.baosight.payment.isv.convert.PayIsvInfoConvert;
 import com.baosight.payment.isv.error.IsvError;
 import com.baosight.payment.isv.mapper.PayIsvInfoMapper;
 import com.baosight.payment.isv.pojo.dto.CreateIsvDTO;
 import com.baosight.payment.isv.pojo.dto.IsvPageDTO;
+import com.baosight.payment.pojo.entity.PayEnterpriseInfo;
 import com.baosight.payment.isv.pojo.entity.PayIsvInfo;
 import com.baosight.payment.isv.pojo.vo.PayIsvInfoVO;
 import com.baosight.payment.isv.pojo.vo.PayIsvPageVO;
 import com.baosight.payment.isv.service.PayIsvInfoService;
+import com.baosight.saas.tenant.api.TenantInfoApi;
+import com.baosight.saas.tenant.api.vo.TenantDetailInfoVO;
 import com.baosight.utils.utils.Assert;
 import com.baosight.web.core.exception.ApiException;
+import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import com.baosight.payment.mapper.PayEnterpriseInfoMapper;
 
 import java.util.List;
 
@@ -33,7 +39,10 @@ public class PayIsvInfoServiceImpl extends ServiceImpl<PayIsvInfoMapper, PayIsvI
 
 
     private final PayIsvInfoMapper payIsvInfoMapper;
+    private final PayEnterpriseInfoMapper payEnterpriseInfoMapper;
 
+    @Resource
+    private TenantInfoApi tenantInfoApi;
     /**
      * 获取服务商列表
      *
@@ -58,7 +67,11 @@ public class PayIsvInfoServiceImpl extends ServiceImpl<PayIsvInfoMapper, PayIsvI
         if (payIsvInfo == null) {
             return null;
         }
-        return PayIsvInfoConvert.INSTANCE.toPayIsvInfoVO(payIsvInfo);
+
+        // 补充企业及法人信息
+        PayEnterpriseInfo payEnterpriseInfo = payEnterpriseInfoMapper.selectById(payIsvInfo.getEnterpriseInfoId());
+        return PayIsvInfoConvert.INSTANCE.toPayIsvInfoVO(payIsvInfo,payEnterpriseInfo);
+
     }
 
     /**
@@ -72,7 +85,7 @@ public class PayIsvInfoServiceImpl extends ServiceImpl<PayIsvInfoMapper, PayIsvI
                 .eq(PayIsvInfo::getContactTel, createIsvDTO.getContactTel())
                 .eq(PayIsvInfo::getName, createIsvDTO.getName()));
         if (!ObjectUtils.isEmpty(payIsvInfo)) {
-            return Boolean.TRUE;
+            Assert.notNull(payIsvInfo, ApiException.supplier(IsvError.ISV_INFO_EXIST));
         }
         payIsvInfo = PayIsvInfoConvert.INSTANCE.toPayIsvInfo(createIsvDTO);
         Integer state = createIsvDTO.getEnable() ? State.NORMAL.code() : State.FORBIDDEN.code();
@@ -80,6 +93,11 @@ public class PayIsvInfoServiceImpl extends ServiceImpl<PayIsvInfoMapper, PayIsvI
 //        payIsvInfo.setCreateBy(AbstractUserContext.getUserId());
 //        payIsvInfo.setCreateByName(AbstractUserContext.getUsername());
         payIsvInfo.setState(state);
+
+        PayEnterpriseInfo payEnterpriseInfo = PayIsvInfoConvert.INSTANCE.toPayEnterpriseInfo(createIsvDTO);
+        payEnterpriseInfoMapper.insert(payEnterpriseInfo);
+
+        payIsvInfo.setEnterpriseInfoId(payEnterpriseInfo.getId());
         return payIsvInfoMapper.insert(payIsvInfo) > 0;
     }
 
@@ -128,6 +146,12 @@ public class PayIsvInfoServiceImpl extends ServiceImpl<PayIsvInfoMapper, PayIsvI
         );
         return payIsvInfoList.stream().map(PayIsvInfoConvert.INSTANCE::toPayIsvPageVO).toList();
 
+    }
+
+    @Override
+    public PayIsvInfoVO tenantIsvInfo(Long id) {
+        TenantDetailInfoVO tenantDetailInfo = tenantInfoApi.getTenantDetailInfo(id);
+        return PayIsvInfoConvert.INSTANCE.toPayIsvInfoVO(tenantDetailInfo);
     }
 
 

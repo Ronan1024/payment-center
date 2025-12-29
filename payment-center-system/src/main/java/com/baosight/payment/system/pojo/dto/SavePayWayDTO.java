@@ -1,11 +1,17 @@
 package com.baosight.payment.system.pojo.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class SavePayWayDTO {
+    /**
+     * 主键
+     */
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long id;
 
     /**
      * 支付方式代码 例如：WX_PAY ALI_PAY
@@ -22,12 +28,19 @@ public class SavePayWayDTO {
     /**
      * 支付机构
      */
-    @NotBlank(message = "支付机构不能为空")
     private String payingAgency;
 
     /**
      * 支付客户端
      */
-    @NotNull(message = "支付客户端不能为空")
     private Integer payingClient;
+
+    /**
+     * 支付类别
+     */
+    private Integer payingCategory;
+    /**
+     * 使用状态 true:禁用 false：启用
+     */
+    private Boolean disable;
 }

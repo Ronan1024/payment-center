@@ -8,38 +8,38 @@ import java.util.List;
 
 @Data
 public class PayInterFaceDefineDTO {
+
+    private Long id;
+
     /**
-     * 支付名称
+     * 支付接口代码
+     */
+    @NotBlank(message = "接口代码不能为空")
+    private String code;
+    /**
+     * 接口名称
      */
     @NotBlank(message = "接口名称不能为空")
     private String name;
 
     /**
-     * 是否支持普通商户
+     * 支付类型ID
      */
-    @NotNull(message = "是否支持普通商户不能为空")
-    private Boolean hasMch;
+    private Long payInterfaceTypeId;
 
     /**
-     * 是否支持子商户
+     * 支付类型ID
      */
-    @NotNull(message = "是否服务商子商户不能为空")
-    private Boolean hasSubMch;
+    private Long payWayId;
+    /**
+     * 应用场景
+     */
+    private Integer scenario;
 
-//    /**
-//     * 服务商支付参数
-//     */
-//    private List<DynamicForm> facilitatorParams;
-//
-//    /**
-//     * 子商户支付参数
-//     */
-//    private List<DynamicForm> subMchParams;
-//
-//    /**
-//     * 普通商户支付参数
-//     */
-//    private List<DynamicForm> normalMchParams;
+    /**
+     * 支付接口状态 true:开启 false：关闭
+     */
+    private Boolean enable;
 
     /**
      * 备注
@@ -47,32 +47,26 @@ public class PayInterFaceDefineDTO {
     private String remark;
 
     /**
-     * 支付方式列表
+     * 是否支持普通商户
      */
-    @NotNull(message = "支付方式不能为空")
-    private List<Long> payWayList;
+    private Boolean hasMch;
 
     /**
-     * 是否开启
+     * 是否支持服务商模式
      */
-    @NotNull(message = "是否开启不能为空")
-    private Boolean enable;
+    private Boolean hasIsvMch;
+    /**
+     * 服务商支付参数配置
+     */
+    private String isvParams;
 
     /**
-     * 支付方式图标
+     * 特约商户配置
      */
-//    @NotBlank(message = "支付方式图标不能为空")
-    private String icon;
+    private String isvSubMchParams;
 
     /**
-     * 支付接口编号
+     * 普通商户支付参数配置
      */
-    @NotBlank(message = "支付接口编号不能为空")
-    private String code;
-
-    /**
-     * 支付渠道用户key
-     */
-    @NotBlank(message = "支付渠道用户key不能为空")
-    private String mchChannelUserKey;
+    private String normalMchParams;
 }

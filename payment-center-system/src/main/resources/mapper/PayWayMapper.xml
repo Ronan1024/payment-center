@@ -10,12 +10,7 @@
         pay_code,
         pay_name,
         disable,
-        create_by,
-        update_by,
-        create_by_name,
-        update_by_name,
-        paying_agency,
-        paying_client
+        paying_category
         from pay_way
         <where>
             <if test="payWayDTO.payWayCode != null and payWayCode.payWayCode != ''">
@@ -23,6 +18,12 @@
             </if>
             <if test="payWayDTO.payWayName != null and payWayDTO.payWayName != ''">
                 and pay_name like concat('%',#{payWayDTO.payWayName}, '%')
+            </if>
+            <if test="payWayDTO.payingCategory != null">
+                paying_category = #{payWayDTO.payingCategory}
+            </if>
+            <if test="payWayDTO.disable != null">
+                disable = #{payWayDTO.disable}
             </if>
         </where>
         order by create_time ASC

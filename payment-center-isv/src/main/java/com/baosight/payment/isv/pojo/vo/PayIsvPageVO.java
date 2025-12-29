@@ -23,23 +23,10 @@ public class PayIsvPageVO extends BasePO {
      * 服务商简称
      */
     private String shortName;
-
-
     /**
      * 状态
      */
     private Integer state;
-
-    /**
-     * 创建人
-     */
-    private Long createBy;
-
-
-    /**
-     * 更新人
-     */
-    private Long updateBy;
 
     /**
      * 联系人名称
@@ -51,9 +38,6 @@ public class PayIsvPageVO extends BasePO {
      */
     private String contactTel;
 
-    /**
-     * 联系人邮箱
-     */
-    private String contactEmail;
+
 
 }

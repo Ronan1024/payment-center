@@ -17,4 +17,14 @@ public class PayWayPageDTO extends PageRequest {
      */
     private String payWayName;
 
+    /**
+     * 支付类别
+     */
+    private Integer payingCategory;
+
+    /**
+     * 使用状态
+     */
+    private Boolean disable;
+
 }

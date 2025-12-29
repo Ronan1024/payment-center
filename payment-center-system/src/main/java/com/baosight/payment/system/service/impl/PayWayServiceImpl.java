@@ -15,6 +15,7 @@ import com.baosight.payment.system.pojo.entity.PayWay;
 import com.baosight.payment.system.pojo.vo.PayWayPageVO;
 import com.baosight.payment.system.pojo.vo.PayWayVO;
 import com.baosight.payment.system.service.PayWayService;
+import com.baosight.saas.auth.context.UserContext;
 import com.baosight.utils.utils.Assert;
 import com.baosight.web.core.exception.ApiException;
 import com.ronan.common.enums.IBaseEnum;
@@ -44,10 +45,7 @@ public class PayWayServiceImpl extends ServiceImpl<PayWayMapper, PayWay> impleme
     @Override
     public PageResponse<PayWayPageVO> pagePayWay(PayWayPageDTO payWayDTO) {
         PageUtil<PayWayPageVO> pageUtil = new PageUtil<>(payWayDTO);
-        PageResponse<PayWayPageVO> build = pageUtil.builder(payWayMapper.page(pageUtil.Page(), payWayDTO)).build();
-        // 设置支付机构名称
-//        build.getList().forEach(e -> e.setPayingAgencyName(IBaseEnum.getMsg(PayingAgency.class, e.getPayingAgency())));
-        return build;
+        return pageUtil.builder(payWayMapper.page(pageUtil.Page(), payWayDTO)).build();
     }
 
     /**
@@ -60,43 +58,35 @@ public class PayWayServiceImpl extends ServiceImpl<PayWayMapper, PayWay> impleme
         Long count = payWayMapper.selectCount(new LambdaQueryWrapper<PayWay>()
                 .eq(PayWay::getPayCode, payWayDTO.getPayCode()));
         Assert.isTrue(count > 0, () -> new ApiException(PayWayError.PAY_WAY_CODE_EXIST));
-        PayingAgency payingAgency = IBaseEnum.getByCode(PayingAgency.class, payWayDTO.getPayingAgency());
-        Assert.isNull(payingAgency, () -> new ApiException(PayWayError.PAY_WAY_AGENCY_ERROR));
-        PayWay payWay = new PayWay();
-        payWay.setPayCode(payWayDTO.getPayCode());
-        payWay.setPayName(payWayDTO.getPayName());
-        // TODO 设置创建人信息
-//        payWay.setCreateByName(AbstractUserContext.getUsername());
-//        payWay.setCreateBy(AbstractUserContext.getUserId());
-        payWay.setPayingAgency(payingAgency.code());
-        payWay.setPayingClient(payWayDTO.getPayingClient());
+//        PayingAgency payingAgency = IBaseEnum.getByCode(PayingAgency.class, payWayDTO.getPayingAgency());
+//        Assert.isNull(payingAgency, () -> new ApiException(PayWayError.PAY_WAY_AGENCY_ERROR));
+        PayWay payWay = PayWayConvert.INSTANCE.toPayway(payWayDTO);
+        // 设置创建人信息
+        payWay.setCreateByName(UserContext.INSTANCE.getUsername());
+        payWay.setCreateBy(UserContext.INSTANCE.getUserId());
         return payWayMapper.insert(payWay) > 0;
     }
 
     /**
      * 更新支付方式
      *
-     * @param id        支付方式id
      * @param payWayDTO 支付方式请求数据
      */
     @Override
-    public Boolean updatePayWay(Long id, SavePayWayDTO payWayDTO) {
-        PayWay payWay = payWayMapper.selectById(id);
+    public Boolean updatePayWay(SavePayWayDTO payWayDTO) {
+        PayWay payWay = payWayMapper.selectById(payWayDTO.getId());
         Assert.isNull(payWay, () -> new ApiException(PayWayError.PAY_WAY_NOT_FOUND));
-        PayingAgency payingAgency = IBaseEnum.getByCode(PayingAgency.class, payWayDTO.getPayingAgency());
-        Assert.isNull(payingAgency, () -> new ApiException(PayWayError.PAY_WAY_AGENCY_ERROR));
+//        PayingAgency payingAgency = IBaseEnum.getByCode(PayingAgency.class, payWayDTO.getPayingAgency());
+//        Assert.isNull(payingAgency, () -> new ApiException(PayWayError.PAY_WAY_AGENCY_ERROR));
         Long count = payWayMapper.selectCount(new LambdaQueryWrapper<PayWay>()
                 .eq(PayWay::getPayCode, payWayDTO.getPayCode())
                 .eq(PayWay::getPayName, payWayDTO.getPayName())
                 .ne(PayWay::getId, payWay.getId()));
         Assert.isTrue(count > 0, () -> new ApiException(PayWayError.PAY_WAY_CODE_EXIST));
-        payWay.setPayName(payWayDTO.getPayName());
-        payWay.setPayCode(payWayDTO.getPayCode());
-        // TODO 设置更新人信息
-//        payWay.setUpdateBy(AbstractUserContext.getUserId());
-//        payWay.setUpdateByName(AbstractUserContext.getUsername());
-        payWay.setPayingAgency(payingAgency.code());
-        payWay.setPayingClient(payWayDTO.getPayingClient());
+
+        PayWayConvert.INSTANCE.toPayway(payWayDTO,payWay);
+        payWay.setUpdateBy(UserContext.INSTANCE.getUserId());
+        payWay.setUpdateByName(UserContext.INSTANCE.getUsername());
         return payWayMapper.updateById(payWay) > 0;
     }
 
