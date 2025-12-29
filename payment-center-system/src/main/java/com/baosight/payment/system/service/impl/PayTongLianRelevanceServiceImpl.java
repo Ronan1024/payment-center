@@ -78,27 +78,29 @@ public class PayTongLianRelevanceServiceImpl extends ServiceImpl<PayTongLianRele
      */
     @Override
     public Boolean bindSybMerchantCode(Long mchId, Long payInterfaceId) {
-        TongLianRelevanceVO relevanceInfo = getRelevanceInfo(mchId);
-        if (Boolean.TRUE.equals(relevanceInfo.getHasBindSyb())) {
-            return Boolean.TRUE;
-        }
+//        TongLianRelevanceVO relevanceInfo = getRelevanceInfo(mchId);
+//        if (Boolean.TRUE.equals(relevanceInfo.getHasBindSyb())) {
+//            return Boolean.TRUE;
+//        }
+//
+//
+//        TongLianIsvAndMchConfigDAO payInterfaceConfig = payInterfaceConfigService.getTongLianIsvAndMchConfig(mchId, payInterfaceId);
+//
+//        // 获取获取服务商配置
+//        TongLianClient tongLianClient = new TongLianClient(payInterfaceConfig.isvConfig());
+//        // TODO 通联商户号异常
+//        TongLianClient.SendBuild sendBuild = MembershipAndAccountHandler.memberBindSyb(SnowflakeIdUtil.nextId(), String.valueOf(mchId), payInterfaceConfig.mchConfig().getSignNum());
+//
+//        TongLianClient.Response response = tongLianClient.sendRequest(sendBuild, tlUserUrl);
+//        if (Boolean.TRUE.equals(response.getSuccess())) {
+//            payTongLianRelevanceMapper.update(new LambdaUpdateWrapper<PayTongLianRelevance>()
+//                    .eq(PayTongLianRelevance::getMchId, mchId)
+//                    .set(PayTongLianRelevance::getHasBindSyb, Boolean.TRUE)
+//            );
+//        }
+//        return response.getSuccess();
 
-
-        TongLianIsvAndMchConfigDAO payInterfaceConfig = payInterfaceConfigService.getTongLianIsvAndMchConfig(mchId, payInterfaceId);
-
-        // 获取获取服务商配置
-        TongLianClient tongLianClient = new TongLianClient(payInterfaceConfig.isvConfig());
-        // TODO 通联商户号异常
-        TongLianClient.SendBuild sendBuild = MembershipAndAccountHandler.memberBindSyb(SnowflakeIdUtil.nextId(), String.valueOf(mchId), payInterfaceConfig.mchConfig().getSignNum());
-
-        TongLianClient.Response response = tongLianClient.sendRequest(sendBuild, tlUserUrl);
-        if (Boolean.TRUE.equals(response.getSuccess())) {
-            payTongLianRelevanceMapper.update(new LambdaUpdateWrapper<PayTongLianRelevance>()
-                    .eq(PayTongLianRelevance::getMchId, mchId)
-                    .set(PayTongLianRelevance::getHasBindSyb, Boolean.TRUE)
-            );
-        }
-        return response.getSuccess();
+        return Boolean.TRUE;
     }
 
     /**
@@ -311,14 +313,14 @@ public class PayTongLianRelevanceServiceImpl extends ServiceImpl<PayTongLianRele
         return Boolean.TRUE;
     }
 
-    private TongLianMchConfigDAO handler(PayInterfaceConfigVO payInterfaceConfig) {
-        Assert.isFalse(!ObjectUtils.isEmpty(payInterfaceConfig) && payInterfaceConfig.getPayingAgency().equals(PayingAgency.TONG_LIAN.code()), ApiException.supplier(PayingAgencyError.PAYING_AGENCY_ERROR, PayingAgency.TONG_LIAN.desc()));
-        // TODO 待处理
-//        List<DynamicForm> interfaceParam = payInterfaceConfig.getInterfaceParam();
-//        Map<String, Object> collect = interfaceParam.stream().collect(Collectors.toMap(DynamicForm::getName, DynamicForm::getValue));
-//        return JsonUtil.parse(JsonUtil.toJson(collect), TongLianMchConfigDAO.class);
-        return null;
-    }
+//    private TongLianMchConfigDAO handler(PayInterfaceConfigVO payInterfaceConfig) {
+//        Assert.isFalse(!ObjectUtils.isEmpty(payInterfaceConfig) && payInterfaceConfig.getPayingAgency().equals(PayingAgency.TONG_LIAN.code()), ApiException.supplier(PayingAgencyError.PAYING_AGENCY_ERROR, PayingAgency.TONG_LIAN.desc()));
+//        // TODO 待处理
+////        List<DynamicForm> interfaceParam = payInterfaceConfig.getInterfaceParam();
+////        Map<String, Object> collect = interfaceParam.stream().collect(Collectors.toMap(DynamicForm::getName, DynamicForm::getValue));
+////        return JsonUtil.parse(JsonUtil.toJson(collect), TongLianMchConfigDAO.class);
+//        return null;
+//    }
 
 }
 

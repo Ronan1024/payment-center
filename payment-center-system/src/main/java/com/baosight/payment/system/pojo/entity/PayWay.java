@@ -43,6 +43,21 @@ public class PayWay extends BasePO implements Serializable {
     private Boolean disable;
 
     /**
+     * 支付机构
+     */
+    private String payingAgency;
+
+    /**
+     * 支付客户端
+     */
+    private Integer payingClient;
+
+    /**
+     * 支付类别
+     */
+    private Integer payingCategory;
+
+    /**
      * 创建人
      */
     private Long createBy;
@@ -61,15 +76,7 @@ public class PayWay extends BasePO implements Serializable {
      * 更新人名称
      */
     private String updateByName;
-    /**
-     * 支付机构
-     */
-    private String payingAgency;
 
-    /**
-     * 支付客户端
-     */
-    private Integer payingClient;
 
     @Serial
     @TableField(exist = false)

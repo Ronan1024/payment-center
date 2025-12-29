@@ -90,6 +90,11 @@
             <artifactId>flyway-mysql</artifactId>
             <version>11.9.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.baosight.saas.tenant.api</groupId>
+            <artifactId>saas-tenant-feign</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>

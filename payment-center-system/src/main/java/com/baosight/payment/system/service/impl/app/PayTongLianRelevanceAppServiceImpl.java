@@ -42,12 +42,13 @@ public class PayTongLianRelevanceAppServiceImpl implements PayTongLianRelevanceA
      */
     @Override
     public Boolean bindSybMerchantCode(Long mchId, Long interfaceId) {
-        TongLianRelevanceVO relevanceInfo = payTongLianRelevanceService.getRelevanceInfo(mchId);
-        if (Boolean.TRUE.equals(relevanceInfo.getHasBindSyb())) {
-            return Boolean.TRUE;
-        }
-        TongLianIsvAndMchConfigDAO mchConfig = payInterfaceConfigService.getTongLianIsvAndMchConfig(mchId, interfaceId);
-        return payTongLianRelevanceService.bindSybMerchantCode(mchId, mchConfig, interfaceId);
+//        TongLianRelevanceVO relevanceInfo = payTongLianRelevanceService.getRelevanceInfo(mchId);
+//        if (Boolean.TRUE.equals(relevanceInfo.getHasBindSyb())) {
+//            return Boolean.TRUE;
+//        }
+//        TongLianIsvAndMchConfigDAO mchConfig = payInterfaceConfigService.getTongLianIsvAndMchConfig(mchId, interfaceId);
+//        return payTongLianRelevanceService.bindSybMerchantCode(mchId, mchConfig, interfaceId);
+        return Boolean.TRUE;
     }
 
     /**
@@ -60,12 +61,13 @@ public class PayTongLianRelevanceAppServiceImpl implements PayTongLianRelevanceA
      */
     @Override
     public Boolean bindPhoneReport(Long mchId, String phone, Boolean hasLegalPerson, Long interfaceId) {
-        TongLianRelevanceVO relevanceInfo = payTongLianRelevanceService.getRelevanceInfo(mchId);
-        if (Boolean.TRUE.equals(relevanceInfo.getHasBindPhone())) {
-            return Boolean.TRUE;
-        }
-        TongLianIsvAndMchConfigDAO mchConfig = payInterfaceConfigService.getTongLianIsvAndMchConfig(mchId, interfaceId);
-        return payTongLianRelevanceService.bindPhoneReport(mchId, mchConfig, interfaceId, phone, hasLegalPerson);
+//        TongLianRelevanceVO relevanceInfo = payTongLianRelevanceService.getRelevanceInfo(mchId);
+//        if (Boolean.TRUE.equals(relevanceInfo.getHasBindPhone())) {
+//            return Boolean.TRUE;
+//        }
+//        TongLianIsvAndMchConfigDAO mchConfig = payInterfaceConfigService.getTongLianIsvAndMchConfig(mchId, interfaceId);
+//        return payTongLianRelevanceService.bindPhoneReport(mchId, mchConfig, interfaceId, phone, hasLegalPerson);
+        return Boolean.TRUE;
     }
 
     /**
@@ -75,17 +77,18 @@ public class PayTongLianRelevanceAppServiceImpl implements PayTongLianRelevanceA
      */
     @Override
     public String contractSign(Long mchId) {
-        PayInterfaceDefine payInterfaceDefine = payInterfaceDefineService.payInterfaceDefineByCode(PayInterfaceCode.TONG_LIAN_PAY.code());
-        Assert.isNull(payInterfaceDefine, ApiException.supplier(PayInterfaceError.PAY_INTERFACE_CHANNEL_NOT_CONFIG));
-        MchInfoVO mchInfoVO = mchInfoApi.mchInfo(mchId);
-
-        PayInterfaceConfigVO payInterfaceConfigVO = payInterfaceConfigService.getConfigInfo(mchInfoVO.getIsvId(), PayingAgency.TONG_LIAN, payInterfaceDefine.getId());
-        Assert.isNull(payInterfaceConfigVO, ApiException.supplier(PayInterfaceConfigError.MERCHANT_NOT_CONFIG_PAY_INTERFACE));
-        Assert.isNull(payInterfaceConfigVO.getInterfaceRate(), ApiException.supplier(PayInterfaceConfigError.PAY_RATE_NOT_CONFIG));
-
-        TongLianIsvAndMchConfigDAO mchConfig = payInterfaceConfigService.getTongLianIsvAndMchConfig(mchId, payInterfaceDefine.getId());
-
-        return payTongLianRelevanceService.contractSign(mchId, mchConfig, payInterfaceConfigVO.getInterfaceRate());
+//        PayInterfaceDefine payInterfaceDefine = payInterfaceDefineService.payInterfaceDefineByCode(PayInterfaceCode.TONG_LIAN_PAY.code());
+//        Assert.isNull(payInterfaceDefine, ApiException.supplier(PayInterfaceError.PAY_INTERFACE_CHANNEL_NOT_CONFIG));
+//        MchInfoVO mchInfoVO = mchInfoApi.mchInfo(mchId);
+//
+//        PayInterfaceConfigVO payInterfaceConfigVO = payInterfaceConfigService.getConfigInfo(mchInfoVO.getIsvId(), PayingAgency.TONG_LIAN, payInterfaceDefine.getId());
+//        Assert.isNull(payInterfaceConfigVO, ApiException.supplier(PayInterfaceConfigError.MERCHANT_NOT_CONFIG_PAY_INTERFACE));
+//        Assert.isNull(payInterfaceConfigVO.getInterfaceRate(), ApiException.supplier(PayInterfaceConfigError.PAY_RATE_NOT_CONFIG));
+//
+//        TongLianIsvAndMchConfigDAO mchConfig = payInterfaceConfigService.getTongLianIsvAndMchConfig(mchId, payInterfaceDefine.getId());
+//
+//        return payTongLianRelevanceService.contractSign(mchId, mchConfig, payInterfaceConfigVO.getInterfaceRate());
+        return "";
     }
 
     /**
@@ -97,9 +100,10 @@ public class PayTongLianRelevanceAppServiceImpl implements PayTongLianRelevanceA
      */
     @Override
     public Boolean confirmBindPhone(Long mchId, String phone, String verifyCode) {
-        PayInterfaceDefine payInterfaceDefine = payInterfaceDefineService.payInterfaceDefineByCode(PayInterfaceCode.TONG_LIAN_PAY.code());
-        Assert.isNull(payInterfaceDefine, ApiException.supplier(PayInterfaceError.PAY_INTERFACE_CHANNEL_NOT_CONFIG));
-        TongLianIsvAndMchConfigDAO mchConfig = payInterfaceConfigService.getTongLianIsvAndMchConfig(mchId, payInterfaceDefine.getId());
-        return payTongLianRelevanceService.confirmBindPhone(phone, mchId, verifyCode, mchConfig, Boolean.TRUE);
+//        PayInterfaceDefine payInterfaceDefine = payInterfaceDefineService.payInterfaceDefineByCode(PayInterfaceCode.TONG_LIAN_PAY.code());
+//        Assert.isNull(payInterfaceDefine, ApiException.supplier(PayInterfaceError.PAY_INTERFACE_CHANNEL_NOT_CONFIG));
+//        TongLianIsvAndMchConfigDAO mchConfig = payInterfaceConfigService.getTongLianIsvAndMchConfig(mchId, payInterfaceDefine.getId());
+//        return payTongLianRelevanceService.confirmBindPhone(phone, mchId, verifyCode, mchConfig, Boolean.TRUE);
+        return Boolean.TRUE;
     }
 }

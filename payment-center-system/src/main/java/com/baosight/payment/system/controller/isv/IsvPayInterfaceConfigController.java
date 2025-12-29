@@ -1,5 +1,6 @@
 package com.baosight.payment.system.controller.isv;
 
+import com.baosight.database.core.page.PageResponse;
 import com.baosight.payment.enums.PayClientType;
 import com.baosight.payment.system.pojo.dto.PayInterFaceDefineDTO;
 import com.baosight.payment.system.pojo.dto.PayInterfaceListDTO;
@@ -29,7 +30,6 @@ import java.util.Map;
 @RequestMapping( "/isv/pay/config")
 public class IsvPayInterfaceConfigController {
 
-    private final PayWayService payWayService;
     private final PayInterfaceDefineService payInterfaceDefineService;
     private final PayInterfaceConfigService payInterfaceConfigService;
 
@@ -37,7 +37,7 @@ public class IsvPayInterfaceConfigController {
      * 获取支付接口列表
      */
     @PostMapping("/page")
-    public List<PayInterfaceDefineListVO> page(@RequestBody @Validated PayInterfaceListDTO pageDTO) {
+    public PageResponse<PayInterfaceDefineListVO> page(@RequestBody @Validated PayInterfaceListDTO pageDTO) {
         return payInterfaceDefineService.payInterfacePage(pageDTO);
     }
 
@@ -56,7 +56,6 @@ public class IsvPayInterfaceConfigController {
      */
     @PostMapping
     public Boolean insert(@RequestBody @Validated PayInterFaceDefineDTO payInterFaceDefine) {
-        payWayService.verify(payInterFaceDefine.getPayWayList());
         return payInterfaceDefineService.insert(payInterFaceDefine);
     }
 
@@ -64,9 +63,8 @@ public class IsvPayInterfaceConfigController {
      * 更新支付接口
      */
     @PutMapping("/{id}")
-    public Boolean update(@PathVariable("id") Long id, @RequestBody @Validated PayInterFaceDefineDTO payInterFaceDefineDTO) {
-        payWayService.verify(payInterFaceDefineDTO.getPayWayList());
-        return payInterfaceDefineService.updatePayInterface(id, payInterFaceDefineDTO);
+    public Boolean update(@RequestBody @Validated PayInterFaceDefineDTO payInterFaceDefineDTO) {
+        return payInterfaceDefineService.updatePayInterface(payInterFaceDefineDTO);
     }
 
     /**

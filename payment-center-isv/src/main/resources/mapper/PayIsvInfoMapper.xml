@@ -20,11 +20,14 @@
         contact_email
         from pay_isv_info
         <where>
-            <if test="isvPageDTO.id != null">
-                and id = #{isvPageDTO.id}
+            <if test="isvPageDTO.shortName != null and isvPageDTO.shortName != ''">
+                and short_name = #{isvPageDTO.shortName}
             </if>
             <if test="isvPageDTO.name != null and isvPageDTO.name != ''">
                 and `name` like concat('%',#{isvPageDTO.name}, '%')
+            </if>
+            <if test="isvPageDTO.contactName != null and isvPageDTO.contactName != ''">
+                and `contact_name` like concat('%',#{isvPageDTO.contactName}, '%')
             </if>
         </where>
     </select>

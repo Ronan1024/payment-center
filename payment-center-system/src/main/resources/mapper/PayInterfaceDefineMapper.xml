@@ -4,4 +4,33 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.baosight.payment.system.mapper.PayInterfaceDefineMapper">
 
+    <select id="page" resultType="com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO">
+        select pid.id,pid.code,pid.name,pid.scenario,pit.interface_type_code,pit.interface_type_name,pw.pay_name,pid.create_time,pid.update_time,pid.enable
+        from pay_interface_define pid
+        left join pay_interface_type pit on pid.pay_interface_type_id = pit.id
+        left join pay_way pw on pid.pay_way_id = pw.id
+        <where>
+            <if test="pageDTO.code != null and pageDTO.code != ''">
+                pid.code = #{pageDTO.code}
+            </if>
+            <if test="pageDTO.name != null and pageDTO.name != ''">
+                pid.name = #{pageDTO.name}
+            </if>
+            <if test="pageDTO.scenario != null">
+                pid.scenario = #{pageDTO.scenario}
+            </if>
+            <if test="pageDTO.interfaceTypeName != null and pageDTO.interfaceTypeName != ''">
+                pit.interface_type_name = #{pageDTO.interfaceTypeName}
+            </if>
+            <if test="pageDTO.payName != null and pageDTO.payName != ''">
+                pw.pay_name = #{pageDTO.payName}
+            </if>
+        </where>
+    </select>
+    <select id="getInterfaceById" resultType="com.baosight.payment.system.pojo.vo.PayInterfaceDefineVO">
+        select id,code, name, scenario, pay_interface_type_id, pay_way_id, `enable`,
+               has_mch,has_isv_mch,remark,isv_params,isv_sub_mch_params,normal_mch_params
+        from pay_interface_define
+        where id = #{id}
+    </select>
 </mapper>

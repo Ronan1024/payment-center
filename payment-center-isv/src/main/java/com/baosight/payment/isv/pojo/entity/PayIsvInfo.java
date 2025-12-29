@@ -46,12 +46,7 @@ public class PayIsvInfo extends BasePO implements Serializable {
     private String contactTel;
 
     /**
-     * 联系人邮箱
-     */
-    private String contactEmail;
-
-    /**
-     * 状态
+     * 服务商状态
      */
     private Integer state;
 
@@ -59,6 +54,12 @@ public class PayIsvInfo extends BasePO implements Serializable {
      * 备注
      */
     private String remark;
+
+    /**
+     * 企业数据id
+     */
+    private Long enterpriseInfoId;
+
 
     /**
      * 创建者用户ID

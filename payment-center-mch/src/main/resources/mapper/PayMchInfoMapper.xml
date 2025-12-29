@@ -4,38 +4,39 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.baosight.payment.mch.mapper.PayMchInfoMapper">
 
+
     <select id="page" resultType="com.baosight.payment.mch.pojo.vo.PayMchListVO">
-        select id,
-        mch_name as name,
-        mch_short_name as shortName,
-        contact_name as contactName,
-        contact_tel as contactTel,
-        contact_email as contactEmail,
+        select pmi.id,
+        tenant_id,
+        mch_name,
         state,
-        remark,
-        create_by as createBy,
-        create_time as createTime,
-        update_by as updateBy,
-        update_time as updateTime,
-        create_time as createByName,
-        update_by_name as updateByName,
-        isv_id as isvId,
-        `type`
-        from pay_mch_info
+        type,
+        contact_name,
+        contact_tel
+        from pay_mch_info pmi
+        left join pay_enterprise_info pei on pei.id = pmi.enterprise_info_id
+        left join pay_bank_account_info pbai on pbai.id = pmi.bank_account_info_id
         <where>
-            <if test="mchPage.mchId != null">
-                and id = #{mchPage.mchId}
+            <if test="mchPage.tenantId != null">
+                and tenant_id = #{mchPage.tenantId}
             </if>
-            <if test="mchPage.name != null and mchPage.name != ''">
-                and `mch_name` LIKE CONCAT('%', #{mchPage.name}, '%')
+            <if test="mchPage.mchName != null and mchPage.mchName != ''">
+                and `mch_name` LIKE CONCAT('%', #{mchPage.mchName}, '%')
             </if>
-            <if test="mchPage.isvId !=null">
-                and isv_id = #{mchPage.isvId}
+            <if test="mchPage.state != null">
+                and state = #{mchPage.state}
             </if>
             <if test="mchPage.type != null">
-                and `type` = #{mchPage.type}
+                and type = #{mchPage.type}
             </if>
-        </where>
+            <if test="mchPage.contactName != null and mchPage.contactName != ''">
+                and contact_name = #{mchPage.contactName}
+            </if>
+            <if test="mchPage.contactTel != null and mchPage.contactTel != ''">
+                and contact_tel = #{mchPage.contactTel}
+            </if>
 
+        </where>
     </select>
+
 </mapper>

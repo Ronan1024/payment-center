@@ -1,5 +1,6 @@
 package com.baosight.payment.system.controller.mch;
 
+import com.baosight.database.core.page.PageResponse;
 import com.baosight.payment.enums.PayClientType;
 import com.baosight.payment.system.pojo.dto.PayInterfaceListDTO;
 import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
@@ -33,7 +34,7 @@ public class MchPayInterfaceConfigController {
      * 获取支付接口列表
      */
     @PostMapping("/page")
-    public List<PayInterfaceDefineListVO> page(@RequestBody @Validated PayInterfaceListDTO pageDTO) {
+    public PageResponse<PayInterfaceDefineListVO> page(@RequestBody @Validated PayInterfaceListDTO pageDTO) {
         return payInterfaceDefineService.payInterfacePage(pageDTO);
     }
 

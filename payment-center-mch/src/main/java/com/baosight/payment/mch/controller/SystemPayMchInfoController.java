@@ -7,6 +7,7 @@ import com.baosight.payment.mch.pojo.dto.MchPageDTO;
 import com.baosight.payment.mch.pojo.vo.PayMchInfoVO;
 import com.baosight.payment.mch.pojo.vo.PayMchListVO;
 import com.baosight.payment.mch.service.PayMchInfoService;
+import com.baosight.security.annotation.AllowAccess;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 
 /**
+ * 商户管理
+ *
  * @program: payment-center
  * @description: 系统商户管理控制器
  * @author: L.J.Ran
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 //@RequestMapping(SYSTEM + "/pm/pay/mch/manage")
 @RequestMapping( "/pm/pay/mch/manage")
+@AllowAccess
 public class SystemPayMchInfoController {
 
     @Resource
@@ -49,6 +53,17 @@ public class SystemPayMchInfoController {
         return payMchInfoService.createMch(mchInfoDTO);
     }
 
+
+    /**
+     * 根据租户ID获取租户相关的企业及法人信息
+     *
+     * @param id 商户id
+     * @return 商户信息
+     */
+    @GetMapping("/byTenant/{tenantId}")
+    public PayMchInfoVO tenantMchInfo(@PathVariable("tenantId") Long id) {
+        return payMchInfoService.tenantMchInfo(id);
+    }
 
     /**
      * 获取商户信息

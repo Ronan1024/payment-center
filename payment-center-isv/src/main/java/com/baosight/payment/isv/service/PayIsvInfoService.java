@@ -7,6 +7,7 @@ import com.baosight.payment.isv.pojo.dto.IsvPageDTO;
 import com.baosight.payment.isv.pojo.entity.PayIsvInfo;
 import com.baosight.payment.isv.pojo.vo.PayIsvInfoVO;
 import com.baosight.payment.isv.pojo.vo.PayIsvPageVO;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,6 +32,7 @@ public interface PayIsvInfoService extends IService<PayIsvInfo> {
      * @param id 服务商id
      * @return 服务商详情
      */
+    @Transactional
     PayIsvInfoVO info(Long id);
 
     /**
@@ -38,6 +40,7 @@ public interface PayIsvInfoService extends IService<PayIsvInfo> {
      *
      * @param createIsvDTO 服务商请求信息
      */
+    @Transactional
     Boolean createIsv(CreateIsvDTO createIsvDTO);
 
     /**
@@ -64,4 +67,11 @@ public interface PayIsvInfoService extends IService<PayIsvInfo> {
      * 获取所有服务商列表
      */
     List<PayIsvPageVO> isvList();
+
+    /**
+     * 根据租户ID获取服务商信息
+     * @param id
+     * @return
+     */
+    PayIsvInfoVO tenantIsvInfo(Long id);
 }

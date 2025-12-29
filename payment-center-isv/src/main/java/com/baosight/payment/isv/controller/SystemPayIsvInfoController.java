@@ -7,6 +7,7 @@ import com.baosight.payment.isv.pojo.dto.IsvPageDTO;
 import com.baosight.payment.isv.pojo.vo.PayIsvInfoVO;
 import com.baosight.payment.isv.pojo.vo.PayIsvPageVO;
 import com.baosight.payment.isv.service.PayIsvInfoService;
+import com.baosight.security.annotation.AllowAccess;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -15,12 +16,13 @@ import java.util.List;
 
 
 /**
- * @author L.J.Ran
+ * 服务商管理
  */
 @RestController
 @RequiredArgsConstructor
 //@RequestMapping(SYSTEM + "/pm/pay/isv/manage")
 @RequestMapping("/pm/pay/isv/manage")
+@AllowAccess
 public class SystemPayIsvInfoController {
     private final PayIsvInfoService payIsvInfoService;
 
@@ -38,7 +40,6 @@ public class SystemPayIsvInfoController {
     /**
      * 获取服务商详情信息
      */
-//    @AllowAccess
     @GetMapping("/{id}")
     public PayIsvInfoVO info(@PathVariable("id") Long id) {
         return payIsvInfoService.info(id);
@@ -69,5 +70,16 @@ public class SystemPayIsvInfoController {
     @GetMapping("/list")
     public List<PayIsvPageVO> list() {
         return payIsvInfoService.isvList();
+    }
+
+    /**
+     * 根据租户ID获取服务商信息
+     *
+     * @param id 商户id
+     * @return 商户信息
+     */
+    @GetMapping("/byTenant/{tenantId}")
+    public PayIsvInfoVO tenantMchInfo(@PathVariable("tenantId") Long id) {
+        return payIsvInfoService.tenantIsvInfo(id);
     }
 }

@@ -15,23 +15,32 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class MchPageDTO extends PageRequest {
     /**
-     * 商户id
+     * 租户id
      */
-    private Long mchId;
+    private Long tenantId;
 
     /**
-     * 商户名称
+     * 企业名称
      */
-    private String name;
+    private String mchName;
 
     /**
-     * 服务商号
+     * 商户状态
      */
-    private Long isvId;
+    private Integer state;
 
     /**
-     * 商户类型
+     * 商户类型（2.普通商户 3.特约商户）
      */
     private Integer type;
 
+    /**
+     * 联系人名称
+     */
+    private String contactName;
+
+    /**
+     * 联系人电话
+     */
+    private String contactTel;
 }

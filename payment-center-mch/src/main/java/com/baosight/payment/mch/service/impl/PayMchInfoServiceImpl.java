@@ -8,27 +8,30 @@ import com.baosight.distributedid.toolkit.SnowflakeIdUtil;
 import com.baosight.payment.enums.MchType;
 import com.baosight.payment.isv.api.IsvInfoApi;
 import com.baosight.payment.isv.vo.IsvInfoVO;
+import com.baosight.payment.mapper.PayEnterpriseInfoMapper;
 import com.baosight.payment.mch.convert.PayMchInfoConvert;
 import com.baosight.payment.mch.error.MchError;
+import com.baosight.payment.mch.mapper.PayBankAccountInfoMapper;
 import com.baosight.payment.mch.mapper.PayMchInfoMapper;
 import com.baosight.payment.mch.pojo.dto.MchInfoDTO;
 import com.baosight.payment.mch.pojo.dto.MchPageDTO;
+import com.baosight.payment.mch.pojo.entity.PayBankAccountInfo;
 import com.baosight.payment.mch.pojo.entity.PayMchInfo;
 import com.baosight.payment.mch.pojo.vo.PayMchInfoVO;
 import com.baosight.payment.mch.pojo.vo.PayMchListVO;
 import com.baosight.payment.mch.service.PayMchInfoService;
+import com.baosight.payment.pojo.entity.PayEnterpriseInfo;
 import com.baosight.payment.utils.IdGenUtil;
+import com.baosight.saas.tenant.api.TenantInfoApi;
+import com.baosight.saas.tenant.api.vo.TenantDetailInfoVO;
 import com.baosight.utils.utils.Assert;
 import com.baosight.web.core.exception.ApiException;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
+import com.baosight.saas.auth.context.UserContext;
 
-import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * @author longjiangran
@@ -39,6 +42,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchInfo> implements PayMchInfoService {
     private final PayMchInfoMapper payMchInfoMapper;
+    private final PayEnterpriseInfoMapper payEnterpriseInfoMapper;
+    private final PayBankAccountInfoMapper payBankAccountInfoMapper;
+    @Resource
+    private TenantInfoApi tenantInfoApi;
 
     @Resource
     private IsvInfoApi isvInfoApi;
@@ -51,20 +58,7 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
     @Override
     public PageResponse<PayMchListVO> mchPage(MchPageDTO mchPage) {
         PageUtil<PayMchListVO> pageUtil = new PageUtil<>(mchPage);
-        PageResponse<PayMchListVO> build = pageUtil.builder(payMchInfoMapper.page(pageUtil.Page(), mchPage)).build();
-        List<PayMchListVO> list = build.getList();
-        if (!CollectionUtils.isEmpty(list)) {
-            List<Long> isvId = list.stream().filter(e -> e.getType().equals(MchType.SUB_MERCHANT.code())).map(PayMchListVO::getIsvId).toList();
-            List<IsvInfoVO> isvInfoVOList = isvInfoApi.isvInfoList(isvId);
-            Map<Long, IsvInfoVO> isvInfoMap = isvInfoVOList.stream().collect(Collectors.toMap(IsvInfoVO::getId, e -> e));
-            list.stream().filter(e -> e.getType().equals(MchType.SUB_MERCHANT.code())).filter(e -> isvInfoMap.containsKey(e.getIsvId()))
-                    .forEach(e -> {
-                        IsvInfoVO isvInfoVO = isvInfoMap.get(e.getIsvId());
-                        e.setIsvName(isvInfoVO.getName());
-                    });
-        }
-
-        return build;
+        return pageUtil.builder(payMchInfoMapper.page(pageUtil.Page(), mchPage)).build();
     }
 
     /**
@@ -76,18 +70,25 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
     public Boolean createMch(MchInfoDTO mchInfoDTO) {
         //处理特约商户
         handlerSpecialMch.accept(mchInfoDTO);
+        // 按商户名称+联系人做唯一性判断
         PayMchInfo payMchInfo = payMchInfoMapper.selectOne(new LambdaQueryWrapper<PayMchInfo>()
-                .eq(PayMchInfo::getMchName, mchInfoDTO.getMchName())
-                .eq(PayMchInfo::getContactTel, mchInfoDTO.getContactTel()));
+                .eq(PayMchInfo::getEnterpriseName, mchInfoDTO.getMchName())
+                .eq(PayMchInfo::getContactTel, mchInfoDTO.getRepresentativeTel()));
         Assert.notNull(payMchInfo, ApiException.supplier(MchError.MCH_INFO_EXIST));
         payMchInfo = PayMchInfoConvert.INSTANCE.toPayMchInfo(mchInfoDTO);
-        //TODO 用户信息
-//        payMchInfo.setCreateBy(SystemUserContext.getUserId());
-//        payMchInfo.setCreateByName(SystemUserContext.getUsername());
+        PayEnterpriseInfo payEnterpriseInfo = PayMchInfoConvert.INSTANCE.toPayEnterpriseInfo(mchInfoDTO);
+        payEnterpriseInfoMapper.insert(payEnterpriseInfo);
+        PayBankAccountInfo payBankAccountInfo = PayMchInfoConvert.INSTANCE.toPayBankAccountInfo(mchInfoDTO);
+        payBankAccountInfoMapper.insert(payBankAccountInfo);
+
+        payMchInfo.setEnterpriseInfoId(payEnterpriseInfo.getId());
+        payMchInfo.setBankAccountInfoId(payBankAccountInfo.getId());
+        payMchInfo.setCreateBy(UserContext.INSTANCE.getUserId());
+        payMchInfo.setCreateByName(UserContext.INSTANCE.getUsername());
         if (mchInfoDTO.getType().equals(MchType.MERCHANT.code())) {
             payMchInfo.setIsvId(null);
+            payMchInfo.setContactName(mchInfoDTO.getRepresentativeName()); // 联系人，如果是特约商户，使用租户联系人；普通商户使用企业法人
         }
-
         String prefix = mchInfoDTO.getType().equals(MchType.MERCHANT.code()) ? "N" : "S";
         String mchNo = IdGenUtil.generateId(SnowflakeIdUtil.nextId());
         payMchInfo.setMchNo(prefix + mchNo);
@@ -97,6 +98,8 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
 
     /**
      * 处理特约商户
+     * 1、服务商ID不能为空
+     * 2、服务商信息必须存在
      */
     private final Consumer<MchInfoDTO> handlerSpecialMch = (e) -> {
         if (e.getType().equals(MchType.SUB_MERCHANT.code())) {
@@ -114,12 +117,15 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
     @Override
     public PayMchInfoVO info(Long id) {
         PayMchInfo payMchInfo = payMchInfoMapper.selectById(id);
-        PayMchInfoVO result = PayMchInfoConvert.INSTANCE.toPayMchInfoVO(payMchInfo);
-        if (result.getType().equals(MchType.SUB_MERCHANT.code())) {
-            IsvInfoVO isvInfoVO = isvInfoApi.isvInfoById(result.getIsvId());
-            result.setIsvName(isvInfoVO.getName());
-        }
-        return result;
+        PayMchInfoVO payMchInfoVO = PayMchInfoConvert.INSTANCE.toPayMchInfoVO(payMchInfo);
+        // 补充企业信息
+        PayEnterpriseInfo payEnterpriseInfo = payEnterpriseInfoMapper.selectById(payMchInfo.getEnterpriseInfoId());
+        PayMchInfoConvert.INSTANCE.toPayMchInfoVO(payEnterpriseInfo,payMchInfoVO);
+        // 补充银行信息
+        PayBankAccountInfo payBankAccountInfo = payBankAccountInfoMapper.selectById(payMchInfo.getBankAccountInfoId());
+        PayMchInfoConvert.INSTANCE.toPayMchInfoVO(payBankAccountInfo,payMchInfoVO);
+
+        return payMchInfoVO;
     }
 
     /**
@@ -136,7 +142,22 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
         // 处理特约商户
         handlerSpecialMch.accept(mchInfoDTO);
 
+        // 更新企业信息
+        PayEnterpriseInfo payEnterpriseInfo = PayMchInfoConvert.INSTANCE.toPayEnterpriseInfo(mchInfoDTO);
+        payEnterpriseInfo.setId(payMchInfo.getEnterpriseInfoId());
+        payEnterpriseInfoMapper.updateById(payEnterpriseInfo);
+        // 更新银行信息
+        PayBankAccountInfo payBankAccountInfo = PayMchInfoConvert.INSTANCE.toPayBankAccountInfo(mchInfoDTO);
+        payBankAccountInfo.setId(payMchInfo.getBankAccountInfoId());
+        payBankAccountInfoMapper.updateById(payBankAccountInfo);
+        // 更新商户基本信息
         PayMchInfoConvert.INSTANCE.copyPayMchInfo(mchInfoDTO, payMchInfo);
+        // 联系人，如果是特约商户，使用租户联系人；普通商户使用企业法人
+        if (mchInfoDTO.getType().equals(MchType.MERCHANT.code())) {
+            payMchInfo.setContactName(mchInfoDTO.getRepresentativeName());
+        }
+        payMchInfo.setUpdateBy(UserContext.INSTANCE.getUserId());
+        payMchInfo.setUpdateByName(UserContext.INSTANCE.getUsername());
         return payMchInfoMapper.updateById(payMchInfo) > 0;
     }
 
@@ -160,6 +181,19 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
         return payMchInfoMapper.selectOne(new LambdaQueryWrapper<PayMchInfo>()
                 .eq(PayMchInfo::getMchNo, mchNo)
         );
+    }
+
+    @Override
+    public PayMchInfoVO tenantMchInfo(Long id) {
+        TenantDetailInfoVO tenantDetailInfo = tenantInfoApi.getTenantDetailInfo(id);
+        PayMchInfoVO payMchInfoVO = PayMchInfoConvert.INSTANCE.toPayMchInfoVO(tenantDetailInfo);
+        if (tenantDetailInfo.getParentId() != null && tenantDetailInfo.getParentId() != 0) {
+            payMchInfoVO.setType(MchType.SUB_MERCHANT.code());
+        } else {
+            payMchInfoVO.setType(MchType.MERCHANT.code());
+        }
+
+        return payMchInfoVO;
     }
 }
 

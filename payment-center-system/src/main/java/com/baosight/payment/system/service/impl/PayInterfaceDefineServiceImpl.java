@@ -3,6 +3,8 @@ package com.baosight.payment.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baosight.database.core.page.PageResponse;
+import com.baosight.database.core.page.PageUtil;
 import com.baosight.payment.api.MchInfoApi;
 import com.baosight.payment.enums.PayClientType;
 import com.baosight.payment.system.convert.PayInterfaceDefineConvert;
@@ -11,20 +13,26 @@ import com.baosight.payment.system.mapper.PayInterfaceConfigMapper;
 import com.baosight.payment.system.mapper.PayInterfaceDefineMapper;
 import com.baosight.payment.system.pojo.dto.PayInterFaceDefineDTO;
 import com.baosight.payment.system.pojo.dto.PayInterfaceListDTO;
+import com.baosight.payment.system.pojo.entity.Param;
 import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
 import com.baosight.payment.system.pojo.entity.PayInterfaceDefine;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineVO;
 import com.baosight.payment.system.service.PayInterfaceDefineService;
 import com.baosight.payment.vo.MchInfoVO;
+import com.baosight.saas.auth.context.UserContext;
 import com.baosight.utils.utils.Assert;
 import com.baosight.web.core.exception.ApiException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.ronan.common.enums.IBaseEnum;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -43,6 +51,9 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
     private MchInfoApi mchInfoApi;
     private final PayInterfaceConfigMapper payInterfaceConfigMapper;
 
+    @Resource
+    private ObjectMapper objectMapper;
+
     /**
      * 新增支付接口参数配置
      *
@@ -50,62 +61,77 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
      */
     @Override
     public Boolean insert(PayInterFaceDefineDTO payInterFaceDefine) {
-        Long count = payInterfaceDefineMapper.selectCount(new LambdaQueryWrapper<PayInterfaceDefine>()
-                .eq(PayInterfaceDefine::getName, payInterFaceDefine.getName()));
-        pauInterfaceVerify(payInterFaceDefine, count);
-        PayInterfaceDefine save = PayInterfaceDefineConvert.INSTANCE.toPayInterfaceDefine(payInterFaceDefine);
-        // TODO 设置创建人
-//        save.setCreateBy(AbstractUserContext.getUserId());
+        // 判断配置json参数是否符合格式
+        checkJsonParams(payInterFaceDefine.getIsvParams());
+        checkJsonParams(payInterFaceDefine.getIsvSubMchParams());
+        checkJsonParams(payInterFaceDefine.getNormalMchParams());
 
-        save.setPayWay(payInterFaceDefine.getPayWayList().stream().map(String::valueOf).collect(Collectors.joining(",")));
-        // TODO 待处理
-//        if (!CollectionUtils.isEmpty(payInterFaceDefine.getFacilitatorParams())) {
-//            save.setIsvParams(JsonUtil.toJson(payInterFaceDefine.getFacilitatorParams()));
-//        }
-//        if (!CollectionUtils.isEmpty(payInterFaceDefine.getSubMchParams())) {
-//            save.setIsvSubMchParams(JsonUtil.toJson(payInterFaceDefine.getSubMchParams()));
-//        }
-//        if (!CollectionUtils.isEmpty(payInterFaceDefine.getNormalMchParams())) {
-//            save.setNormalMchParams(JsonUtil.toJson(payInterFaceDefine.getNormalMchParams()));
-//        }
+        Long count = payInterfaceDefineMapper.selectCount(new LambdaQueryWrapper<PayInterfaceDefine>()
+                .eq(PayInterfaceDefine::getCode, payInterFaceDefine.getCode()));
+        if (count > 0) {
+            throw new ApiException(PayInterfaceError.PAY_INTERFACE_NAME_EXIST);
+        }
+
+        PayInterfaceDefine save = PayInterfaceDefineConvert.INSTANCE.toPayInterfaceDefine(payInterFaceDefine);
+        save.setCreateBy(UserContext.INSTANCE.getUserId());
         return payInterfaceDefineMapper.insert(save) > 0;
     }
 
-    private void pauInterfaceVerify(PayInterFaceDefineDTO payInterFaceDefine, Long count) {
-        Assert.isTrue(count > 0, () -> new ApiException(PayInterfaceError.PAY_INTERFACE_NAME_EXIST));
-        // TODO 待处理
-//        Assert.isTrue(payInterFaceDefine.getHasMch() && CollectionUtils.isEmpty(payInterFaceDefine.getNormalMchParams()), () -> new ApiException(PayInterfaceError.PAY_INTERFACE_NORMAL_MCH_PARAMS_NULL));
-//        Assert.isTrue(payInterFaceDefine.getHasSubMch() && CollectionUtils.isEmpty(payInterFaceDefine.getSubMchParams()), () -> new ApiException(PayInterfaceError.PAY_INTERFACE_ISV_SUB_MCH_PARAMS_NULL));
-//        Assert.isNull(CollectionUtils.isEmpty(payInterFaceDefine.getFacilitatorParams()), () -> new ApiException(PayInterfaceError.PAY_INTERFACE_ISV_PARAMS_NULL));
+    /**
+     * 检查json串是否符合格式
+     * @param params
+     * @return
+     */
+    private Boolean checkJsonParams(String params){
+        // 入参非空判断
+        if (params == null || params.trim().isEmpty()) {
+           return true;
+        }
+
+        try {
+            // 核心：使用TypeReference指定泛型类型（解决泛型擦除问题）
+            List<Param> userList = objectMapper.readValue(
+                    params,
+                    new TypeReference<List<Param>>() {}
+            );
+            return Boolean.TRUE;
+        } catch (MismatchedInputException e) {
+            throw new RuntimeException("JSON结构与User类不匹配（Jackson）", e);
+        } catch (Exception e) {
+            throw new RuntimeException("JSON转List<Param>失败（Jackson）", e);
+        }
     }
+
 
     /**
      * 更新支付接口
      *
-     * @param id                    支付接口id
      * @param payInterFaceDefineDTO 支付接口更新信息
      */
     @Override
-    public Boolean updatePayInterface(Long id, PayInterFaceDefineDTO payInterFaceDefineDTO) {
-        PayInterfaceDefine payInterfaceDefine = payInterfaceDefineMapper.selectById(id);
+    public Boolean updatePayInterface(PayInterFaceDefineDTO payInterFaceDefineDTO) {
+        // 判断配置json参数是否符合格式
+        checkJsonParams(payInterFaceDefineDTO.getIsvParams());
+        checkJsonParams(payInterFaceDefineDTO.getIsvSubMchParams());
+        checkJsonParams(payInterFaceDefineDTO.getNormalMchParams());
+
+        PayInterfaceDefine payInterfaceDefine = payInterfaceDefineMapper.selectById(payInterFaceDefineDTO.getId());
         Assert.isNull(payInterfaceDefine, () -> new ApiException(PayInterfaceError.PAY_INTERFACE_NOT_EXIST));
-        Long count = payInterfaceDefineMapper.selectCount(new LambdaQueryWrapper<PayInterfaceDefine>()
-                .eq(PayInterfaceDefine::getName, payInterFaceDefineDTO.getName())
-                .ne(PayInterfaceDefine::getId, id)
-        );
-        pauInterfaceVerify(payInterFaceDefineDTO, count);
+        // 查询已经签约当前接口的客户端类型
+        List<Integer> signedClientTypeList = payInterfaceConfigMapper.selectList(new LambdaQueryWrapper<PayInterfaceConfig>()
+                .eq(PayInterfaceConfig::getInterfaceId, payInterFaceDefineDTO.getId()))
+                .stream().map(PayInterfaceConfig::getClientType).toList();
+
+        if(signedClientTypeList.contains(PayClientType.MERCHANT.code()) && !payInterFaceDefineDTO.getHasMch()){
+            throw new IllegalStateException("存在已签约的商户！");
+        }
+
+        if((signedClientTypeList.contains(PayClientType.SERVICE_PROVIDER.code()) || signedClientTypeList.contains(PayClientType.SUB_MERCHANT.code())) && !payInterFaceDefineDTO.getHasIsvMch()){
+            throw new IllegalStateException("存在已签约的服务商或特约商户！");
+        }
+
         PayInterfaceDefineConvert.INSTANCE.copyPayInterfaceDefine(payInterfaceDefine, payInterFaceDefineDTO);
-        //TODO 待处理
-//        payInterfaceDefine.setUpdateBy(AbstractUserContext.getUserId());
-        payInterfaceDefine.setPayWay(payInterFaceDefineDTO.getPayWayList().stream().map(String::valueOf).collect(Collectors.joining(",")));
-        // TODO 待处理
-//        payInterfaceDefine.setIsvParams(JsonUtil.toJson(payInterFaceDefineDTO.getFacilitatorParams()));
-//        if (!CollectionUtils.isEmpty(payInterFaceDefineDTO.getSubMchParams())) {
-//            payInterfaceDefine.setIsvSubMchParams(JsonUtil.toJson(payInterFaceDefineDTO.getSubMchParams()));
-//        }
-//        if (!CollectionUtils.isEmpty(payInterFaceDefineDTO.getNormalMchParams())) {
-//            payInterfaceDefine.setNormalMchParams(JsonUtil.toJson(payInterFaceDefineDTO.getNormalMchParams()));
-//        }
+//        payInterfaceDefine.setUpdateBy(UserContext.INSTANCE.getUserId());
         boolean update = payInterfaceDefineMapper.updateById(payInterfaceDefine) > 0;
         // 修改已签约的支付方式
         if (update) {
@@ -122,17 +148,9 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
      * 获取支付接口分页列表
      */
     @Override
-    public List<PayInterfaceDefineListVO> payInterfacePage(PayInterfaceListDTO pageDTO) {
-        List<PayInterfaceDefine> payInterfaceDefine = payInterfaceDefineMapper.selectList(new LambdaQueryWrapper<PayInterfaceDefine>()
-                .like(StringUtils.hasText(pageDTO.getName()), PayInterfaceDefine::getName, pageDTO.getName())
-        );
-        return payInterfaceDefine.stream().map(e -> {
-            PayInterfaceDefineListVO payInterfaceDefineListVO = new PayInterfaceDefineListVO();
-            payInterfaceDefineListVO.setId(e.getId());
-            payInterfaceDefineListVO.setName(e.getName());
-            payInterfaceDefineListVO.setRemark(e.getRemark());
-            return payInterfaceDefineListVO;
-        }).toList();
+    public PageResponse<PayInterfaceDefineListVO> payInterfacePage(PayInterfaceListDTO pageDTO) {
+        PageUtil<PayInterfaceDefineListVO> pageUtil = new PageUtil<PayInterfaceDefineListVO>(pageDTO);
+        return pageUtil.builder(payInterfaceDefineMapper.page(pageUtil.Page(),pageDTO)).build();
     }
 
     /**
@@ -142,21 +160,7 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
      */
     @Override
     public PayInterfaceDefineVO detail(Long id) {
-        PayInterfaceDefine payInterfaceDefine = payInterfaceDefineMapper.selectById(id);
-        Assert.isNull(payInterfaceDefine, () -> new ApiException(PayInterfaceError.PAY_INTERFACE_NOT_EXIST));
-        PayInterfaceDefineVO result = PayInterfaceDefineConvert.INSTANCE.toPayInterfaceDefineVO(payInterfaceDefine);
-        result.setPayWayList(Arrays.stream(payInterfaceDefine.getPayWay().split(",")).toList());
-        // TODO 根据不同的支付方式，解析不同的参数 待处理
-        if (StringUtils.hasText(payInterfaceDefine.getIsvParams())) {
-//            result.setFacilitatorParams(DynamicFormParse.convert(payInterfaceDefine.getIsvParams()));
-        }
-        if (StringUtils.hasText(payInterfaceDefine.getIsvSubMchParams())) {
-//            result.setSubMchParams(DynamicFormParse.convert(payInterfaceDefine.getIsvSubMchParams()));
-        }
-        if (StringUtils.hasText(payInterfaceDefine.getNormalMchParams())) {
-//            result.setNormalMchParams(DynamicFormParse.convert(payInterfaceDefine.getNormalMchParams()));
-        }
-        return result;
+        return payInterfaceDefineMapper.getInterfaceById(id);
     }
 
     /**
@@ -166,14 +170,12 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
      */
     @Override
     public Boolean delete(Long id) {
-        // TODO 校验该支付方式是否有服务商或商户配置参数或者已有订单
-//        if (payInterfaceConfigService.count(PayInterfaceConfig.gw().eq(PayInterfaceConfig::getIfCode, ifCode)) > 0
-//                || payOrderService.count(PayOrder.gw().eq(PayOrder::getIfCode, ifCode)) > 0) {
-//            throw new BizException("该支付接口已有服务商或商户配置参数或已发生交易，无法删除！");
-//        }
-        PayInterfaceDefine payInterfaceDefine = payInterfaceDefineMapper.selectById(id);
-        Assert.isNull(payInterfaceDefine, () -> new ApiException(PayInterfaceError.PAY_INTERFACE_NOT_EXIST));
-        return payInterfaceDefineMapper.deleteById(id) > 0;
+        // 校验该支付方式是否有服务商或商户签约
+        List<PayInterfaceConfig> payInterfaceConfigs = payInterfaceConfigMapper.selectList(new LambdaQueryWrapper<PayInterfaceConfig>().eq(PayInterfaceConfig::getInterfaceId, id));
+        Assert.isTrue(!payInterfaceConfigs.isEmpty(), "该支付接口已有服务商或商户签约，无法删除！");
+
+        payInterfaceDefineMapper.deleteById(id);
+        return Boolean.TRUE;
     }
 
     /**

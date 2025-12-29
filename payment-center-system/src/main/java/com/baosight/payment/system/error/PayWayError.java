@@ -12,7 +12,7 @@ public enum PayWayError implements IErrorEnum<String> {
     /**
      * 支付code已存在
      */
-    PAY_WAY_CODE_EXIST("100002", "支付方式code已存在"),
+    PAY_WAY_CODE_EXIST("100002", "支付方式已存在"),
     /**
      * 支付机构信息异常
      */

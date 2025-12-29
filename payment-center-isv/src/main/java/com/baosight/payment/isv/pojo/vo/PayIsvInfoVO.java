@@ -6,12 +6,17 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.Date;
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class PayIsvInfoVO extends BasePO {
 
     @JsonSerialize(using = CustomLongSerializer.class)
     private Long id;
+
+    @JsonSerialize(using = CustomLongSerializer.class)
+    private Long tenantId;
 
     /**
      * 服务商名称
@@ -34,11 +39,6 @@ public class PayIsvInfoVO extends BasePO {
     private String contactTel;
 
     /**
-     * 联系人邮箱
-     */
-    private String contactEmail;
-
-    /**
      * 状态
      */
     private Integer state;
@@ -49,16 +49,73 @@ public class PayIsvInfoVO extends BasePO {
     private String remark;
 
     /**
-     * 创建人
+     * 企业名称
      */
-    @JsonSerialize(using = CustomLongSerializer.class)
-    private Long createBy;
-
+    private String enterpriseName;
 
     /**
-     * 更新人
+     * 企业性质
      */
-    @JsonSerialize(using = CustomLongSerializer.class)
-    private Long updateBy;
+    private Integer enterpriseDominantType;
+
+    /**
+     * 社会统一信用码
+     */
+    private String unifiedSocialCreditCode;
+
+    /**
+     * 企业状态
+     */
+    private Integer enterpriseStatus;
+
+    /**
+     * 证件类型
+     */
+    private Integer certificateType;
+
+    /**
+     * 企业地址
+     */
+    private String enterpriseAddress;
+
+    /**
+     * 所属行业
+     */
+    private Integer enterpriseIndustry;
+
+    /**
+     * 经营范围
+     */
+    private String businessScope;
+
+    /**
+     * 法人名称
+     */
+    private String representativeName;
+
+    /**
+     * 法人性别
+     */
+    private Integer representativeSex;
+    /**
+     * 法人手机号
+     */
+    private String representativeTel;
+    /**
+     * 证件类型
+     */
+    private Integer representativeCertificateType;
+    /**
+     * 证件号码
+     */
+    private String representativeCertificateId;
+    /**
+     * 证件有效起始日期
+     */
+    private Date representativeCertificateEffectStartTime;
+    /**
+     * 证件有效截至日期
+     */
+    private Date representativeCertificateEffectEndTime;
 
 }

@@ -14,8 +14,13 @@ public class IsvPageDTO extends PageRequest {
     private String name;
 
     /**
+     * 服务商名称
+     */
+    private String shortName;
+
+    /**
      * 服务商id
      */
-    private Long id;
+    private String contactName;
 
 }

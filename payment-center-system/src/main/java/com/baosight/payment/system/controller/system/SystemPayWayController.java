@@ -14,6 +14,7 @@ import com.baosight.payment.system.pojo.vo.*;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
 import com.baosight.payment.system.service.PayWayService;
 import com.baosight.payment.vo.MchInfoVO;
+import com.baosight.security.annotation.AllowAccess;
 import com.baosight.utils.utils.Assert;
 import com.baosight.web.core.exception.ApiException;
 import jakarta.annotation.Resource;
@@ -34,6 +35,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping( "/pm/pay/way/manage")
+@AllowAccess
 public class SystemPayWayController {
 
     private final PayWayService payWayService;
@@ -52,12 +54,18 @@ public class SystemPayWayController {
 
     /**
      * 支付方式列表
+     * （新建接口页面使用）
      */
     @GetMapping("/list")
     public List<PayWayPageVO> list() {
         return payWayService.pagePayList();
     }
 
+    /**
+     * 获取支付方式的详情
+     * @param id
+     * @return
+     */
     @GetMapping("/{id}")
     public PayWayVO detail(@PathVariable("id") Long id) {
         return payWayService.detailPayWay(id);
@@ -73,9 +81,14 @@ public class SystemPayWayController {
     }
 
 
-    @PutMapping("/{id}")
-    public Boolean update(@PathVariable("id") Long id, @RequestBody @Validated SavePayWayDTO payWayDTO) {
-        return payWayService.updatePayWay(id, payWayDTO);
+    /**
+     * 更新支付方式
+     * @param payWayDTO
+     * @return
+     */
+    @PutMapping
+    public Boolean update(@RequestBody @Validated SavePayWayDTO payWayDTO) {
+        return payWayService.updatePayWay(payWayDTO);
     }
 
     /**

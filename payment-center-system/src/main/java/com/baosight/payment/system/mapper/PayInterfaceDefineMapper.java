@@ -1,8 +1,15 @@
 package com.baosight.payment.system.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baosight.database.core.page.PageResponse;
+import com.baosight.payment.system.pojo.dto.PayInterfaceListDTO;
 import com.baosight.payment.system.pojo.entity.PayInterfaceDefine;
+import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
+import com.baosight.payment.system.pojo.vo.PayInterfaceDefineVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author longjiangran
@@ -13,6 +20,9 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface PayInterfaceDefineMapper extends BaseMapper<PayInterfaceDefine> {
 
+    IPage<PayInterfaceDefineListVO> page(@Param("page") Page<PayInterfaceDefineListVO> page, @Param("pageDTO") PayInterfaceListDTO pageDTO);
+
+    PayInterfaceDefineVO getInterfaceById(@Param("id")Long id);
 }
 
 
