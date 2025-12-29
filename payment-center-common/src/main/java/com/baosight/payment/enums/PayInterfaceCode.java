@@ -14,12 +14,17 @@ public enum PayInterfaceCode implements IBaseEnum<String> {
     /**
      * 通联码牌
      */
-    TONG_LIAN_QR("tl_qr", "通联码牌","tLQR"),
+    TONG_LIAN_QR("tl_qr", "通联码牌", "tLQR"),
     /**
      * 通联支付
      */
     TONG_LIAN_PAY("tl_pay", "通联支付", "tLPay"),
-    ;
+
+    /**
+     * 银联商务
+     */
+    UMS("ums", "银联商务", "ums"),
+    ;;
 
     private final String codeName;
 
