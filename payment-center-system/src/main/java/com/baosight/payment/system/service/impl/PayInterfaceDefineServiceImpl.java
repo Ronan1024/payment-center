@@ -30,6 +30,7 @@ import com.ronan.common.enums.IBaseEnum;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -61,16 +62,26 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
         checkJsonParams(payInterFaceDefine.getIsvSubMchParams());
         checkJsonParams(payInterFaceDefine.getNormalMchParams());
 
+        // 校验支付机构
         Long count = payInterfaceDefineMapper.selectCount(new LambdaQueryWrapper<PayInterfaceDefine>()
                 .eq(PayInterfaceDefine::getCode, payInterFaceDefine.getCode()));
-        if (count > 0) {
-            throw new ApiException(PayInterfaceError.PAY_INTERFACE_NAME_EXIST);
-        }
-
+        Assert.isTrue(count > 0, () -> new ApiException(PayInterfaceError.PAY_INTERFACE_NAME_EXIST));
         PayInterfaceDefine save = PayInterfaceDefineConvert.INSTANCE.toPayInterfaceDefine(payInterFaceDefine);
+        payInterfaceVerify(save);
 //        save.setCreateBy(UserContext.INSTANCE.getUserId());
         return payInterfaceDefineMapper.insert(save) > 0;
     }
+
+    /**
+     * 参数校验
+     * @param payInterfaceDefine
+     */
+    private void payInterfaceVerify(PayInterfaceDefine payInterfaceDefine) {
+        Assert.isTrue(payInterfaceDefine.getHasMch() && StringUtils.isEmpty(payInterfaceDefine.getNormalMchParams()), () -> new ApiException(PayInterfaceError.PAY_INTERFACE_NORMAL_MCH_PARAMS_NULL));
+        Assert.isTrue(payInterfaceDefine.getHasIsvMch() && StringUtils.isEmpty(payInterfaceDefine.getIsvSubMchParams()), () -> new ApiException(PayInterfaceError.PAY_INTERFACE_ISV_SUB_MCH_PARAMS_NULL));
+        Assert.isTrue(payInterfaceDefine.getHasIsvMch() && StringUtils.isEmpty(payInterfaceDefine.getIsvParams()), () -> new ApiException(PayInterfaceError.PAY_INTERFACE_ISV_PARAMS_NULL));
+    }
+
 
     /**
      * 检查json串是否符合格式
@@ -121,7 +132,8 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
         }
 
         PayInterfaceDefineConvert.INSTANCE.copyPayInterfaceDefine(payInterfaceDefine, payInterFaceDefineDTO);
-//        payInterfaceDefine.setUpdateBy(UserContext.INSTANCE.getUserId());
+        payInterfaceVerify(payInterfaceDefine);
+        payInterfaceDefine.setUpdateBy(UserContext.INSTANCE.getUserId());
         boolean update = payInterfaceDefineMapper.updateById(payInterfaceDefine) > 0;
         // 修改已签约的支付方式
         if (update) {

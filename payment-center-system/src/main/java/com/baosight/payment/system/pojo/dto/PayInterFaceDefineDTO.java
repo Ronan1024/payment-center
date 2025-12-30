@@ -69,4 +69,9 @@ public class PayInterFaceDefineDTO {
      * 普通商户支付参数配置
      */
     private String normalMchParams;
+
+    /**
+     * 支付机构
+     */
+    private String payingAgency;
 }
