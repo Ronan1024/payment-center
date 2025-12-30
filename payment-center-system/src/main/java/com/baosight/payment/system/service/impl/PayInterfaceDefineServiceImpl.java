@@ -30,13 +30,9 @@ import com.ronan.common.enums.IBaseEnum;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
 
 /**
  * @author longjiangran
@@ -50,7 +46,6 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
     @Resource
     private MchInfoApi mchInfoApi;
     private final PayInterfaceConfigMapper payInterfaceConfigMapper;
-
     @Resource
     private ObjectMapper objectMapper;
 
@@ -73,7 +68,7 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
         }
 
         PayInterfaceDefine save = PayInterfaceDefineConvert.INSTANCE.toPayInterfaceDefine(payInterFaceDefine);
-        save.setCreateBy(UserContext.INSTANCE.getUserId());
+//        save.setCreateBy(UserContext.INSTANCE.getUserId());
         return payInterfaceDefineMapper.insert(save) > 0;
     }
 
@@ -82,23 +77,18 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
      * @param params
      * @return
      */
-    private Boolean checkJsonParams(String params){
+    private void checkJsonParams(String params){
         // 入参非空判断
         if (params == null || params.trim().isEmpty()) {
-           return true;
+           return;
         }
 
         try {
             // 核心：使用TypeReference指定泛型类型（解决泛型擦除问题）
-            List<Param> userList = objectMapper.readValue(
-                    params,
-                    new TypeReference<List<Param>>() {}
-            );
-            return Boolean.TRUE;
-        } catch (MismatchedInputException e) {
-            throw new RuntimeException("JSON结构与User类不匹配（Jackson）", e);
+            objectMapper.readValue(params, new TypeReference<List<Param>>() {});
         } catch (Exception e) {
-            throw new RuntimeException("JSON转List<Param>失败（Jackson）", e);
+            e.printStackTrace();
+            throw new IllegalArgumentException("参数格式与Param类不匹配");
         }
     }
 
