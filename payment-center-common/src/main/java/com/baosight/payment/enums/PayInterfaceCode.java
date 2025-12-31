@@ -23,7 +23,7 @@ public enum PayInterfaceCode implements IBaseEnum<String> {
     /**
      * 银联商务
      */
-    UMS("ums", "银联商务", "ums"),
+    UMS("ums", "银联商务", "UMS"),
     ;;
 
     private final String codeName;
