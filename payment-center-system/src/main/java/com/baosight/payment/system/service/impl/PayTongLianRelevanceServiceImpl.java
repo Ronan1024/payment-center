@@ -78,14 +78,13 @@ public class PayTongLianRelevanceServiceImpl extends ServiceImpl<PayTongLianRele
      */
     @Override
     public Boolean bindSybMerchantCode(Long mchId, Long payInterfaceId) {
+        // 存在签约记录，直接返回true
 //        TongLianRelevanceVO relevanceInfo = getRelevanceInfo(mchId);
 //        if (Boolean.TRUE.equals(relevanceInfo.getHasBindSyb())) {
 //            return Boolean.TRUE;
 //        }
 //
-//
 //        TongLianIsvAndMchConfigDAO payInterfaceConfig = payInterfaceConfigService.getTongLianIsvAndMchConfig(mchId, payInterfaceId);
-//
 //        // 获取获取服务商配置
 //        TongLianClient tongLianClient = new TongLianClient(payInterfaceConfig.isvConfig());
 //        // TODO 通联商户号异常

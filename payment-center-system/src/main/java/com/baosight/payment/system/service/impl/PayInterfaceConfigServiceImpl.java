@@ -386,6 +386,11 @@ public class PayInterfaceConfigServiceImpl extends ServiceImpl<PayInterfaceConfi
                 .eq(PayInterfaceConfig::getInterfaceId, interfaceId)
         );
     }
+
+    @Override
+    public List<PayInterfaceConfigListVO> getIsvInterfaceConfigList(Long isvId) {
+        return null;
+    }
 //
 //// TODO 待处理
 ////    /**
@@ -420,34 +425,23 @@ public class PayInterfaceConfigServiceImpl extends ServiceImpl<PayInterfaceConfi
 //        return function.apply(payInterfaceDefineList, payInterfaceConfigList);
 //    }
 //
-//    /**
-//     * 根据指定商户获取指定支付机构配置信息
-//     *
-//     * @param mchId        商户id
-//     * @param payingAgency 支付机构信息
-//     */
-//    @Override
-//    public PayInterfaceConfigVO getConfigInfo(Long mchId, PayingAgency payingAgency) {
-//        PayInterfaceConfig payInterfaceConfig = payInterfaceConfigMapper.selectOne(new LambdaQueryWrapper<PayInterfaceConfig>()
-//                .eq(PayInterfaceConfig::getClientId, mchId)
-//                .eq(PayInterfaceConfig::getPayingAgency, payingAgency.code())
-//        );
-//        if (ObjectUtils.isEmpty(payInterfaceConfig)) {
-//            return null;
-//        }
-//        PayInterfaceConfigVO result = new PayInterfaceConfigVO();
-//        result.setInterfaceId(payInterfaceConfig.getId());
-//        result.setEnable(Boolean.FALSE);
-//        result.setClientType(payInterfaceConfig.getClientType());
-//        result.setClientId(mchId);
-//        result.setInterfaceParams(payInterfaceConfig.getInterfaceParams());
-//        // TODO 待处理
-////        result.setInterfaceParam(JsonUtil.parseArray(payInterfaceConfig.getInterfaceParams(), DynamicForm.class));
-//        result.setHasSetting(Boolean.FALSE);
-//        result.setName(payInterfaceConfig.getName());
-//        result.setPayingAgency(payInterfaceConfig.getPayingAgency());
-//        return result;
-//    }
+    /**
+     * 获取指定商户签约的指定支付机构的接口ID
+     *
+     * @param mchId        商户id
+     * @param payingAgency 支付机构信息
+     */
+    @Override
+    public Long getMchInterfaceIdByPayingAgency(Long mchId, PayingAgency payingAgency) {
+        PayInterfaceConfig payInterfaceConfig = payInterfaceConfigMapper.selectOne(new LambdaQueryWrapper<PayInterfaceConfig>()
+                .eq(PayInterfaceConfig::getClientId, mchId)
+                .eq(PayInterfaceConfig::getPayingAgency, payingAgency.code())
+        );
+        if (ObjectUtils.isEmpty(payInterfaceConfig)) {
+            return null;
+        }
+        return payInterfaceConfig.getInterfaceId();
+    }
 //
 //    /**
 //     * 获取指定客户端配置信息

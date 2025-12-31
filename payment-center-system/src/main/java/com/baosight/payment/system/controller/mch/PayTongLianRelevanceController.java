@@ -31,13 +31,13 @@ public class PayTongLianRelevanceController {
 
 
     @PostMapping("/bind/syb")
-    public Boolean bindSyb() {
-        // TODO 商户id
-        Long mchId = 0L;
-//        Long mchId = SystemUserContext.getCompanyId();
-//        PayInterfaceConfigVO payInterfaceConfigVO = payInterfaceConfigService.getConfigInfo(mchId, PayingAgency.TONG_LIAN);
-//        return payTongLianRelevanceService.bindSybMerchantCode(mchId, payInterfaceConfigVO);
-        return null;
+    public Boolean bindSyb(Long mchId) {
+        // 获取商户签约的支付接口ID
+        Long interfaceId = payInterfaceConfigService.getMchInterfaceIdByPayingAgency(mchId, PayingAgency.TONG_LIAN);
+        if(interfaceId == null){
+            throw new IllegalStateException("商户还未签约通联支付");
+        }
+        return payTongLianRelevanceService.bindSybMerchantCode(mchId, interfaceId);
     }
 
     /**

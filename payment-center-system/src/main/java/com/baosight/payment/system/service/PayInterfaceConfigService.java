@@ -2,6 +2,7 @@ package com.baosight.payment.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baosight.payment.enums.PayClientType;
+import com.baosight.payment.enums.PayingAgency;
 import com.baosight.payment.system.pojo.dto.PayInterfaceConfigDTO;
 import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigListVO;
@@ -100,20 +101,20 @@ public interface PayInterfaceConfigService extends IService<PayInterfaceConfig> 
 //     */
 ////    List<DynamicForm> getDynamicForm(Long mchId, Long interfaceId);
 
-//    /**
-//     * 获取支付配置列表
-//     *
-//     * @param isvId 服务商id
-//     */
-//    List<PayInterfaceConfigListVO> getIsvInterfaceConfigList(Long isvId);
-//
-//    /**
-//     * 根据指定商户获取指定支付机构配置信息
-//     *
-//     * @param mchId        商户id
-//     * @param payingAgency 支付机构信息
-//     */
-//    PayInterfaceConfigVO getConfigInfo(Long mchId, PayingAgency payingAgency);
+    /**
+     * 获取支付配置列表
+     *
+     * @param isvId 服务商id
+     */
+    List<PayInterfaceConfigListVO> getIsvInterfaceConfigList(Long isvId);
+
+    /**
+     * 获取指定商户签约的指定支付机构的接口ID
+     *
+     * @param mchId        商户id
+     * @param payingAgency 支付机构信息
+     */
+    Long getMchInterfaceIdByPayingAgency(Long mchId, PayingAgency payingAgency);
 //
 //    /**
 //     * 获取指定客户端配置信息
