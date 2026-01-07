@@ -30,6 +30,11 @@ public class PayTongLianRelevanceController {
     }
 
 
+    /**
+     * 会员绑定收银宝商户
+     * @param mchId
+     * @return
+     */
     @PostMapping("/bind/syb")
     public Boolean bindSyb(Long mchId) {
         // 获取商户签约的支付接口ID

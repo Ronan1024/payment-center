@@ -11,8 +11,6 @@ import com.baosight.payment.error.MchError;
 import com.baosight.payment.system.convert.PayInterfaceConfigConvert;
 import com.baosight.payment.system.error.PayInterfaceConfigError;
 import com.baosight.payment.system.error.PayInterfaceError;
-import com.baosight.payment.system.handler.option.PayAgencyOptionContext;
-import com.baosight.payment.system.handler.option.TongLianOptionHandler;
 import com.baosight.payment.system.manager.PayInterfaceConfigManager;
 import com.baosight.payment.system.mapper.PayInterfaceConfigMapper;
 import com.baosight.payment.system.mapper.PayInterfaceDefineMapper;
@@ -20,6 +18,7 @@ import com.baosight.payment.system.pojo.dto.PayInterfaceConfigDTO;
 import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
 import com.baosight.payment.system.pojo.entity.PayInterfaceDefine;
 import com.baosight.payment.system.pojo.entity.PayWay;
+import com.baosight.payment.system.pojo.vo.ClientPayInterfaceConfigVo;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigListVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
@@ -442,29 +441,26 @@ public class PayInterfaceConfigServiceImpl extends ServiceImpl<PayInterfaceConfi
         }
         return payInterfaceConfig.getInterfaceId();
     }
-//
-//    /**
-//     * 获取指定客户端配置信息
-//     *
-//     * @param clientId     客户端id
-//     * @param payingAgency 支付机构信息
-//     * @param interfaceId  支付接口id
-//     */
-//    @Override
-//    public PayInterfaceConfigVO getConfigInfo(Long clientId, PayingAgency payingAgency, Long interfaceId) {
-//        PayInterfaceConfig payInterfaceConfig = payInterfaceConfigMapper.selectOne(new LambdaQueryWrapper<PayInterfaceConfig>()
-//                .eq(PayInterfaceConfig::getClientId, clientId)
-//                .eq(PayInterfaceConfig::getPayingAgency, payingAgency.code())
-//                .eq(PayInterfaceConfig::getInterfaceId, interfaceId)
-//        );
-//        if (ObjectUtils.isEmpty(payInterfaceConfig)) {
-//            return null;
-//        }
-//        PayInterfaceConfigVO result = PayInterfaceConfigConvert.INSTANCE.toPayInterfaceConfigVO(payInterfaceConfig);
-//        // TODO 待处理
-////        result.setInterfaceParam(JsonUtil.parseArray(payInterfaceConfig.getInterfaceParams(), DynamicForm.class));
-//        return result;
-//    }
+
+    /**
+     * 获取指定客户端配置信息
+     *
+     * @param clientId     客户端id
+     * @param payingAgency 支付机构信息
+     * @param interfaceId  支付接口id
+     */
+    @Override
+    public ClientPayInterfaceConfigVo getConfigInfo(Long clientId, PayingAgency payingAgency, Long interfaceId) {
+        PayInterfaceConfig payInterfaceConfig = payInterfaceConfigMapper.selectOne(new LambdaQueryWrapper<PayInterfaceConfig>()
+                .eq(PayInterfaceConfig::getClientId, clientId)
+                .eq(PayInterfaceConfig::getPayingAgency, payingAgency.code())
+                .eq(PayInterfaceConfig::getInterfaceId, interfaceId)
+        );
+        if (ObjectUtils.isEmpty(payInterfaceConfig)) {
+            return null;
+        }
+        return PayInterfaceConfigConvert.INSTANCE.toClientPayInterfaceConfigVo(payInterfaceConfig);
+    }
 //
 //    /**
 //     * 商户id 获取商户接口配置信息
@@ -591,32 +587,32 @@ public class PayInterfaceConfigServiceImpl extends ServiceImpl<PayInterfaceConfi
 //        return option.option(payInterfaceConfig);
 //    }
 //
-//    /**
-//     * 获取通联服务商与商家配置
-//     *
-//     * @param mchId       商家id
-//     * @param interfaceId 接口id
-//     */
-//    @Override
-//    public TongLianIsvAndMchConfigDAO getTongLianIsvAndMchConfig(Long mchId, Long interfaceId) {
+    /**
+     * 获取通联服务商与商家配置
+     *
+     * @param mchId       商家id
+     * @param interfaceId 接口id
+     */
+    @Override
+    public TongLianIsvAndMchConfigDAO getTongLianIsvAndMchConfig(Long mchId, Long interfaceId) {
 //        MchInfoVO mchInfo = mchInfoApi.mchInfo(mchId);
 //        Assert.isNull(mchInfo, ApiException.supplier(MchError.MCH_NOT_FOUND));
 //        Assert.isFalse(mchInfo.getType().equals(MchType.SUB_MERCHANT.code()), ApiException.supplier(MchError.MCH_TYPE_ERROR));
 //        // 获取当前商户配置
-//        PayInterfaceConfigVO mchInterfaceConfig = getConfigInfo(mchInfo.getId(), PayingAgency.TONG_LIAN, interfaceId);
+//        ClientPayInterfaceConfigVo mchInterfaceConfig = getConfigInfo(mchInfo.getId(), PayingAgency.TONG_LIAN, interfaceId);
 //        Assert.isNull(mchInterfaceConfig, ApiException.supplier(PayInterfaceConfigError.MERCHANT_NOT_CONFIG_PAY_INTERFACE));
 //        // 获取服务商配置信息
-//        PayInterfaceConfigVO isvInterfaceConfig = getConfigInfo(mchInfo.getIsvId(), PayingAgency.TONG_LIAN, interfaceId);
+//        ClientPayInterfaceConfigVo isvInterfaceConfig = getConfigInfo(mchInfo.getIsvId(), PayingAgency.TONG_LIAN, interfaceId);
 //        Assert.isNull(isvInterfaceConfig, ApiException.supplier(PayInterfaceConfigError.ISV_NOT_CONFIG_PAY_INTERFACE));
 //        // TODO 解析配置信息
-////        Map<String, Object> mch = mchInterfaceConfig.getInterfaceParam().stream().collect(Collectors.toMap(DynamicForm::getName, DynamicForm::getValue));
-////        TongLianMchConfigDAO tongLianMchConfigDAO = JsonUtil.parse(JsonUtil.toJson(mch), TongLianMchConfigDAO.class);
-////        Map<String, Object> isv = isvInterfaceConfig.getInterfaceParam().stream().collect(Collectors.toMap(DynamicForm::getName, DynamicForm::getValue));
-////        TongLianIsvConfigDAO tongLianIsvConfigDAO = JsonUtil.parse(JsonUtil.toJson(isv), TongLianIsvConfigDAO.class);
-////        return new TongLianIsvAndMchConfigDAO(tongLianIsvConfigDAO, tongLianMchConfigDAO);
-//        return null;
-//    }
-//
+//        Map<String, Object> mch = mchInterfaceConfig.getInterfaceParams().stream().collect(Collectors.toMap(DynamicForm::getName, DynamicForm::getValue));
+//        TongLianMchConfigDAO tongLianMchConfigDAO = JsonUtil.parse(JsonUtil.toJson(mch), TongLianMchConfigDAO.class);
+//        Map<String, Object> isv = isvInterfaceConfig.getInterfaceParam().stream().collect(Collectors.toMap(DynamicForm::getName, DynamicForm::getValue));
+//        TongLianIsvConfigDAO tongLianIsvConfigDAO = JsonUtil.parse(JsonUtil.toJson(isv), TongLianIsvConfigDAO.class);
+//        return new TongLianIsvAndMchConfigDAO(tongLianIsvConfigDAO, tongLianMchConfigDAO);
+        return null;
+    }
+
     /**
      * 获取服务商 支付配置列表
      *

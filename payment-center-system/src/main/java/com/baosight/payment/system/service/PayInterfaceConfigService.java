@@ -1,10 +1,12 @@
 package com.baosight.payment.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.baosight.payment.dao.TongLianIsvAndMchConfigDAO;
 import com.baosight.payment.enums.PayClientType;
 import com.baosight.payment.enums.PayingAgency;
 import com.baosight.payment.system.pojo.dto.PayInterfaceConfigDTO;
 import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
+import com.baosight.payment.system.pojo.vo.ClientPayInterfaceConfigVo;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigListVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
@@ -115,15 +117,15 @@ public interface PayInterfaceConfigService extends IService<PayInterfaceConfig> 
      * @param payingAgency 支付机构信息
      */
     Long getMchInterfaceIdByPayingAgency(Long mchId, PayingAgency payingAgency);
-//
-//    /**
-//     * 获取指定客户端配置信息
-//     *
-//     * @param clientId     客户端id
-//     * @param payingAgency 支付机构信息
-//     * @param interfaceId  支付接口id
-//     */
-//    PayInterfaceConfigVO getConfigInfo(Long clientId, PayingAgency payingAgency, Long interfaceId);
+
+    /**
+     * 获取指定客户端配置信息
+     *
+     * @param clientId     客户端id
+     * @param payingAgency 支付机构信息
+     * @param interfaceId  支付接口id
+     */
+    ClientPayInterfaceConfigVo getConfigInfo(Long clientId, PayingAgency payingAgency, Long interfaceId);
 //
 //    /**
 //     * 获取服务商接口配置信息
@@ -173,15 +175,15 @@ public interface PayInterfaceConfigService extends IService<PayInterfaceConfig> 
 //     */
 //    List<String> trailingOption(Long interfaceId, Long mchId);
 //
-//    /**
-//     * 获取通联服务商与商家配置
-//     *
-//     * @param mchId       商家id
-//     * @param interfaceId 接口id
-//     */
-//    TongLianIsvAndMchConfigDAO getTongLianIsvAndMchConfig(Long mchId, Long interfaceId);
-//
-//
+    /**
+     * 获取通联服务商与商家配置
+     *
+     * @param mchId       商家id
+     * @param interfaceId 接口id
+     */
+    TongLianIsvAndMchConfigDAO getTongLianIsvAndMchConfig(Long mchId, Long interfaceId);
+
+
     /**
      * 获取服务商 支付配置列表
      *
