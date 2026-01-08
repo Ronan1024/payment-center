@@ -3,9 +3,9 @@ package com.baosight.payment.system.convert;
 import com.baosight.payment.dao.TongLianConfigVO;
 import com.baosight.payment.system.pojo.dto.PayInterfaceConfigDTO;
 import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
-import com.baosight.payment.system.pojo.vo.ClientPayInterfaceConfigVo;
-import com.baosight.payment.system.pojo.vo.PayInterfaceConfigListVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigVO;
+import com.baosight.payment.system.pojo.vo.PayInterfaceConfigListVO;
+import com.baosight.payment.system.pojo.vo.PayInterfaceConfigDynamicVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
 import com.baosight.payment.vo.IsvInterfaceConfigVO;
 import com.baosight.payment.vo.MchInterfaceConfigVO;
@@ -21,7 +21,7 @@ public interface PayInterfaceConfigConvert {
     @Mapping(target = "isvId", ignore = true)
     @Mapping(target = "hasSetting", ignore = true)
 //    @Mapping(target = "interfaceParam", ignore = true)
-    ClientPayInterfaceConfigVo toClientPayInterfaceConfigVo(PayInterfaceConfig payInterfaceConfig);
+    PayInterfaceConfigVO toClientPayInterfaceConfigVo(PayInterfaceConfig payInterfaceConfig);
 
     @Mapping(target = "clientId", ignore = true)
     @Mapping(target = "payingAgency", ignore = true)
@@ -63,5 +63,5 @@ public interface PayInterfaceConfigConvert {
     @Mapping(target = "config", ignore = true)
     IsvInterfaceConfigVO toIsvInterfaceConfigVO(PayInterfaceConfig payInterfaceConfig);
 
-    PayInterfaceConfig toPayInterfaceConfig(PayInterfaceConfigVO payInterfaceConfigVO);
+    PayInterfaceConfig toPayInterfaceConfig(PayInterfaceConfigDynamicVO payInterfaceConfigDynamicVO);
 }

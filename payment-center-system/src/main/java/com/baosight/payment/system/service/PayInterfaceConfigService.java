@@ -6,9 +6,9 @@ import com.baosight.payment.enums.PayClientType;
 import com.baosight.payment.enums.PayingAgency;
 import com.baosight.payment.system.pojo.dto.PayInterfaceConfigDTO;
 import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
-import com.baosight.payment.system.pojo.vo.ClientPayInterfaceConfigVo;
-import com.baosight.payment.system.pojo.vo.PayInterfaceConfigListVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigVO;
+import com.baosight.payment.system.pojo.vo.PayInterfaceConfigDynamicVO;
+import com.baosight.payment.system.pojo.vo.PayInterfaceConfigListVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
 import com.baosight.payment.vo.IsvInterfaceConfigVO;
 import com.baosight.payment.vo.MchInterfaceConfigVO;
@@ -24,23 +24,23 @@ import java.util.Map;
 public interface PayInterfaceConfigService extends IService<PayInterfaceConfig> {
     /**
      * 支付设置
-     * @param payInterfaceConfigVO
+     * @param payInterfaceConfigDynamicVO
      * @return
      */
-    Boolean setPaymentConfig(PayInterfaceConfigVO payInterfaceConfigVO);
+    Boolean setPaymentConfig(PayInterfaceConfigDynamicVO payInterfaceConfigDynamicVO);
 
     /**
      * 获取服务商签约的支付商户
      * @param isvId
      */
-    List<PayInterfaceConfigVO> getIsvPayInterfaceConfigs(Long isvId);
+    List<PayInterfaceConfigDynamicVO> getIsvPayInterfaceConfigs(Long isvId);
 
     /**
      * 更新
-     * @param payInterfaceConfigVO
+     * @param payInterfaceConfigDynamicVO
      * @return
      */
-    Boolean updatePayInterfaceConfig(PayInterfaceConfigVO payInterfaceConfigVO);
+    Boolean updatePayInterfaceConfig(PayInterfaceConfigDynamicVO payInterfaceConfigDynamicVO);
     /**
      * 获取指定用户的支付配置信息
      *
@@ -76,6 +76,8 @@ public interface PayInterfaceConfigService extends IService<PayInterfaceConfig> 
 //     */
 //    PayInterfaceConfigVO getConfigInfo(PayClientType payClientType, Long id, Long interfaceId);
 
+
+    PayInterfaceConfigVO getConfigInfo(Long mchId, PayingAgency payingAgency);
     /**
      * 保存或更新支付配置
      *
@@ -125,7 +127,7 @@ public interface PayInterfaceConfigService extends IService<PayInterfaceConfig> 
      * @param payingAgency 支付机构信息
      * @param interfaceId  支付接口id
      */
-    ClientPayInterfaceConfigVo getConfigInfo(Long clientId, PayingAgency payingAgency, Long interfaceId);
+    PayInterfaceConfigVO getConfigInfo(Long clientId, PayingAgency payingAgency, Long interfaceId);
 //
 //    /**
 //     * 获取服务商接口配置信息
@@ -149,7 +151,7 @@ public interface PayInterfaceConfigService extends IService<PayInterfaceConfig> 
      * @param mchId
      * @return
      */
-    PayInterfaceConfigVO getMchInterfaceConfigList(Long mchId);
+    PayInterfaceConfigDynamicVO getMchInterfaceConfigList(Long mchId);
 
     /**
      * 获取商户支付接口配置
@@ -206,5 +208,5 @@ public interface PayInterfaceConfigService extends IService<PayInterfaceConfig> 
      * @param mchId
      * @return
      */
-    List<PayInterfaceConfigVO> getMchPayInterfaceConfigs(Long mchId);
+    List<PayInterfaceConfigDynamicVO> getMchPayInterfaceConfigs(Long mchId);
 }

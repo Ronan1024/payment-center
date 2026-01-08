@@ -85,7 +85,7 @@ public class MembershipAndAccountHandler {
     /**
      * 线上协议签订申请
      */
-    public static TongLianClient.SendBuild onlineProtocolSignApply(Long reqTraceNum, String signNum, String memberName, Long rete) {
+    public static TongLianClient.SendBuild onlineProtocolSignApply(Long reqTraceNum, String signNum, String memberName, Long rate) {
         String transCode = TongLianInterfaceCode.ONLINE_PROTOCOL_SIGN_APPLY.getCode();
         Map<String, String> map = new HashMap<>(7);
         map.put("reqTraceNum", String.valueOf(reqTraceNum));
@@ -94,7 +94,7 @@ public class MembershipAndAccountHandler {
         map.put("agreementType", "3");
         Map<String, String> agreementMap = new HashMap<>();
         agreementMap.put("couponWay", "1");
-        agreementMap.put("couponRate", new BigDecimal(rete).divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP).toString());
+        agreementMap.put("couponRate", new BigDecimal(rate).divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP).toString());
         map.put("agreementJson", JsonUtil.toJson(agreementMap));
         // TODO 签约回调地址未处理
         map.put("notifyUrl", "https://www.baidu.com");

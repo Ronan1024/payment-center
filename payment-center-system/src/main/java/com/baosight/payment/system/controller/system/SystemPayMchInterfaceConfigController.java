@@ -1,7 +1,7 @@
 package com.baosight.payment.system.controller.system;
 
 import com.baosight.payment.api.MchInfoApi;
-import com.baosight.payment.system.pojo.vo.PayInterfaceConfigVO;
+import com.baosight.payment.system.pojo.vo.PayInterfaceConfigDynamicVO;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
@@ -74,7 +74,7 @@ public class SystemPayMchInterfaceConfigController {
      * 查询商户已签约的支付配置列表
      */
     @GetMapping("/list/{mchId}")
-    public List<PayInterfaceConfigVO> getPayInterfaceConfigs(@PathVariable("mchId")Long mchId){
+    public List<PayInterfaceConfigDynamicVO> getPayInterfaceConfigs(@PathVariable("mchId")Long mchId){
         return payInterfaceConfigService.getMchPayInterfaceConfigs(mchId);
     }
 
@@ -82,7 +82,7 @@ public class SystemPayMchInterfaceConfigController {
      * 更新已签约的支付方式的列表
      */
     @PutMapping
-    public Boolean getPayInterfaceConfigs(@RequestBody PayInterfaceConfigVO payInterfaceConfigVO){
-        return payInterfaceConfigService.updatePayInterfaceConfig(payInterfaceConfigVO);
+    public Boolean getPayInterfaceConfigs(@RequestBody PayInterfaceConfigDynamicVO payInterfaceConfigDynamicVO){
+        return payInterfaceConfigService.updatePayInterfaceConfig(payInterfaceConfigDynamicVO);
     }
 }
