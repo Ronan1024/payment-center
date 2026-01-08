@@ -280,7 +280,7 @@ public class PayTongLianRelevanceServiceImpl extends ServiceImpl<PayTongLianRele
                 .eq(PayTongLianRelevance::getMchId, mchId)
         );
         if (payTongLianRelevance.getHasContractSign().equals(Boolean.TRUE)) {
-            return "";
+            return "该商户已存在线上协议签约申请";
         }
         //TODO
         // 处理如果已签约则不能在进行签约了
