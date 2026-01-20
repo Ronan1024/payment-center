@@ -43,6 +43,7 @@ public class PayTongLianRelevanceAppServiceImpl implements PayTongLianRelevanceA
     @Override
     public Boolean bindSybMerchantCode(Long mchId, Long interfaceId) {
         TongLianRelevanceVO relevanceInfo = payTongLianRelevanceService.getRelevanceInfo(mchId);
+        // 已经绑定了收银宝,直接返回True
         if (Boolean.TRUE.equals(relevanceInfo.getHasBindSyb())) {
             return Boolean.TRUE;
         }
@@ -61,6 +62,7 @@ public class PayTongLianRelevanceAppServiceImpl implements PayTongLianRelevanceA
     @Override
     public Boolean bindPhoneReport(Long mchId, String phone, Boolean hasLegalPerson, Long interfaceId) {
         TongLianRelevanceVO relevanceInfo = payTongLianRelevanceService.getRelevanceInfo(mchId);
+        // 已经绑定了手机号,直接返回true
         if (Boolean.TRUE.equals(relevanceInfo.getHasBindPhone())) {
             return Boolean.TRUE;
         }

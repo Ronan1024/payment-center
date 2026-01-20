@@ -8,6 +8,7 @@ import com.baosight.payment.system.pojo.dto.PayInterfaceListDTO;
 import com.baosight.payment.system.pojo.entity.PayInterfaceDefine;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineVO;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ public interface PayInterfaceDefineService extends IService<PayInterfaceDefine> 
      *
      * @param payInterFaceDefine 支付接口配置
      */
+    @Transactional
     Boolean insert(PayInterFaceDefineDTO payInterFaceDefine);
 
     /**

@@ -66,15 +66,15 @@ public interface PayInterfaceConfigService extends IService<PayInterfaceConfig> 
      */
     Map<Long, PayInterfaceConfig> getPayConfigurationMap(Long mchId);
 
-//    /**
-//     * 获取支付配置信息
-//     *
-//     * @param payClientType 支付客户端类型
-//     * @param id            客户端id
-//     * @param interfaceId   支付接口ID
-//     * @return 支付接口配置信息
-//     */
-//    PayInterfaceConfigVO getConfigInfo(PayClientType payClientType, Long id, Long interfaceId);
+    /**
+     * 获取支付配置信息
+     *
+     * @param payClientType 支付客户端类型
+     * @param id            客户端id
+     * @param interfaceId   支付接口ID
+     * @return 支付接口配置信息
+     */
+    PayInterfaceConfigVO getConfigInfo(PayClientType payClientType, Long id, Long interfaceId);
 
 
     PayInterfaceConfigVO getConfigInfo(Long mchId, PayingAgency payingAgency);

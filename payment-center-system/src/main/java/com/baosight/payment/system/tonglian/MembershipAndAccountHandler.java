@@ -3,6 +3,7 @@ package com.baosight.payment.system.tonglian;
 import com.baosight.payment.enums.TongLianInterfaceCode;
 import com.baosight.payment.system.enums.TongLianInfoType;
 import com.baosight.utils.json.JsonUtil;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -13,6 +14,8 @@ import java.util.Map;
  * 会员及账户类接口
  */
 public class MembershipAndAccountHandler {
+    @Value("${pay.domainUrl}")
+    private static String domainUrl;
 
     /**
      * 会员绑定收银宝商户
@@ -47,6 +50,7 @@ public class MembershipAndAccountHandler {
         map.put("signNum", signNum);
         map.put("phone", mobile);
         map.put("phoneType", Boolean.TRUE.equals(hasLegalPerson) ? "1" : "2");
+        map.put("notifyUrl", domainUrl + "/payment-center/tl/notice/bind/phone/" + signNum); // 回调地址
         return new TongLianClient.SendBuild(reqTraceNum, transCode, JsonUtil.toJson(map));
     }
 
@@ -97,7 +101,7 @@ public class MembershipAndAccountHandler {
         agreementMap.put("couponRate", new BigDecimal(rate).divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP).toString());
         map.put("agreementJson", JsonUtil.toJson(agreementMap));
         // TODO 签约回调地址未处理
-        map.put("notifyUrl", "https://www.baidu.com");
+        map.put("notifyUrl", domainUrl + "/payment-center/tl/notice/sign/" + signNum);
         map.put("jumpUrl", "https://www.baidu.com/s?wd=ok");
         return new TongLianClient.SendBuild(reqTraceNum, transCode, JsonUtil.toJson(map));
     }

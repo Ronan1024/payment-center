@@ -46,7 +46,7 @@ public enum PayInterfaceError implements IErrorEnum<String> {
     /**
      * 支付渠道未配置或未启用
      */
-    PAY_INTERFACE_CHANNEL_NOT_CONFIG("10109","支付渠道未配置或未启用"),
+    PAY_INTERFACE_CHANNEL_NOT_CONFIG("10109","支付渠道未配置"),
 
     /**
      * 服务商暂未开启支付配置
@@ -62,6 +62,19 @@ public enum PayInterfaceError implements IErrorEnum<String> {
      * 支付接口定义未找到
      */
     PAY_INTERFACE_DEFINE_NOT_EXIST("10112","支付接口定义未找到"),
+
+    /**
+     * 缺少服务商商户号
+     */
+    ISV_MCH_NO_NOT_EXIST("10113", "缺少服务商商户号"),
+    /**
+     * 缺少特约商户商户号
+     */
+    SUB_MERCHANT_NO_NOT_EXIST("10114", "缺少特约商户商户号"),
+    /**
+     * 缺少普通商户商户号
+     */
+    MCH_NO_NOT_EXIST("10115", "缺少普通商户商户号"),
 
     ;
 

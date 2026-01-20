@@ -16,6 +16,7 @@ import com.baosight.payment.system.manager.PayTongLianRelevanceManager;
 import com.baosight.payment.system.mapper.PayTongLianRelevanceMapper;
 import com.baosight.payment.system.pojo.dao.tonglian.TongLianMemberBasicInfoDAO;
 import com.baosight.payment.system.pojo.dto.TongLianAgreementDTO;
+import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
 import com.baosight.payment.system.pojo.entity.PayTongLianRelevance;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigVO;
 import com.baosight.payment.system.pojo.vo.TongLianRelevanceVO;
@@ -125,6 +126,9 @@ public class PayTongLianRelevanceServiceImpl extends ServiceImpl<PayTongLianRele
                     .set(PayTongLianRelevance::getHasBindSyb, Boolean.TRUE));
             // 更新通联支付配置 绑定 三方id
             payTongLianRelevanceManager.updateTongLianSybRelevance(mchId, Boolean.TRUE, tongLianIsvAndMchConfig.mchConfig().getSignNum(), interfaceId);
+            // 更新payInterfaceConfig.mch_channel_user 支付渠道用户信息
+            payInterfaceConfigService.update(new LambdaUpdateWrapper<PayInterfaceConfig>().eq(PayInterfaceConfig::getClientId,mchId)
+                    .set(PayInterfaceConfig::getMchChannelUser,tongLianIsvAndMchConfig.mchConfig().getSignNum()));
         } else {
             throw new ApiException(response.getRespCode(), response.getErrorMsg());
         }
@@ -197,11 +201,13 @@ public class PayTongLianRelevanceServiceImpl extends ServiceImpl<PayTongLianRele
                 .eq(PayTongLianRelevance::getMchId, mchId)
         );
         TongLianRelevanceVO tongLianRelevanceVO = new TongLianRelevanceVO();
-        if (!ObjectUtils.isEmpty(tongLianRelevanceVO)) {
+        if (!ObjectUtils.isEmpty(payTongLianRelevance)) {
             tongLianRelevanceVO.setHasBindPhone(payTongLianRelevance.getHasBindPhone());
             tongLianRelevanceVO.setHasBindSyb(payTongLianRelevance.getHasBindSyb());
             tongLianRelevanceVO.setHasContractSign(payTongLianRelevance.getHasContractSign());
         } else {
+            // 增加记录
+            init(mchId);
             tongLianRelevanceVO.setHasBindPhone(false);
             tongLianRelevanceVO.setHasBindSyb(false);
             tongLianRelevanceVO.setHasContractSign(false);

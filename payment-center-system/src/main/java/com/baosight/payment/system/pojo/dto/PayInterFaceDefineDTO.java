@@ -1,10 +1,7 @@
 package com.baosight.payment.system.pojo.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 public class PayInterFaceDefineDTO {
@@ -28,9 +25,9 @@ public class PayInterFaceDefineDTO {
     private Long payInterfaceTypeId;
 
     /**
-     * 支付类型ID
+     * 支付类型ID,如果存在多个，多个ID之间，逗号分割
      */
-    private Long payWayId;
+    private String payWay;
     /**
      * 应用场景
      */
@@ -64,6 +61,36 @@ public class PayInterFaceDefineDTO {
      * 特约商户配置
      */
     private String isvSubMchParams;
+
+    /**
+     * 服务商信息数据ID(pay_isv_info的id,前端下拉框选择服务商)
+     */
+    private Long isvInfoId;
+
+    /**
+     * 普通商户信息数据ID(pay_mch_info的id,前端下拉框选择服务商)
+     */
+    private Long mchInfoId;
+
+    /**
+     * 特约商户信息数据ID(pay_mch_info的id,前端下拉框选择服务商)
+     */
+    private Long subMchInfoId;
+
+    /**
+     * 服务商 商户号
+     */
+    private String isvMchNo;
+
+    /**
+     * 普通商户 商户号
+     */
+    private String mchNo;
+
+    /**
+     * 特约商户 商户号
+     */
+    private String subMchNo;
 
     /**
      * 普通商户支付参数配置

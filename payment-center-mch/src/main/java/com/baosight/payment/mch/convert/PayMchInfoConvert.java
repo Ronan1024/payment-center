@@ -46,15 +46,15 @@ public interface PayMchInfoConvert {
     PayMchInfoVO toPayMchInfoVO(PayEnterpriseInfo payEnterpriseInfo,@MappingTarget PayMchInfoVO payMchInfoVO);
     PayMchInfoVO toPayMchInfoVO(PayBankAccountInfo payBankAccountInfo,@MappingTarget PayMchInfoVO payMchInfoVO);
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "tenantId", source = "id")
-    @Mapping(target = "mchName", source = "firmName")
-    @Mapping(target = "unifiedSocialCreditCode", source = "creditCode")
-    @Mapping(target = "enterpriseStatus", source = "status")
-    @Mapping(target = "enterpriseAddress", source = "residence")
-    @Mapping(target = "representativeName", source = "representative")
-    @Mapping(target = "representativeTel", source = "contactPhone")
-    PayMchInfoVO toPayMchInfoVO(TenantDetailInfoVO tenantDetailInfo);
+//    @Mapping(target = "id", ignore = true)
+//    @Mapping(target = "tenantId", source = "id")
+//    @Mapping(target = "mchName", source = "firmName")
+//    @Mapping(target = "unifiedSocialCreditCode", source = "creditCode")
+//    @Mapping(target = "enterpriseStatus", source = "status")
+//    @Mapping(target = "enterpriseAddress", source = "residence")
+//    @Mapping(target = "representativeName", source = "representative")
+//    @Mapping(target = "representativeTel", source = "contactPhone")
+//    PayMchInfoVO toPayMchInfoVO(TenantDetailInfoVO tenantDetailInfo);
 
     @Mapping(target = "updateTime", ignore = true)
     @Mapping(target = "updateByName", ignore = true)

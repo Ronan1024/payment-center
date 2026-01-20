@@ -20,12 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequiredArgsConstructor
-//@RequestMapping(SYSTEM + "/pm/tl/relevance/manage")
 @RequestMapping( "/pm/tl/relevance/manage")
 public class SystemPayTongLianRelevanceController {
 
-    private final PayTongLianRelevanceService payTongLianRelevanceService;
-    private final PayInterfaceConfigService payInterfaceConfigService;
     private final PayTongLianRelevanceAppService payTongLianRelevanceAppService;
 
     /**

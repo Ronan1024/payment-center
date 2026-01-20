@@ -30,7 +30,7 @@ public class PayInterfaceConfig extends BasePO implements Serializable {
     private Integer clientType;
 
     /**
-     * 客户端id 如服务商、商家等id
+     * 客户端id 如服务商、商家等id(pay_mch_info的记录主键)
      */
     private Long clientId;
 

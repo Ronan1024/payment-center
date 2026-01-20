@@ -1,13 +1,21 @@
 package com.baosight.payment.system.pojo.vo;
 
+import com.baosight.saas.entity.DynamicForm;
+import com.baosight.database.mybatis.handler.BasePO;
 import com.baosight.web.core.serializer.CustomLongSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+import java.util.List;
+
+/**
+ * @author L.J.Ran
+ */
 @Data
-public class PayInterfaceConfigVO {
-
+@EqualsAndHashCode(callSuper = true)
+public class PayInterfaceConfigVO extends BasePO {
     @JsonSerialize(using = CustomLongSerializer.class)
     private Long id;
 
@@ -35,6 +43,7 @@ public class PayInterfaceConfigVO {
     /**
      * 支付接口参数obj
      */
+    private List<DynamicForm> interfaceParam;
 //    private List<DynamicForm> interfaceParam;
 
     /**
@@ -73,3 +82,4 @@ public class PayInterfaceConfigVO {
     @JsonIgnore
     private Long isvId;
 }
+

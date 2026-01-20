@@ -20,8 +20,8 @@ public interface PayInterfaceConfigConvert {
 
     @Mapping(target = "isvId", ignore = true)
     @Mapping(target = "hasSetting", ignore = true)
-//    @Mapping(target = "interfaceParam", ignore = true)
-    PayInterfaceConfigVO toClientPayInterfaceConfigVo(PayInterfaceConfig payInterfaceConfig);
+    @Mapping(target = "interfaceParam", ignore = true)
+    PayInterfaceConfigVO toPayInterfaceConfigVO(PayInterfaceConfig payInterfaceConfig);
 
     @Mapping(target = "clientId", ignore = true)
     @Mapping(target = "payingAgency", ignore = true)

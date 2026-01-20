@@ -3,6 +3,7 @@ package com.baosight.payment.system.controller.system;
 import com.baosight.payment.api.MchInfoApi;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigDynamicVO;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
+import com.baosight.security.annotation.AllowAccess;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ import java.util.List;
  */
 @RestController
 @RequiredArgsConstructor
+@AllowAccess
 //@RequestMapping(SYSTEM + "/pm/pay/mch/config/manage")
 @RequestMapping("/pm/pay/mch/config/manage")
 public class SystemPayMchInterfaceConfigController {

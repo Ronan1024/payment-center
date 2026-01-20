@@ -22,8 +22,10 @@ spring:
         username: ${spring.cloud.nacos.discovery.username}
         password: ${spring.cloud.nacos.discovery.password}
         namespace: ${spring.cloud.nacos.discovery.namespace}
+  main:
+    allow-bean-definition-overriding: true
 pay:
-  client: 192.168.137.217
+  client: 192.168.137.160
   server: 192.168.137.208
 
 auth:
