@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>pay-center-channel</artifactId>
-    <description>支付渠道核心 {主要包含了渠道管理， 渠道网关等}</description>
+    <description>支付渠道{三方支付渠道功能实现}</description>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
