@@ -38,9 +38,18 @@ public class PayInterfaceDefineController {
      * 获取支付接口列表
      */
     @PostMapping("/page")
+    public List<PayInterfaceDefineListVO> list() {
+        return payInterfaceDefineService.selectList();
+    }
+
+    /**
+     * 获取支付接口列表
+     */
+    @PostMapping("/list")
     public PageResponse<PayInterfaceDefineListVO> page(@RequestBody @Validated PayInterfaceListDTO pageDTO) {
         return payInterfaceDefineService.payInterfacePage(pageDTO);
     }
+
 
 
     /**

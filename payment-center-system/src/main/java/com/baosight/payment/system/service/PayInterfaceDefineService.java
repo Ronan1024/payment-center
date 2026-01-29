@@ -96,4 +96,5 @@ public interface PayInterfaceDefineService extends IService<PayInterfaceDefine> 
      */
     PayInterfaceDefine payInterfaceDefineByCode(String code);
 
+    List<PayInterfaceDefineListVO> selectList();
 }

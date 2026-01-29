@@ -24,7 +24,7 @@ public class PayIsvPageVO extends BasePO {
      */
     private String shortName;
     /**
-     * 状态
+     * 状态 1 启用  2 禁用
      */
     private Integer state;
 

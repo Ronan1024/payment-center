@@ -16,6 +16,7 @@ import com.baosight.payment.isv.pojo.entity.PayIsvInfo;
 import com.baosight.payment.isv.pojo.vo.PayIsvInfoVO;
 import com.baosight.payment.isv.pojo.vo.PayIsvPageVO;
 import com.baosight.payment.isv.service.PayIsvInfoService;
+import com.baosight.saas.auth.context.UserContext;
 import com.baosight.saas.tenant.api.TenantInfoApi;
 import com.baosight.saas.tenant.api.vo.TenantDetailInfoVO;
 import com.baosight.utils.utils.Assert;
@@ -70,7 +71,9 @@ public class PayIsvInfoServiceImpl extends ServiceImpl<PayIsvInfoMapper, PayIsvI
 
         // 补充企业及法人信息
         PayEnterpriseInfo payEnterpriseInfo = payEnterpriseInfoMapper.selectById(payIsvInfo.getEnterpriseInfoId());
-        return PayIsvInfoConvert.INSTANCE.toPayIsvInfoVO(payIsvInfo,payEnterpriseInfo);
+        PayIsvInfoVO payIsvInfoVO = PayIsvInfoConvert.INSTANCE.toPayIsvInfoVO(payIsvInfo, payEnterpriseInfo);
+        payIsvInfoVO.setId(id);
+        return payIsvInfoVO;
 
     }
 
@@ -88,11 +91,8 @@ public class PayIsvInfoServiceImpl extends ServiceImpl<PayIsvInfoMapper, PayIsvI
             Assert.notNull(payIsvInfo, ApiException.supplier(IsvError.ISV_INFO_EXIST));
         }
         payIsvInfo = PayIsvInfoConvert.INSTANCE.toPayIsvInfo(createIsvDTO);
-        Integer state = createIsvDTO.getEnable() ? State.NORMAL.code() : State.FORBIDDEN.code();
-        //TODO 设置创建人信息
-//        payIsvInfo.setCreateBy(AbstractUserContext.getUserId());
-//        payIsvInfo.setCreateByName(AbstractUserContext.getUsername());
-        payIsvInfo.setState(state);
+        payIsvInfo.setCreateBy(UserContext.INSTANCE.userId());
+        payIsvInfo.setCreateByName(UserContext.INSTANCE.username());
 
         PayEnterpriseInfo payEnterpriseInfo = PayIsvInfoConvert.INSTANCE.toPayEnterpriseInfo(createIsvDTO);
         payEnterpriseInfoMapper.insert(payEnterpriseInfo);

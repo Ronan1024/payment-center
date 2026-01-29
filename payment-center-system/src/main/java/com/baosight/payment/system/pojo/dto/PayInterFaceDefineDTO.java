@@ -63,36 +63,6 @@ public class PayInterFaceDefineDTO {
     private String isvSubMchParams;
 
     /**
-     * 服务商信息数据ID(pay_isv_info的id,前端下拉框选择服务商)
-     */
-    private Long isvInfoId;
-
-    /**
-     * 普通商户信息数据ID(pay_mch_info的id,前端下拉框选择服务商)
-     */
-    private Long mchInfoId;
-
-    /**
-     * 特约商户信息数据ID(pay_mch_info的id,前端下拉框选择服务商)
-     */
-    private Long subMchInfoId;
-
-    /**
-     * 服务商 商户号
-     */
-    private String isvMchNo;
-
-    /**
-     * 普通商户 商户号
-     */
-    private String mchNo;
-
-    /**
-     * 特约商户 商户号
-     */
-    private String subMchNo;
-
-    /**
      * 普通商户支付参数配置
      */
     private String normalMchParams;

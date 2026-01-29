@@ -1,6 +1,7 @@
 package com.baosight.payment.mch.pojo.vo;
 
 
+import com.baosight.database.mybatis.handler.BasePO;
 import com.baosight.web.core.serializer.CustomLongSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -16,7 +17,7 @@ import java.util.Date;
  * @create: 2025/3/17
  */
 @Data
-public class PayMchListVO {
+public class PayMchListVO  extends BasePO {
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 

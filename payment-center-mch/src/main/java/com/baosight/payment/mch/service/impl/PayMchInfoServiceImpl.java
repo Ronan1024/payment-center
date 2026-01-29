@@ -73,7 +73,7 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
         // 按商户名称+联系人做唯一性判断
         PayMchInfo payMchInfo = payMchInfoMapper.selectOne(new LambdaQueryWrapper<PayMchInfo>()
                 .eq(PayMchInfo::getEnterpriseName, mchInfoDTO.getMchName())
-                .eq(PayMchInfo::getContactTel, mchInfoDTO.getRepresentativeTel()));
+                .eq(PayMchInfo::getContactTel, mchInfoDTO.getContactTel()));
         Assert.notNull(payMchInfo, ApiException.supplier(MchError.MCH_INFO_EXIST));
         payMchInfo = PayMchInfoConvert.INSTANCE.toPayMchInfo(mchInfoDTO);
         PayEnterpriseInfo payEnterpriseInfo = PayMchInfoConvert.INSTANCE.toPayEnterpriseInfo(mchInfoDTO);
@@ -83,10 +83,9 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
 
         payMchInfo.setEnterpriseInfoId(payEnterpriseInfo.getId());
         payMchInfo.setBankAccountInfoId(payBankAccountInfo.getId());
-        payMchInfo.setCreateBy(UserContext.INSTANCE.getUserId());
-        payMchInfo.setCreateByName(UserContext.INSTANCE.getUsername());
+//        payMchInfo.setCreateBy(UserContext.INSTANCE.userId());
+//        payMchInfo.setCreateByName(UserContext.INSTANCE.username());
         if (mchInfoDTO.getType().equals(MchType.MERCHANT.code())) {
-            payMchInfo.setIsvId(null);
             payMchInfo.setContactName(mchInfoDTO.getRepresentativeName()); // 联系人，如果是特约商户，使用租户联系人；普通商户使用企业法人
         }
         String prefix = mchInfoDTO.getType().equals(MchType.MERCHANT.code()) ? "N" : "S";
@@ -156,8 +155,8 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
         if (mchInfoDTO.getType().equals(MchType.MERCHANT.code())) {
             payMchInfo.setContactName(mchInfoDTO.getRepresentativeName());
         }
-        payMchInfo.setUpdateBy(UserContext.INSTANCE.getUserId());
-        payMchInfo.setUpdateByName(UserContext.INSTANCE.getUsername());
+//        payMchInfo.setUpdateBy(UserContext.INSTANCE.userId());
+//        payMchInfo.setUpdateByName(UserContext.INSTANCE.username());
         return payMchInfoMapper.updateById(payMchInfo) > 0;
     }
 

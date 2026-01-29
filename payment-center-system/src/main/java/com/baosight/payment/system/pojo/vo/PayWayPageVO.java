@@ -1,11 +1,12 @@
 package com.baosight.payment.system.pojo.vo;
 
+import com.baosight.database.mybatis.handler.BasePO;
 import com.baosight.web.core.serializer.CustomLongSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
 @Data
-public class PayWayPageVO {
+public class PayWayPageVO{
     @JsonSerialize(using = CustomLongSerializer.class)
     private Long id;
 
@@ -33,5 +34,20 @@ public class PayWayPageVO {
      * 支付类别
      */
     private Integer payingCategory;
+
+    /**
+     * 支付机构
+     */
+    private String payingAgency;
+
+    /**
+     * 创建人
+     */
+    private Long createBy;
+
+    /**
+     * 更新人
+     */
+    private Long updateBy;
 
 }

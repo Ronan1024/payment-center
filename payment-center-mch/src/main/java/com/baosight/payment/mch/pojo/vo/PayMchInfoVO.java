@@ -3,9 +3,9 @@ package com.baosight.payment.mch.pojo.vo;
 
 import com.baosight.database.mybatis.handler.BasePO;
 import com.baosight.web.core.serializer.CustomLongSerializer;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -38,6 +38,10 @@ public class PayMchInfoVO extends BasePO {
      * 租户ID
      */
     private String contactName;
+    /**
+     * 联系电话
+     */
+    private String contactTel;
 
     /**
      * 商户类型 2.普通商户 3.特约商户
@@ -63,8 +67,12 @@ public class PayMchInfoVO extends BasePO {
     /**
      * 商户名称
      */
-    @NotBlank(message = "企业名称不能为空")
     private String mchName;
+
+    /**
+     * 企业名称
+     */
+    private String enterpriseName;
 
     /**
      * 企业性质
@@ -162,6 +170,15 @@ public class PayMchInfoVO extends BasePO {
      * 市
      */
     private String city;
+    /**
+     * 区域ID
+     */
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long areaId;
+    /**
+     * 开户所在区
+     */
+    private String area;
     /**
      * 备注
      */

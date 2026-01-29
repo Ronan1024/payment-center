@@ -12,7 +12,9 @@
         state,
         type,
         contact_name,
-        contact_tel
+        contact_tel,
+        pmi.create_time,
+        pmi.update_time
         from pay_mch_info pmi
         left join pay_enterprise_info pei on pei.id = pmi.enterprise_info_id
         left join pay_bank_account_info pbai on pbai.id = pmi.bank_account_info_id
@@ -37,6 +39,7 @@
             </if>
 
         </where>
+        order by pmi.create_time desc
     </select>
 
 </mapper>

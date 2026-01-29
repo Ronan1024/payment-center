@@ -26,4 +26,8 @@ public enum PayingAgency implements IBaseEnum<String> {
     public static PayingAgency byAgencyCode(Integer agencyCode){
         return Arrays.stream(PayingAgency.values()).filter(e -> e.getAgencyCode().equals(agencyCode)).findFirst().orElse(null);
     }
+
+    public static PayingAgency getByCode(String code){
+        return Arrays.stream(PayingAgency.values()).filter(e -> e.code().equals(code)).findFirst().orElse(null);
+    }
 }

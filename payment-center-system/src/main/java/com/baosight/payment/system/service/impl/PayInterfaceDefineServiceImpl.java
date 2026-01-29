@@ -72,7 +72,6 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
         save.setCreateBy(UserContext.INSTANCE.userId());
         // 保存接口定义信息
         payInterfaceDefineMapper.insert(save);
-        savePayInterfaceConfigs(payInterFaceDefine);
 
         return Boolean.TRUE;
     }
@@ -88,30 +87,30 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
             // 组织服务商的配置数据
             PayInterfaceConfig isvPayInterfaceConfig = new PayInterfaceConfig();
             isvPayInterfaceConfig.setClientType(PayClientType.SERVICE_PROVIDER.code());
-            isvPayInterfaceConfig.setClientId(payInterFaceDefine.getIsvInfoId());
+            //isvPayInterfaceConfig.setClientId(payInterFaceDefine.getIsvInfoId());
             isvPayInterfaceConfig.setInterfaceParams(payInterFaceDefine.getIsvParams());
             // interface_rate 签约成功后更新
             isvPayInterfaceConfig.setEnable(Boolean.FALSE);
             isvPayInterfaceConfig.setPayingAgency(payInterFaceDefine.getPayingAgency());
             isvPayInterfaceConfig.setName(payInterFaceDefine.getName());
             isvPayInterfaceConfig.setPayWay(payInterFaceDefine.getPayWay());
-            isvPayInterfaceConfig.setMchNo(payInterFaceDefine.getIsvMchNo());
+            //isvPayInterfaceConfig.setMchNo(payInterFaceDefine.getIsvMchNo());
             // mch_channel_user 绑定收银宝后更新
             payInterfaceConfigs.add(isvPayInterfaceConfig);
 
             // 组织特约商户的配置数据
             PayInterfaceConfig subMerchantPayInterfaceConfig = new PayInterfaceConfig();
             subMerchantPayInterfaceConfig.setClientType(PayClientType.SUB_MERCHANT.code());
-            subMerchantPayInterfaceConfig.setClientId(payInterFaceDefine.getSubMchInfoId());
+            //subMerchantPayInterfaceConfig.setClientId(payInterFaceDefine.getSubMchInfoId());
             subMerchantPayInterfaceConfig.setInterfaceParams(payInterFaceDefine.getIsvSubMchParams());
             // interface_rate 签约成功后更新
             subMerchantPayInterfaceConfig.setEnable(Boolean.FALSE);
             subMerchantPayInterfaceConfig.setPayingAgency(payInterFaceDefine.getPayingAgency());
             subMerchantPayInterfaceConfig.setName(payInterFaceDefine.getName());
             subMerchantPayInterfaceConfig.setPayWay(payInterFaceDefine.getPayWay());
-            subMerchantPayInterfaceConfig.setMchNo(payInterFaceDefine.getSubMchNo());
+            //subMerchantPayInterfaceConfig.setMchNo(payInterFaceDefine.getSubMchNo());
             // mch_channel_user 绑定收银宝后更新
-            subMerchantPayInterfaceConfig.setParentClientId(payInterFaceDefine.getIsvInfoId());
+            //subMerchantPayInterfaceConfig.setParentClientId(payInterFaceDefine.getIsvInfoId());
             payInterfaceConfigs.add(subMerchantPayInterfaceConfig);
 
         }
@@ -120,14 +119,14 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
             // 组织普通商户的配置数据
             PayInterfaceConfig subMerchantPayInterfaceConfig = new PayInterfaceConfig();
             subMerchantPayInterfaceConfig.setClientType(PayClientType.MERCHANT.code());
-            subMerchantPayInterfaceConfig.setClientId(payInterFaceDefine.getMchInfoId());
+            //subMerchantPayInterfaceConfig.setClientId(payInterFaceDefine.getMchInfoId());
             subMerchantPayInterfaceConfig.setInterfaceParams(payInterFaceDefine.getNormalMchParams());
             // interface_rate 签约成功后更新
             subMerchantPayInterfaceConfig.setEnable(Boolean.FALSE);
             subMerchantPayInterfaceConfig.setPayingAgency(payInterFaceDefine.getPayingAgency());
             subMerchantPayInterfaceConfig.setName(payInterFaceDefine.getName());
             subMerchantPayInterfaceConfig.setPayWay(payInterFaceDefine.getPayWay());
-            subMerchantPayInterfaceConfig.setMchNo(payInterFaceDefine.getMchNo());
+            //subMerchantPayInterfaceConfig.setMchNo(payInterFaceDefine.getMchNo());
             // mch_channel_user 绑定收银宝后更新
             payInterfaceConfigs.add(subMerchantPayInterfaceConfig);
         }
@@ -140,16 +139,6 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
      * @param payInterfaceDefine
      */
     private void verify(PayInterFaceDefineDTO payInterfaceDefine) {
-        if(payInterfaceDefine.getHasIsvMch() && (payInterfaceDefine.getIsvInfoId() == null || payInterfaceDefine.getSubMchInfoId() == null)){
-            throw new IllegalStateException("缺少服务商商户号或特约商户商户号！");
-        }else if(payInterfaceDefine.getHasMch() && payInterfaceDefine.getMchInfoId() == null){
-            throw new IllegalStateException("缺少普通商户商户号！");
-        }
-
-        Assert.isTrue(payInterfaceDefine.getHasIsvMch() && (payInterfaceDefine.getIsvInfoId() == null), () -> new ApiException(PayInterfaceError.ISV_MCH_NO_NOT_EXIST));
-        Assert.isTrue(payInterfaceDefine.getHasIsvMch() && (payInterfaceDefine.getSubMchInfoId() == null), () -> new ApiException(PayInterfaceError.SUB_MERCHANT_NO_NOT_EXIST));
-        Assert.isTrue(payInterfaceDefine.getHasMch() && (payInterfaceDefine.getMchInfoId() == null), () -> new ApiException(PayInterfaceError.MCH_NO_NOT_EXIST));
-
         Assert.isTrue(payInterfaceDefine.getHasMch() && !StringUtils.hasText(payInterfaceDefine.getNormalMchParams()), () -> new ApiException(PayInterfaceError.PAY_INTERFACE_NORMAL_MCH_PARAMS_NULL));
         Assert.isTrue(payInterfaceDefine.getHasIsvMch() && !StringUtils.hasText(payInterfaceDefine.getIsvSubMchParams()), () -> new ApiException(PayInterfaceError.PAY_INTERFACE_ISV_SUB_MCH_PARAMS_NULL));
         Assert.isTrue(payInterfaceDefine.getHasIsvMch() && !StringUtils.hasText(payInterfaceDefine.getIsvParams()), () -> new ApiException(PayInterfaceError.PAY_INTERFACE_ISV_PARAMS_NULL));
@@ -351,6 +340,13 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
                 // .eq(PayInterfaceDefine::getEnable, Boolean.TRUE)
                 .eq(PayInterfaceDefine::getCode, code)
         );
+    }
+
+    @Override
+    public List<PayInterfaceDefineListVO> selectList() {
+        List<PayInterfaceDefine> list = list();
+
+        return null;
     }
 
 
