@@ -2,6 +2,8 @@ package com.baosight.payment.mch.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 /**
@@ -59,4 +61,12 @@ public class PayBankAccountInfo {
      * 城市
      */
     private String city;
+    /**
+     * 区域ID
+     */
+    private Long areaId;
+    /**
+     * 开户所在区
+     */
+    private String area;
 }

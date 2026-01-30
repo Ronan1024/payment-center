@@ -53,7 +53,7 @@ public class PayWay extends BasePO implements Serializable {
     private Integer payingClient;
 
     /**
-     * 支付类别
+     * 支付类别 1 支付 2代付
      */
     private Integer payingCategory;
 

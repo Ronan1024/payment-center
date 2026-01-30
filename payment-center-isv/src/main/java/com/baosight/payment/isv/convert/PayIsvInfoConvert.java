@@ -32,7 +32,6 @@ public interface PayIsvInfoConvert {
     @Mapping(target = "representativeTel", source = "contactPhone")
     PayIsvInfoVO toPayIsvInfoVO(TenantDetailInfoVO tenantDetailInfo);
 
-    @Mapping(target = "state", ignore = true)
     @Mapping(target = "updateTime", ignore = true)
     @Mapping(target = "id", source = "isvId")
     @Mapping(target = "updateByName", ignore = true)

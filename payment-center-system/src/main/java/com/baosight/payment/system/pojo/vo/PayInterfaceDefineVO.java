@@ -67,4 +67,9 @@ public class PayInterfaceDefineVO {
      */
     private String normalMchParams;
 
+    /**
+     * 支付渠道用户key
+     */
+    private String mchChannelUserKey;
+
 }

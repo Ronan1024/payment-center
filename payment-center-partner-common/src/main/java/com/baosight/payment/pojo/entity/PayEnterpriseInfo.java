@@ -31,7 +31,7 @@ public class PayEnterpriseInfo extends BasePO {
     private String enterpriseName;
 
     /**
-     * 企业性质
+     * 企业性质 取值参见EnterpriseDominantType
      */
     private Byte enterpriseDominantType;
 
@@ -41,12 +41,12 @@ public class PayEnterpriseInfo extends BasePO {
     private String unifiedSocialCreditCode;
 
     /**
-     * 企业状态 0：停用 1：正常
+     * 企业状态 1。存续 2.异常 3.注销 4.冻结
      */
     private Integer enterpriseStatus;
 
     /**
-     * 证件类型
+     * 证件类型 7.营业执照 8.组织机构代码证 9.税务登记证 10.统一社会信用代码
      */
     private Integer certificateType;
 
@@ -71,7 +71,7 @@ public class PayEnterpriseInfo extends BasePO {
     private String representativeName;
 
     /**
-     * 法人性别
+     * 法人性别(1.男 2.女）
      */
     private Integer representativeSex;
 
@@ -81,7 +81,7 @@ public class PayEnterpriseInfo extends BasePO {
     private String representativeTel;
 
     /**
-     * 证件类型 1.身份证 2.护照
+     * 证件类型 1.身份证 2.护照 3。军官证 4。士兵证 5。港澳居民来往内地通行证 6。台湾同胞往来内地通行证 7.营业执照
      */
     private Integer representativeCertificateType;
 

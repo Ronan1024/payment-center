@@ -10,7 +10,11 @@
         pay_code,
         pay_name,
         disable,
-        paying_category
+        paying_category,
+        paying_agency,
+        paying_client,
+        create_by_name,
+        update_by_name
         from pay_way
         <where>
             <if test="payWayDTO.payWayCode != null and payWayCode.payWayCode != ''">

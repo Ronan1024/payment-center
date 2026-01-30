@@ -100,4 +100,8 @@ public class PayMchInfo extends BasePO {
      */
     private String updateByName;
 
+    /**
+     * 备注
+     */
+    private String remark;
 }

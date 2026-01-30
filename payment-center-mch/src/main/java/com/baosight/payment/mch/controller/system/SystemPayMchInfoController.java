@@ -1,4 +1,4 @@
-package com.baosight.payment.mch.controller;
+package com.baosight.payment.mch.controller.system;
 
 
 import com.baosight.database.core.page.PageResponse;

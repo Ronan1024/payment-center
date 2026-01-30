@@ -1,5 +1,6 @@
 package com.baosight.payment.isv.pojo.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -41,8 +42,7 @@ public class CreateIsvDTO {
     /**
      * 是否启用
      */
-    @NotNull(message = "是否启用不能为空")
-    private Boolean enable;
+    private Integer state;
 
     /**
      * 备注
@@ -53,7 +53,7 @@ public class CreateIsvDTO {
     /**
      * 企业名称
      */
-    private Integer enterpriseName;
+    private String enterpriseName;
 
     /**
      * 企业性质
@@ -114,9 +114,11 @@ public class CreateIsvDTO {
     /**
      * 证件有效起始日期
      */
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date representativeCertificateEffectStartTime;
     /**
      * 证件有效截至日期
      */
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date representativeCertificateEffectEndTime;
 }

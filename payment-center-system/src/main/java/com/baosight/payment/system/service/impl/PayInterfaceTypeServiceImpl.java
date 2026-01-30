@@ -58,8 +58,8 @@ public class PayInterfaceTypeServiceImpl extends ServiceImpl<PayInterfaceTypeMap
         Long count = payInterfaceTypeMapper.selectCount(new LambdaQueryWrapper<PayInterfaceType>()
                 .eq(PayInterfaceType::getInterfaceTypeCode, payInterfaceType.getInterfaceTypeCode()));
         Assert.isTrue(count > 0, "接口类型code已存在");
-//        payInterfaceType.setCreateBy(UserContext.INSTANCE.getUserId());
-//        payInterfaceType.setCreateByName(UserContext.INSTANCE.getUsername());
+        payInterfaceType.setCreateBy(UserContext.INSTANCE.userId());
+        payInterfaceType.setCreateByName(UserContext.INSTANCE.username());
         return payInterfaceTypeMapper.insert(payInterfaceType) > 0;
     }
 
@@ -78,8 +78,8 @@ public class PayInterfaceTypeServiceImpl extends ServiceImpl<PayInterfaceTypeMap
                 .ne(PayInterfaceType::getId, payInterfaceType.getId()));
         Assert.isTrue(count > 0, "接口类型code已存在");
         BeanUtil.copyProperties(payInterfaceTypeDTO, payInterfaceType);
-//        payInterfaceType.setUpdateBy(UserContext.INSTANCE.getUserId());
-//        payInterfaceType.setUpdateByName(UserContext.INSTANCE.getUsername());
+//        payInterfaceType.setUpdateBy(UserContext.INSTANCE.userId());
+//        payInterfaceType.setUpdateByName(UserContext.INSTANCE.username());
         return payInterfaceTypeMapper.updateById(payInterfaceType) > 0;
     }
 

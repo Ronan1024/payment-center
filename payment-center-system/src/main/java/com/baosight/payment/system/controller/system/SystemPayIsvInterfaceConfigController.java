@@ -1,6 +1,6 @@
 package com.baosight.payment.system.controller.system;
 
-import com.baosight.payment.system.pojo.vo.PayInterfaceConfigVO;
+import com.baosight.payment.system.pojo.vo.PayInterfaceConfigDynamicVO;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
 import com.baosight.payment.system.service.app.PayInterfaceConfigAppService;
 import com.baosight.security.annotation.AllowAccess;
@@ -72,7 +72,7 @@ public class SystemPayIsvInterfaceConfigController {
      * 查询已签约的支付方式的列表
      */
     @GetMapping("/list/{isvId}")
-    public List<PayInterfaceConfigVO> getPayInterfaceConfigs(@PathVariable("isvId")Long isvId){
+    public List<PayInterfaceConfigDynamicVO> getPayInterfaceConfigs(@PathVariable("isvId")Long isvId){
         return payInterfaceConfigService.getIsvPayInterfaceConfigs(isvId);
     }
 
@@ -80,8 +80,8 @@ public class SystemPayIsvInterfaceConfigController {
      * 更新已签约的支付方式的列表
      */
     @PutMapping
-    public Boolean getPayInterfaceConfigs(@RequestBody PayInterfaceConfigVO payInterfaceConfigVO){
-        return payInterfaceConfigService.updatePayInterfaceConfig(payInterfaceConfigVO);
+    public Boolean getPayInterfaceConfigs(@RequestBody PayInterfaceConfigDynamicVO payInterfaceConfigDynamicVO){
+        return payInterfaceConfigService.updatePayInterfaceConfig(payInterfaceConfigDynamicVO);
     }
 
 }
