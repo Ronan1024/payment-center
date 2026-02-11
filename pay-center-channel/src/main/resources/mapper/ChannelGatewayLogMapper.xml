@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baosight.payment.channel.mapper.ChannelGatewayLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.baosight.payment.channel.pojo.entity.ChannelGatewayLog">
+        <result column="id" property="id" />
+        <result column="create_time" property="createTime" />
+        <result column="operation" property="operation" />
+        <result column="request_no" property="requestNo" />
+        <result column="out_trade_no" property="outTradeNo" />
+        <result column="inst_code" property="instCode" />
+        <result column="channel_code" property="channelCode" />
+        <result column="error_code" property="errorCode" />
+        <result column="error_msg" property="errorMsg" />
+        <result column="cost_time" property="costTime" />
+        <result column="req_params" property="reqParams" />
+        <result column="res_params" property="resParams" />
+        <result column="biz_status" property="bizStatus" />
+        <result column="channel_interface_id" property="channelInterfaceId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        create_time,
+        operation, request_no, out_trade_no, inst_code, channel_code, error_code, error_msg, updated_time, cost_time, req_params, res_params, biz_status, channel_interface_id
+    </sql>
+
+</mapper>
