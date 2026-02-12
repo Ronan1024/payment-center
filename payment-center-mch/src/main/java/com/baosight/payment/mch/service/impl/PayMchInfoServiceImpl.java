@@ -22,14 +22,12 @@ import com.baosight.payment.mch.pojo.vo.PayMchListVO;
 import com.baosight.payment.mch.service.PayMchInfoService;
 import com.baosight.payment.pojo.entity.PayEnterpriseInfo;
 import com.baosight.payment.utils.IdGenUtil;
-import com.baosight.saas.tenant.api.TenantInfoApi;
-import com.baosight.saas.tenant.api.vo.TenantDetailInfoVO;
+import com.baosight.saas.auth.context.UserContext;
 import com.baosight.utils.utils.Assert;
 import com.baosight.web.core.exception.ApiException;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.baosight.saas.auth.context.UserContext;
 
 import java.util.function.Consumer;
 
@@ -44,8 +42,8 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
     private final PayMchInfoMapper payMchInfoMapper;
     private final PayEnterpriseInfoMapper payEnterpriseInfoMapper;
     private final PayBankAccountInfoMapper payBankAccountInfoMapper;
-    @Resource
-    private TenantInfoApi tenantInfoApi;
+//    @Resource
+//    private TenantInfoApi tenantInfoApi;
 
     @Resource
     private IsvInfoApi isvInfoApi;
@@ -83,8 +81,8 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
 
         payMchInfo.setEnterpriseInfoId(payEnterpriseInfo.getId());
         payMchInfo.setBankAccountInfoId(payBankAccountInfo.getId());
-//        payMchInfo.setCreateBy(UserContext.INSTANCE.userId());
-//        payMchInfo.setCreateByName(UserContext.INSTANCE.username());
+        payMchInfo.setCreateBy(UserContext.INSTANCE.userId());
+        payMchInfo.setCreateByName(UserContext.INSTANCE.username());
         if (mchInfoDTO.getType().equals(MchType.MERCHANT.code())) {
             payMchInfo.setContactName(mchInfoDTO.getRepresentativeName()); // 联系人，如果是特约商户，使用租户联系人；普通商户使用企业法人
         }
@@ -155,8 +153,8 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
         if (mchInfoDTO.getType().equals(MchType.MERCHANT.code())) {
             payMchInfo.setContactName(mchInfoDTO.getRepresentativeName());
         }
-//        payMchInfo.setUpdateBy(UserContext.INSTANCE.userId());
-//        payMchInfo.setUpdateByName(UserContext.INSTANCE.username());
+        payMchInfo.setUpdateBy(UserContext.INSTANCE.userId());
+        payMchInfo.setUpdateByName(UserContext.INSTANCE.username());
         return payMchInfoMapper.updateById(payMchInfo) > 0;
     }
 
@@ -184,15 +182,16 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
 
     @Override
     public PayMchInfoVO tenantMchInfo(Long id) {
-        TenantDetailInfoVO tenantDetailInfo = tenantInfoApi.getTenantDetailInfo(id);
-        PayMchInfoVO payMchInfoVO = PayMchInfoConvert.INSTANCE.toPayMchInfoVO(tenantDetailInfo);
-        if (tenantDetailInfo.getParentId() != null && tenantDetailInfo.getParentId() != 0) {
-            payMchInfoVO.setType(MchType.SUB_MERCHANT.code());
-        } else {
-            payMchInfoVO.setType(MchType.MERCHANT.code());
-        }
-
-        return payMchInfoVO;
+//        TenantDetailInfoVO tenantDetailInfo = tenantInfoApi.getTenantDetailInfo(id);
+//        PayMchInfoVO payMchInfoVO = PayMchInfoConvert.INSTANCE.toPayMchInfoVO(tenantDetailInfo);
+//        if (tenantDetailInfo.getParentId() != null && tenantDetailInfo.getParentId() != 0) {
+//            payMchInfoVO.setType(MchType.SUB_MERCHANT.code());
+//        } else {
+//            payMchInfoVO.setType(MchType.MERCHANT.code());
+//        }
+//
+//        return payMchInfoVO;
+        return null;
     }
 }
 

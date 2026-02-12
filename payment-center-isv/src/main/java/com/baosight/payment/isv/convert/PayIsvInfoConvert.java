@@ -7,7 +7,7 @@ import com.baosight.payment.isv.pojo.vo.PayIsvInfoVO;
 import com.baosight.payment.isv.pojo.vo.PayIsvPageVO;
 import com.baosight.payment.isv.vo.IsvInfoVO;
 import com.baosight.payment.vo.MchInfoVO;
-import com.baosight.saas.tenant.api.vo.TenantDetailInfoVO;
+//import com.baosight.saas.tenant.api.vo.TenantDetailInfoVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -21,16 +21,16 @@ public interface PayIsvInfoConvert {
     @Mapping(target = "updateTime", source = "payIsvInfo.updateTime")
     PayIsvInfoVO toPayIsvInfoVO(PayIsvInfo payIsvInfo,PayEnterpriseInfo payEnterpriseInfo);
 
-    @Mapping(target = "id",ignore = true)
-    @Mapping(target = "tenantId", source = "id")
-    @Mapping(target = "name",source = "tenantName")
-    @Mapping(target = "enterpriseName", source = "firmName")
-    @Mapping(target = "unifiedSocialCreditCode", source = "creditCode")
-    @Mapping(target = "enterpriseStatus", source = "status")
-    @Mapping(target = "enterpriseAddress", source = "residence")
-    @Mapping(target = "representativeName", source = "representative")
-    @Mapping(target = "representativeTel", source = "contactPhone")
-    PayIsvInfoVO toPayIsvInfoVO(TenantDetailInfoVO tenantDetailInfo);
+//    @Mapping(target = "id",ignore = true)
+//    @Mapping(target = "tenantId", source = "id")
+//    @Mapping(target = "name",source = "tenantName")
+//    @Mapping(target = "enterpriseName", source = "firmName")
+//    @Mapping(target = "unifiedSocialCreditCode", source = "creditCode")
+//    @Mapping(target = "enterpriseStatus", source = "status")
+//    @Mapping(target = "enterpriseAddress", source = "residence")
+//    @Mapping(target = "representativeName", source = "representative")
+//    @Mapping(target = "representativeTel", source = "contactPhone")
+//    PayIsvInfoVO toPayIsvInfoVO(TenantDetailInfoVO tenantDetailInfo);
 
     @Mapping(target = "updateTime", ignore = true)
     @Mapping(target = "id", source = "isvId")

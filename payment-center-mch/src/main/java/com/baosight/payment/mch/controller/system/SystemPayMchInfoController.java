@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequiredArgsConstructor
-//@RequestMapping(SYSTEM + "/pm/pay/mch/manage")
 @RequestMapping( "/pm/pay/mch/manage")
 @AllowAccess
 public class SystemPayMchInfoController {

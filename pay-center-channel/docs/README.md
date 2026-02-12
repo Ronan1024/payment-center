@@ -2,4 +2,4 @@
 
 ## 渠道网关入站
 > 入站处理流程
-![img.png](img.png)
+![img.png](entry.png)

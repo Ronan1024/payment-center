@@ -6,7 +6,7 @@ import com.baosight.payment.mch.pojo.entity.PayMchInfo;
 import com.baosight.payment.mch.pojo.vo.PayMchInfoVO;
 import com.baosight.payment.pojo.entity.PayEnterpriseInfo;
 import com.baosight.payment.vo.MchInfoVO;
-import com.baosight.saas.tenant.api.vo.TenantDetailInfoVO;
+//import com.baosight.saas.tenant.api.vo.TenantDetailInfoVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -48,17 +48,17 @@ public interface PayMchInfoConvert {
     @Mapping(target = "id", ignore = true)
     PayMchInfoVO toPayMchInfoVO(PayBankAccountInfo payBankAccountInfo,@MappingTarget PayMchInfoVO payMchInfoVO);
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "tenantId", source = "id")
-    @Mapping(target = "mchName", source = "firmName")
-    @Mapping(target = "enterpriseName", source = "firmName")
-    @Mapping(target = "unifiedSocialCreditCode", source = "creditCode")
-    @Mapping(target = "enterpriseStatus", source = "status")
-    @Mapping(target = "enterpriseAddress", source = "residence")
-    @Mapping(target = "representativeName", source = "representative")
-    @Mapping(target = "representativeTel", source = "contactPhone")
-    @Mapping(target = "contactTel", source = "contactPhone")
-    PayMchInfoVO toPayMchInfoVO(TenantDetailInfoVO tenantDetailInfo);
+//    @Mapping(target = "id", ignore = true)
+//    @Mapping(target = "tenantId", source = "id")
+//    @Mapping(target = "mchName", source = "firmName")
+//    @Mapping(target = "enterpriseName", source = "firmName")
+//    @Mapping(target = "unifiedSocialCreditCode", source = "creditCode")
+//    @Mapping(target = "enterpriseStatus", source = "status")
+//    @Mapping(target = "enterpriseAddress", source = "residence")
+//    @Mapping(target = "representativeName", source = "representative")
+//    @Mapping(target = "representativeTel", source = "contactPhone")
+//    @Mapping(target = "contactTel", source = "contactPhone")
+//    PayMchInfoVO toPayMchInfoVO(TenantDetailInfoVO tenantDetailInfo);
 
     @Mapping(target = "updateTime", ignore = true)
     @Mapping(target = "updateByName", ignore = true)

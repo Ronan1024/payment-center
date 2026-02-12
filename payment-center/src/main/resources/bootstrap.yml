@@ -39,3 +39,7 @@ auth:
         secret-key: cGF5bWVudC1jZW50ZXItcGxhdGZvcm0=
         by-package:
           - com.baosight.payment.system.controller.system
+      saas-platform:
+        secret-key: ND1Q0NA==
+        by-package:
+          - com.baosight.payment.system.controller.system
