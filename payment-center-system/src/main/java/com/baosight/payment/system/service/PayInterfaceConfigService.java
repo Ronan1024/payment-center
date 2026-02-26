@@ -5,6 +5,7 @@ import com.baosight.payment.dao.TongLianIsvAndMchConfigDAO;
 import com.baosight.payment.enums.PayClientType;
 import com.baosight.payment.enums.PayingAgency;
 import com.baosight.payment.system.pojo.dto.PayInterfaceConfigDTO;
+import com.baosight.payment.system.pojo.dto.PayInterfaceDefineBindDTO;
 import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigDynamicVO;
@@ -40,7 +41,14 @@ public interface PayInterfaceConfigService extends IService<PayInterfaceConfig> 
      * @param payInterfaceConfigDynamicVO
      * @return
      */
-    Boolean updatePayInterfaceConfig(PayInterfaceConfigDynamicVO payInterfaceConfigDynamicVO);
+    Boolean updatePayInterfaceConfig4Mch(PayInterfaceConfigDynamicVO payInterfaceConfigDynamicVO);
+
+    /**
+     * 更新
+     * @param payInterfaceConfigDynamicVO
+     * @return
+     */
+    Boolean updatePayInterfaceConfig4Isv(PayInterfaceConfigDynamicVO payInterfaceConfigDynamicVO);
     /**
      * 获取指定用户的支付配置信息
      *
@@ -209,4 +217,19 @@ public interface PayInterfaceConfigService extends IService<PayInterfaceConfig> 
      * @return
      */
     List<PayInterfaceConfigDynamicVO> getMchPayInterfaceConfigs(Long mchId);
+
+    /**
+     * 为商户增加支付配置
+     * @param payInterfaceDefineBindDTO
+     * @return
+     */
+    Boolean addPayInterfaceConfig(PayInterfaceDefineBindDTO payInterfaceDefineBindDTO);
+
+    /**
+     * 特约商户绑定服务商
+     * @param isvId
+     * @return
+     */
+    Boolean bindIsv(Long mchId,Long isvId);
+
 }

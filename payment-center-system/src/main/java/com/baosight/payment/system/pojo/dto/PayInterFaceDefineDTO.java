@@ -28,10 +28,6 @@ public class PayInterFaceDefineDTO {
      * 支付类型ID,如果存在多个，多个ID之间，逗号分割
      */
     private String payWay;
-    /**
-     * 应用场景
-     */
-    private Integer scenario;
 
     /**
      * 支付接口状态 true:开启 false：关闭
@@ -66,9 +62,9 @@ public class PayInterFaceDefineDTO {
      * 普通商户支付参数配置
      */
     private String normalMchParams;
-
     /**
-     * 支付机构
+     * 商户支付渠道用户key
      */
-    private String payingAgency;
+    private String mchChannelUserKey;
+
 }

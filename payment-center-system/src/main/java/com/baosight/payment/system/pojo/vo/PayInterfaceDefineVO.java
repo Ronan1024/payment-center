@@ -2,6 +2,7 @@ package com.baosight.payment.system.pojo.vo;
 
 import com.baosight.web.core.serializer.CustomLongSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 @Data
 public class PayInterfaceDefineVO {
 
-    @JsonSerialize(using = CustomLongSerializer.class)
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
     /**
      * 支付接口代码
@@ -24,13 +25,13 @@ public class PayInterfaceDefineVO {
     private String name;
 
     /**
-     * 支付类型ID
+     * 支付类型ID,多个之间逗号分割
      */
-    private Long payWayId;
+    private String payWay;
     /**
      * 应用场景
      */
-    private Integer scenario;
+    private String scenario;
 
     /**
      * 支付接口状态 true:开启 false：关闭
@@ -71,5 +72,11 @@ public class PayInterfaceDefineVO {
      * 支付渠道用户key
      */
     private String mchChannelUserKey;
+
+    /**
+     * 支付接口类型ID
+     */
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long payInterfaceTypeId;
 
 }

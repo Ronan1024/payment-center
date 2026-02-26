@@ -27,7 +27,6 @@ import java.util.function.BiConsumer;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping( "/pm/pay/interface/define")
-@AllowAccess
 public class PayInterfaceDefineController {
 
     private final PayInterfaceDefineService payInterfaceDefineService;
@@ -35,17 +34,18 @@ public class PayInterfaceDefineController {
     private PayInterfaceConfigService payInterfaceConfigService;
 
     /**
-     * 获取支付接口列表
+     * 获取支付接口列表(商户绑定支付接口使用)
+     * @param payClientType 取值参见PayClientType
      */
-    @PostMapping("/page")
-    public List<PayInterfaceDefineListVO> list() {
-        return payInterfaceDefineService.selectList();
+    @PostMapping("/list/{payClientType}")
+    public List<PayInterfaceDefineListVO> list(@PathVariable("payClientType") Integer payClientType) {
+        return payInterfaceDefineService.queryList(payClientType);
     }
 
     /**
      * 获取支付接口列表
      */
-    @PostMapping("/list")
+    @PostMapping("/page")
     public PageResponse<PayInterfaceDefineListVO> page(@RequestBody @Validated PayInterfaceListDTO pageDTO) {
         return payInterfaceDefineService.payInterfacePage(pageDTO);
     }

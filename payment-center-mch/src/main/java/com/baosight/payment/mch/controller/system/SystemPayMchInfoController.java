@@ -9,6 +9,7 @@ import com.baosight.payment.mch.pojo.vo.PayMchListVO;
 import com.baosight.payment.mch.service.PayMchInfoService;
 import com.baosight.security.annotation.AllowAccess;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +25,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequiredArgsConstructor
-//@RequestMapping(SYSTEM + "/pm/pay/mch/manage")
 @RequestMapping( "/pm/pay/mch/manage")
-@AllowAccess
 public class SystemPayMchInfoController {
 
     @Resource

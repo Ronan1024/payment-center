@@ -83,15 +83,17 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
 
         payMchInfo.setEnterpriseInfoId(payEnterpriseInfo.getId());
         payMchInfo.setBankAccountInfoId(payBankAccountInfo.getId());
-//        payMchInfo.setCreateBy(UserContext.INSTANCE.userId());
-//        payMchInfo.setCreateByName(UserContext.INSTANCE.username());
+        payMchInfo.setCreateBy(UserContext.INSTANCE.userId());
+        payMchInfo.setCreateByName(UserContext.INSTANCE.username());
         if (mchInfoDTO.getType().equals(MchType.MERCHANT.code())) {
             payMchInfo.setContactName(mchInfoDTO.getRepresentativeName()); // 联系人，如果是特约商户，使用租户联系人；普通商户使用企业法人
         }
         String prefix = mchInfoDTO.getType().equals(MchType.MERCHANT.code()) ? "N" : "S";
         String mchNo = IdGenUtil.generateId(SnowflakeIdUtil.nextId());
         payMchInfo.setMchNo(prefix + mchNo);
-        return payMchInfoMapper.insert(payMchInfo) > 0;
+        payMchInfoMapper.insert(payMchInfo);
+
+        return Boolean.TRUE;
     }
 
 
@@ -155,8 +157,8 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
         if (mchInfoDTO.getType().equals(MchType.MERCHANT.code())) {
             payMchInfo.setContactName(mchInfoDTO.getRepresentativeName());
         }
-//        payMchInfo.setUpdateBy(UserContext.INSTANCE.userId());
-//        payMchInfo.setUpdateByName(UserContext.INSTANCE.username());
+        payMchInfo.setUpdateBy(UserContext.INSTANCE.userId());
+        payMchInfo.setUpdateByName(UserContext.INSTANCE.username());
         return payMchInfoMapper.updateById(payMchInfo) > 0;
     }
 

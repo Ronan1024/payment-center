@@ -102,16 +102,6 @@ public class PayInterfaceDefine extends BasePO implements Serializable {
      */
     private Long payInterfaceTypeId;
 
-    /**
-     * 支付类型ID
-     */
-    private Long payWayId;
-
-    /**
-     * 应用场景
-     */
-    private Integer scenario;
-
     @Serial
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

@@ -47,5 +47,9 @@ public class PayInterfaceDefineListVO extends BasePO {
      */
     private String payName;
 
+    /**
+     * 支付可用客户端（支付场景，取中文名称）
+     */
+    private String payingClient;
 
 }

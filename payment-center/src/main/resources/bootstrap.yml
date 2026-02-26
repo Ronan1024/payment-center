@@ -39,3 +39,5 @@ auth:
         secret-key: cGF5bWVudC1jZW50ZXItcGxhdGZvcm0=
         by-package:
           - com.baosight.payment.system.controller.system
+          - com.baosight.payment.mch.controller.system
+          - com.baosight.payment.isv.controller.system
