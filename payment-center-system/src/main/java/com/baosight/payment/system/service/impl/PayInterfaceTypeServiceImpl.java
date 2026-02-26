@@ -18,6 +18,7 @@ import com.baosight.utils.utils.Assert;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -78,8 +79,9 @@ public class PayInterfaceTypeServiceImpl extends ServiceImpl<PayInterfaceTypeMap
                 .ne(PayInterfaceType::getId, payInterfaceType.getId()));
         Assert.isTrue(count > 0, "接口类型code已存在");
         BeanUtil.copyProperties(payInterfaceTypeDTO, payInterfaceType);
-//        payInterfaceType.setUpdateBy(UserContext.INSTANCE.userId());
-//        payInterfaceType.setUpdateByName(UserContext.INSTANCE.username());
+        payInterfaceType.setUpdateBy(UserContext.INSTANCE.userId());
+        payInterfaceType.setUpdateByName(UserContext.INSTANCE.username());
+        payInterfaceType.setUpdateTime(new Date());
         return payInterfaceTypeMapper.updateById(payInterfaceType) > 0;
     }
 

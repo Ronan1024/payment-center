@@ -23,6 +23,7 @@ import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -62,8 +63,8 @@ public class PayWayServiceImpl extends ServiceImpl<PayWayMapper, PayWay> impleme
         Assert.isNull(payingAgency, () -> new ApiException(PayWayError.PAY_WAY_AGENCY_ERROR));
         PayWay payWay = PayWayConvert.INSTANCE.toPayway(payWayDTO);
         // 设置创建人信息
-//        payWay.setCreateByName(UserContext.INSTANCE.username());
-//        payWay.setCreateBy(UserContext.INSTANCE.userId());
+        payWay.setCreateByName(UserContext.INSTANCE.username());
+        payWay.setCreateBy(UserContext.INSTANCE.userId());
         return payWayMapper.insert(payWay) > 0;
     }
 
@@ -76,8 +77,8 @@ public class PayWayServiceImpl extends ServiceImpl<PayWayMapper, PayWay> impleme
     public Boolean updatePayWay(SavePayWayDTO payWayDTO) {
         PayWay payWay = payWayMapper.selectById(payWayDTO.getId());
         Assert.isNull(payWay, () -> new ApiException(PayWayError.PAY_WAY_NOT_FOUND));
-//        PayingAgency payingAgency = IBaseEnum.getByCode(PayingAgency.class, payWayDTO.getPayingAgency());
-//        Assert.isNull(payingAgency, () -> new ApiException(PayWayError.PAY_WAY_AGENCY_ERROR));
+        PayingAgency payingAgency = PayingAgency.getByCode(payWayDTO.getPayingAgency());
+        Assert.isNull(payingAgency, () -> new ApiException(PayWayError.PAY_WAY_AGENCY_ERROR));
         Long count = payWayMapper.selectCount(new LambdaQueryWrapper<PayWay>()
                 .eq(PayWay::getPayCode, payWayDTO.getPayCode())
                 .eq(PayWay::getPayName, payWayDTO.getPayName())
@@ -85,8 +86,9 @@ public class PayWayServiceImpl extends ServiceImpl<PayWayMapper, PayWay> impleme
         Assert.isTrue(count > 0, () -> new ApiException(PayWayError.PAY_WAY_CODE_EXIST));
 
         PayWayConvert.INSTANCE.toPayway(payWayDTO,payWay);
-//        payWay.setUpdateBy(UserContext.INSTANCE.userId());
-//        payWay.setUpdateByName(UserContext.INSTANCE.username());
+        payWay.setUpdateTime(new Date());
+        payWay.setUpdateBy(UserContext.INSTANCE.userId());
+        payWay.setUpdateByName(UserContext.INSTANCE.username());
         return payWayMapper.updateById(payWay) > 0;
     }
 

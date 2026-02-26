@@ -3,7 +3,6 @@ package com.baosight.payment.system.controller.system;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigDynamicVO;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
 import com.baosight.payment.system.service.app.PayInterfaceConfigAppService;
-import com.baosight.security.annotation.AllowAccess;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +17,6 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 //@RequestMapping(SYSTEM + "/pm/pay/isv/config/manage")
-@AllowAccess
 @RequestMapping("/pm/pay/isv/config/manage")
 public class SystemPayIsvInterfaceConfigController {
     private final PayInterfaceConfigService payInterfaceConfigService;
@@ -81,7 +79,15 @@ public class SystemPayIsvInterfaceConfigController {
      */
     @PutMapping
     public Boolean getPayInterfaceConfigs(@RequestBody PayInterfaceConfigDynamicVO payInterfaceConfigDynamicVO){
-        return payInterfaceConfigService.updatePayInterfaceConfig(payInterfaceConfigDynamicVO);
+        return payInterfaceConfigService.updatePayInterfaceConfig4Isv(payInterfaceConfigDynamicVO);
     }
+
+//    /**
+//     * 为商户绑定支付接口
+//     */
+//    @PostMapping("/bind/{isvId}/{payInterfaceId}")
+//    public Boolean addPayInterfaceConfig(@PathVariable("isvId") Long isvId, @PathVariable("payInterfaceId") Long payInterfaceId){
+//        return payInterfaceConfigService.addPayInterfaceConfig(isvId, payInterfaceId);
+//    }
 
 }

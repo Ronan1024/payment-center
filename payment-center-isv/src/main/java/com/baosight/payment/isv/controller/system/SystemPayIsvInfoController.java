@@ -1,4 +1,4 @@
-package com.baosight.payment.isv.controller;
+package com.baosight.payment.isv.controller.system;
 
 
 import com.baosight.database.core.page.PageResponse;
@@ -22,7 +22,6 @@ import java.util.List;
 @RequiredArgsConstructor
 //@RequestMapping(SYSTEM + "/pm/pay/isv/manage")
 @RequestMapping("/pm/pay/isv/manage")
-@AllowAccess
 public class SystemPayIsvInfoController {
     private final PayIsvInfoService payIsvInfoService;
 

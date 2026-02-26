@@ -89,7 +89,9 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
         String prefix = mchInfoDTO.getType().equals(MchType.MERCHANT.code()) ? "N" : "S";
         String mchNo = IdGenUtil.generateId(SnowflakeIdUtil.nextId());
         payMchInfo.setMchNo(prefix + mchNo);
-        return payMchInfoMapper.insert(payMchInfo) > 0;
+        payMchInfoMapper.insert(payMchInfo);
+
+        return Boolean.TRUE;
     }
 
 

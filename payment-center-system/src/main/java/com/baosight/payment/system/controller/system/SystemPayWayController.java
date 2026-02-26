@@ -35,7 +35,6 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping( "/pm/pay/way/manage")
-@AllowAccess
 public class SystemPayWayController {
 
     private final PayWayService payWayService;

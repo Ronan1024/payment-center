@@ -1,9 +1,9 @@
 package com.baosight.payment.system.controller.system;
 
 import com.baosight.payment.api.MchInfoApi;
+import com.baosight.payment.system.pojo.dto.PayInterfaceDefineBindDTO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigDynamicVO;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
-import com.baosight.security.annotation.AllowAccess;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +21,6 @@ import java.util.List;
  */
 @RestController
 @RequiredArgsConstructor
-@AllowAccess
 //@RequestMapping(SYSTEM + "/pm/pay/mch/config/manage")
 @RequestMapping("/pm/pay/mch/config/manage")
 public class SystemPayMchInterfaceConfigController {
@@ -73,7 +72,7 @@ public class SystemPayMchInterfaceConfigController {
 //    };
 
     /**
-     * 查询商户已签约的支付配置列表
+     * 查询商户已绑定的支付配置列表
      */
     @GetMapping("/list/{mchId}")
     public List<PayInterfaceConfigDynamicVO> getPayInterfaceConfigs(@PathVariable("mchId")Long mchId){
@@ -81,10 +80,26 @@ public class SystemPayMchInterfaceConfigController {
     }
 
     /**
-     * 更新已签约的支付方式的列表
+     * 更新已绑定的支付方式的列表
      */
     @PutMapping
-    public Boolean getPayInterfaceConfigs(@RequestBody PayInterfaceConfigDynamicVO payInterfaceConfigDynamicVO){
-        return payInterfaceConfigService.updatePayInterfaceConfig(payInterfaceConfigDynamicVO);
+    public Boolean updatePayInterfaceConfigs(@RequestBody PayInterfaceConfigDynamicVO payInterfaceConfigDynamicVO){
+        return payInterfaceConfigService.updatePayInterfaceConfig4Mch(payInterfaceConfigDynamicVO);
+    }
+
+    /**
+     * 为商户绑定支付接口
+     */
+    @PostMapping("/bind")
+    public Boolean addPayInterfaceConfig(@RequestBody PayInterfaceDefineBindDTO payInterfaceDefineBindDTO){
+        return payInterfaceConfigService.addPayInterfaceConfig(payInterfaceDefineBindDTO);
+    }
+
+    /**
+     * 为特约商户绑定服务商
+     */
+    @PostMapping("/bind/isv//{mchId}/{isvId}")
+    public Boolean addPayInterfaceConfig(@PathVariable("mchId") Long mchId,@PathVariable("isvId") Long isvId){
+        return payInterfaceConfigService.bindIsv(mchId,isvId);
     }
 }

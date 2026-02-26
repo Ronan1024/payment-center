@@ -22,7 +22,6 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/pm/pay/interface/type")
-@AllowAccess
 public class PayInterfaceTypeController {
 
     private final PayInterfaceTypeService payInterfaceTypeService;

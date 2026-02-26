@@ -96,5 +96,10 @@ public interface PayInterfaceDefineService extends IService<PayInterfaceDefine> 
      */
     PayInterfaceDefine payInterfaceDefineByCode(String code);
 
-    List<PayInterfaceDefineListVO> selectList();
+    /**
+     * 查询商户可以绑定的支付接口定义信息
+     * @param payClientType
+     * @return
+     */
+    List<PayInterfaceDefineListVO> queryList(Integer payClientType);
 }
