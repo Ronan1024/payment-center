@@ -47,10 +47,10 @@
             <artifactId>payment-center-isv-api</artifactId>
             <version>${payment-center-api.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.baosight.saas.tenant.api</groupId>
-            <artifactId>saas-tenant-feign</artifactId>
-            <version>1.0.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.baosight.saas.tenant.api</groupId>-->
+<!--            <artifactId>saas-tenant-feign</artifactId>-->
+<!--            <version>1.0.0</version>-->
+<!--        </dependency>-->
     </dependencies>
 </project>
