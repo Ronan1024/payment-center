@@ -6,18 +6,16 @@
 
 
     <select id="page" resultType="com.baosight.payment.mch.pojo.vo.PayMchListVO">
-        select pmi.id,
+        select id,
         tenant_id,
         mch_name,
         state,
         type,
         contact_name,
         contact_tel,
-        pmi.create_time,
-        pmi.update_time
-        from pay_mch_info pmi
-        left join pay_enterprise_info pei on pei.id = pmi.enterprise_info_id
-        left join pay_bank_account_info pbai on pbai.id = pmi.bank_account_info_id
+        create_time,
+        update_time
+        from pay_mch_info
         <where>
             <if test="mchPage.tenantId != null">
                 and tenant_id = #{mchPage.tenantId}
@@ -39,7 +37,7 @@
             </if>
 
         </where>
-        order by pmi.create_time desc
+        order by create_time desc
     </select>
 
 </mapper>
