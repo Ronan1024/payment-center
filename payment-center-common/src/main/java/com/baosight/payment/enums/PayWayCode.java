@@ -26,6 +26,11 @@ public enum PayWayCode implements IBaseEnum<String> {
      * 特殊支付方式( 通过二维码跳转到收银台完成支付， 已集成获取用户ID的实现。 )
      */
     QR_CASHIER("QR_CASHIER", "通过二维码跳转到收银台完成支付", 3),
+
+    /**
+     * 银联商务微信小程序支付
+     */
+    UMS_WX_MINI_PROGRAM("umsWxMiniProgram", "银联商务微信小程序支付", 5),
     ;
 
 
