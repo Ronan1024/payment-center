@@ -57,7 +57,7 @@ public class RequestInterfaceRecord extends BasePO {
         RequestInterfaceRecord requestInterfaceRecord = new RequestInterfaceRecord();
         requestInterfaceRecord.setRequest(request);
         requestInterfaceRecord.setSuccess(response.getSuccess());
-        requestInterfaceRecord.setPayAgency(PayingAgency.TONG_LIAN.code());
+        requestInterfaceRecord.setPayAgency(PayingAgency.ALL_IN.code());
         requestInterfaceRecord.setInterfaceId(TongLianInterfaceCode.BIND_SYB.getCode());
         requestInterfaceRecord.setResponse(response.getResult().toString());
         return requestInterfaceRecord;

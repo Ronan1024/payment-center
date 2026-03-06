@@ -3,7 +3,7 @@ package com.baosight.payment.mch.api;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baosight.payment.api.MchInfoApi;
 import com.baosight.payment.mch.convert.PayMchInfoConvert;
-import com.baosight.payment.mch.pojo.entity.PayMchInfo;
+import com.baosight.payment.mch.dao.entity.PayMchInfo;
 import com.baosight.payment.mch.service.PayMchInfoService;
 import com.baosight.payment.vo.MchInfoVO;
 import jakarta.annotation.Resource;

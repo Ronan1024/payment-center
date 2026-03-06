@@ -1,4 +1,4 @@
-package com.baosight.payment.channel.pojo.entity;
+package com.baosight.payment.channel.pojo.dto.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;

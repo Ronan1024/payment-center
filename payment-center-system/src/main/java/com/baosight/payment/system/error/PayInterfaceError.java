@@ -75,6 +75,11 @@ public enum PayInterfaceError implements IErrorEnum<String> {
      * 缺少普通商户商户号
      */
     MCH_NO_NOT_EXIST("10115", "缺少普通商户商户号"),
+    /**
+     * 当前支付渠道编号已存在定义的配置信息
+     */
+    CHANNEL_CODE_HAS_DEFINED_CONFIGURATION("10116","当前支付渠道编号已存在定义的配置信息"),
+
 
     ;
 

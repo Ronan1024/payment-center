@@ -4,7 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import com.baosight.common.exception.ServiceException;
 import com.baosight.payment.channel.pojo.dao.TongLianOrderResultNotifyDTO;
 import com.baosight.payment.channel.pojo.dao.UnifiedPayNotifyDTO;
-import com.baosight.payment.channel.pojo.entity.ChannelGatewayLog;
+import com.baosight.payment.channel.pojo.dto.entity.ChannelGatewayLog;
 import com.baosight.payment.channel.service.ChannelGatewayLogManager;
 import com.baosight.payment.channel.service.PayNotifyHandler;
 import com.baosight.payment.channel.service.impl.PayNotifyProcessor;

@@ -29,7 +29,7 @@ public class WxMiniProgram implements IPaymentService {
      **/
     @Override
     public String getPayInterfaceCode() {
-        return PayInterfaceCode.UMS.getCode();
+        return PayInterfaceCode.UMS.code();
     }
 
     /**
@@ -72,7 +72,7 @@ public class WxMiniProgram implements IPaymentService {
      */
     @Override
     public String payWayCode() {
-        return PayWayCode.UMS_WX_MINI_PROGRAM.getCode();
+        return PayWayCode.UMS_WX_MINI_PROGRAM.code();
     }
 
     /**

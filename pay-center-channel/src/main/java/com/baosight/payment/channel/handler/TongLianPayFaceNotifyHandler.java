@@ -1,21 +1,16 @@
 package com.baosight.payment.channel.handler;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.NumberUtil;
 import com.baosight.payment.channel.pojo.dao.TongLianPayResultNotifyDTO;
 import com.baosight.payment.channel.pojo.dao.UnifiedPayNotifyDTO;
-import com.baosight.payment.channel.pojo.entity.ChannelGatewayLog;
+import com.baosight.payment.channel.pojo.dto.entity.ChannelGatewayLog;
 import com.baosight.payment.channel.service.ChannelGatewayLogManager;
 import com.baosight.payment.channel.service.PayNotifyHandler;
 import com.baosight.payment.channel.service.impl.PayNotifyProcessor;
 import com.baosight.utils.json.JsonUtil;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.sql.rowset.serial.SerialException;
-import java.util.Date;
 
 @Component
 public class TongLianPayFaceNotifyHandler implements PayNotifyHandler {

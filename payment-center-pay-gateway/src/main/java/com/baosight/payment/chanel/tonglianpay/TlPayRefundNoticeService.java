@@ -72,7 +72,7 @@ public class TlPayRefundNoticeService implements IChannelRefundNoticeService {
         parseChannelParamDAO.setErrMsg(jsonNode.get("respMsg").asText());
         parseChannelParamDAO.setOrderId(jsonNode.get("reqTraceNum").asLong());
         parseChannelParamDAO.setChannelOrderId(jsonNode.get("respTraceNum").asText());
-        parseChannelParamDAO.setPayingAgency(PayingAgency.TONG_LIAN.getAgencyCode());
+        parseChannelParamDAO.setPayingAgency(PayingAgency.ALL_IN.getAgencyCode());
         parseChannelParamDAO.setChannelResult(notifyParam);
         if (jsonNode.has("channelParamInfo")) {
             JsonNode channelParamInfo = JsonUtil.readTree(jsonNode.get("channelParamInfo").asText());

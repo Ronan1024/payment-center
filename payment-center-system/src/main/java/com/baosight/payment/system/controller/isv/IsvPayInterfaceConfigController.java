@@ -2,14 +2,13 @@ package com.baosight.payment.system.controller.isv;
 
 import com.baosight.database.core.page.PageResponse;
 import com.baosight.payment.enums.PayClientType;
-import com.baosight.payment.system.pojo.dto.PayInterFaceDefineDTO;
 import com.baosight.payment.system.pojo.dto.PayInterfaceListDTO;
+import com.baosight.payment.system.pojo.dto.req.PayInterFaceDefineReqDTO;
 import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineVO;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
 import com.baosight.payment.system.service.PayInterfaceDefineService;
-import com.baosight.payment.system.service.PayWayService;
 import com.baosight.utils.stream.StreamBuild;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.CollectionUtils;
@@ -55,17 +54,17 @@ public class IsvPayInterfaceConfigController {
      * 新增支付接口
      */
     @PostMapping
-    public Boolean insert(@RequestBody @Validated PayInterFaceDefineDTO payInterFaceDefine) {
+    public Boolean insert(@RequestBody @Validated PayInterFaceDefineReqDTO payInterFaceDefine) {
         return payInterfaceDefineService.insert(payInterFaceDefine);
     }
 
-    /**
-     * 更新支付接口
-     */
-    @PutMapping("/{id}")
-    public Boolean update(@RequestBody @Validated PayInterFaceDefineDTO payInterFaceDefineDTO) {
-        return payInterfaceDefineService.updatePayInterface(payInterFaceDefineDTO);
-    }
+//    /**
+//     * 更新支付接口
+//     */
+//    @PutMapping("/{id}")
+//    public Boolean update(@RequestBody @Validated PayInterFaceDefineDTO payInterFaceDefineDTO) {
+//        return payInterfaceDefineService.updatePayInterface(payInterFaceDefineDTO, );
+//    }
 
     /**
      * 删除支付接口

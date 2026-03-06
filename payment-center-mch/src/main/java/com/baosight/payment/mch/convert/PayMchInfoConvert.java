@@ -1,12 +1,11 @@
 package com.baosight.payment.mch.convert;
 
+import com.baosight.payment.mch.dao.entity.PayMchInfo;
 import com.baosight.payment.mch.pojo.dto.MchInfoDTO;
 import com.baosight.payment.mch.pojo.entity.PayBankAccountInfo;
-import com.baosight.payment.mch.pojo.entity.PayMchInfo;
 import com.baosight.payment.mch.pojo.vo.PayMchInfoVO;
 import com.baosight.payment.pojo.entity.PayEnterpriseInfo;
 import com.baosight.payment.vo.MchInfoVO;
-//import com.baosight.saas.tenant.api.vo.TenantDetailInfoVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

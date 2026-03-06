@@ -83,7 +83,8 @@ public class DivisionTask {
             Map<String, Object> map = new HashMap<>();
             List<String> list = v.stream().map(e -> {
                 // 渠道成本默认 2.6/1000
-                BigDecimal divide = new BigDecimal(2.6).divide(new BigDecimal(1000), 4, RoundingMode.HALF_UP);
+                BigDecimal divide = new BigDecimal("2.6")
+                        .divide(new BigDecimal(1000), 4, RoundingMode.HALF_UP);
                 SubAccountInfo subAccountInfo = new SubAccountInfo();
                 //商户订单号
                 subAccountInfo.setReqTraceNum(String.valueOf(e.getId()));

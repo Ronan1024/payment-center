@@ -6,11 +6,10 @@
     <parent>
         <groupId>com.baosight.payment</groupId>
         <artifactId>payment-center-pom</artifactId>
-        <version>${revision}</version>
+        <version>1.1.0</version>
     </parent>
     <packaging>pom</packaging>
     <artifactId>payment-center-api</artifactId>
-    <version>1.0.0</version>
     <modules>
         <module>payment-center-system-api</module>
         <module>payment-center-mch-api</module>
@@ -19,6 +18,7 @@
         <module>payment-center-notify-api</module>
         <module>payment-center-check-api</module>
         <module>payment-center-settlement-api</module>
+        <module>payment-center-channel-api</module>
     </modules>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

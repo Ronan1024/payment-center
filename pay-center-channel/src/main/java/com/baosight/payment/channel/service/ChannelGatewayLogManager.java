@@ -1,7 +1,7 @@
 package com.baosight.payment.channel.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.baosight.payment.channel.pojo.entity.ChannelGatewayLog;
+import com.baosight.payment.channel.pojo.dto.entity.ChannelGatewayLog;
 
 /**
  * <p>

@@ -328,7 +328,7 @@ public class PayTongLianRelevanceServiceImpl extends ServiceImpl<PayTongLianRele
      * @return
      */
     private TongLianIsvConfigDAO handler(PayInterfaceConfigVO payInterfaceConfig) {
-        Assert.isFalse(!ObjectUtils.isEmpty(payInterfaceConfig) && payInterfaceConfig.getPayingAgency().equals(PayingAgency.TONG_LIAN.code()), ApiException.supplier(PayingAgencyError.PAYING_AGENCY_ERROR, PayingAgency.TONG_LIAN.desc()));
+        Assert.isFalse(!ObjectUtils.isEmpty(payInterfaceConfig) && payInterfaceConfig.getPayingAgency().equals(PayingAgency.ALL_IN.code()), ApiException.supplier(PayingAgencyError.PAYING_AGENCY_ERROR, PayingAgency.ALL_IN.desc()));
         List<DynamicForm> interfaceParam = JsonUtil.parseArray(payInterfaceConfig.getInterfaceParams(), DynamicForm.class);
         Map<String, Object> collect = interfaceParam.stream().collect(Collectors.toMap(DynamicForm::getName, DynamicForm::getValue));
         return JsonUtil.parse(JsonUtil.toJson(collect), TongLianIsvConfigDAO.class);

@@ -14,7 +14,7 @@ public enum PayingAgency implements IBaseEnum<String> {
     /**
      * 通联
      */
-    TONG_LIAN("TONG_LIAN", "通联支付", 1),
+    ALL_IN("ALL_IN", "通联支付", 1),
     /**
      * 银联商务
      */

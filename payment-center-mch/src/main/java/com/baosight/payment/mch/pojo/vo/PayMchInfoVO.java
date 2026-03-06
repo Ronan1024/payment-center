@@ -2,8 +2,7 @@ package com.baosight.payment.mch.pojo.vo;
 
 
 import com.baosight.database.mybatis.handler.BasePO;
-import com.baosight.web.core.serializer.CustomLongSerializer;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.baosight.web.desensitize.core.annotaton.IdCardDesensitize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
@@ -31,11 +30,12 @@ public class PayMchInfoVO extends BasePO {
     /**
      * 租户ID
      */
+    @Deprecated
     @JsonSerialize(using = ToStringSerializer.class)
     private Long tenantId;
 
     /**
-     * 租户ID
+     * 联系人
      */
     private String contactName;
     /**
@@ -129,7 +129,9 @@ public class PayMchInfoVO extends BasePO {
     /**
      * 证件号码
      */
+    @IdCardDesensitize
     private String representativeCertificateId;
+
     /**
      * 证件有效起始日期
      */
@@ -138,47 +140,59 @@ public class PayMchInfoVO extends BasePO {
      * 证件有效截至日期
      */
     private Date representativeCertificateEffectEndTime;
+
+
     /**
      * 开户行名称
      */
     private String bankName;
+
     /**
      * 开户网点名称
      */
     private String branchName;
+
     /**
      * 账户名
      */
     private String accountName;
+
     /**
      * 账户号
      */
     @JsonSerialize(using = ToStringSerializer.class)
     private Long accountId;
+
     /**
      * 省ID
      */
     @JsonSerialize(using = ToStringSerializer.class)
     private Long provinceId;
+
     /**
      * 省
      */
     private String province;
+
+
     @JsonSerialize(using = ToStringSerializer.class)
     private Long cityId;
     /**
      * 市
      */
     private String city;
+
     /**
      * 区域ID
      */
     @JsonSerialize(using = ToStringSerializer.class)
     private Long areaId;
+
     /**
      * 开户所在区
      */
     private String area;
+
     /**
      * 备注
      */

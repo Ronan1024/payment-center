@@ -38,7 +38,7 @@ public class PayTongLianRelevanceController {
     @PostMapping("/bind/syb")
     public Boolean bindSyb(Long mchId) {
         // 获取商户签约的支付接口ID
-        Long interfaceId = payInterfaceConfigService.getMchInterfaceIdByPayingAgency(mchId, PayingAgency.TONG_LIAN);
+        Long interfaceId = payInterfaceConfigService.getMchInterfaceIdByPayingAgency(mchId, PayingAgency.ALL_IN);
         if(interfaceId == null){
             throw new IllegalStateException("商户还未签约通联支付");
         }
@@ -55,7 +55,7 @@ public class PayTongLianRelevanceController {
     public Boolean bindPhone(@PathVariable("phone") @Validated @Mobile String phone, @PathVariable("hasLegalPerson") Boolean hasLegalPerson) {
         Long mchId = 0L;
         // TODO 商户id
-        PayInterfaceConfigVO payInterfaceConfigVO = payInterfaceConfigService.getConfigInfo(mchId, PayingAgency.TONG_LIAN);
+        PayInterfaceConfigVO payInterfaceConfigVO = payInterfaceConfigService.getConfigInfo(mchId, PayingAgency.ALL_IN);
         return payTongLianRelevanceService.bindPhone(mchId, phone, payInterfaceConfigVO, hasLegalPerson);
     }
 
@@ -71,7 +71,7 @@ public class PayTongLianRelevanceController {
 //        Long mchId = SystemUserContext.getCompanyId();
         // TODO 商户id
         Long mchId = 0L;
-        PayInterfaceConfigVO payInterfaceConfigVO = payInterfaceConfigService.getConfigInfo(mchId, PayingAgency.TONG_LIAN);
+        PayInterfaceConfigVO payInterfaceConfigVO = payInterfaceConfigService.getConfigInfo(mchId, PayingAgency.ALL_IN);
         return payTongLianRelevanceService.confirmBindPhone(phone, mchId, verifyCode, payInterfaceConfigVO, Boolean.TRUE);
     }
 
@@ -83,7 +83,7 @@ public class PayTongLianRelevanceController {
 //        Long mchId = SystemUserContext.getCompanyId();
         // TODO 商户id
         Long mchId = 0L;
-        PayInterfaceConfigVO payInterfaceConfigVO = payInterfaceConfigService.getConfigInfo(mchId, PayingAgency.TONG_LIAN);
+        PayInterfaceConfigVO payInterfaceConfigVO = payInterfaceConfigService.getConfigInfo(mchId, PayingAgency.ALL_IN);
         return payTongLianRelevanceService.contractSign(mchId, payInterfaceConfigVO, tongLianAgreement);
     }
 

@@ -14,10 +14,11 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class MchPageDTO extends PageRequest {
+
     /**
-     * 租户id
+     * 商户编号
      */
-    private Long tenantId;
+    private String mchNo;
 
     /**
      * 企业名称
@@ -25,19 +26,9 @@ public class MchPageDTO extends PageRequest {
     private String mchName;
 
     /**
-     * 商户状态
-     */
-    private Integer state;
-
-    /**
      * 商户类型（2.普通商户 3.特约商户）
      */
     private Integer type;
-
-    /**
-     * 联系人名称
-     */
-    private String contactName;
 
     /**
      * 联系人电话

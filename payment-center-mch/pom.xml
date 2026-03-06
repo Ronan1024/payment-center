@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.baosight.payment</groupId>
         <artifactId>payment-center-pom</artifactId>
-        <version>${revision}</version>
+        <version>1.1.0</version>
     </parent>
 
     <artifactId>payment-center-mch</artifactId>
@@ -18,10 +18,6 @@
     </properties>
 
     <dependencies>
-<!--        <dependency>-->
-<!--            <groupId>com.baosight.saas</groupId>-->
-<!--            <artifactId>saas-common-auth</artifactId>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-common</artifactId>
@@ -32,11 +28,6 @@
             <artifactId>payment-center-partner-common</artifactId>
             <version>1.1.0</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.baosight.saas</groupId>-->
-<!--            <artifactId>saas-common-dynamic-form</artifactId>-->
-<!--            <version>1.0.0</version>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-mch-api</artifactId>
@@ -47,10 +38,9 @@
             <artifactId>payment-center-isv-api</artifactId>
             <version>${payment-center-api.version}</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.baosight.saas.tenant.api</groupId>-->
-<!--            <artifactId>saas-tenant-feign</artifactId>-->
-<!--            <version>1.0.0</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.baosight.web.framework</groupId>
+            <artifactId>web-spring-boot-desensitize</artifactId>
+        </dependency>
     </dependencies>
 </project>

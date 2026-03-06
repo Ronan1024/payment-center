@@ -14,7 +14,6 @@ import com.baosight.payment.system.pojo.vo.*;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
 import com.baosight.payment.system.service.PayWayService;
 import com.baosight.payment.vo.MchInfoVO;
-import com.baosight.security.annotation.AllowAccess;
 import com.baosight.utils.utils.Assert;
 import com.baosight.web.core.exception.ApiException;
 import jakarta.annotation.Resource;

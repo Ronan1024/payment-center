@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.baosight.payment</groupId>
         <artifactId>payment-center-pom</artifactId>
-        <version>${revision}</version>
+        <version>1.1.0</version>
     </parent>
 
     <artifactId>payment-center-pay-gateway</artifactId>
@@ -67,7 +67,7 @@
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>pay</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>

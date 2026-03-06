@@ -10,24 +10,24 @@ import com.baosight.payment.isv.api.IsvInfoApi;
 import com.baosight.payment.isv.vo.IsvInfoVO;
 import com.baosight.payment.mapper.PayEnterpriseInfoMapper;
 import com.baosight.payment.mch.convert.PayMchInfoConvert;
+import com.baosight.payment.mch.dao.entity.PayMchInfo;
+import com.baosight.payment.mch.dao.mapper.PayMchInfoMapper;
 import com.baosight.payment.mch.error.MchError;
 import com.baosight.payment.mch.mapper.PayBankAccountInfoMapper;
-import com.baosight.payment.mch.mapper.PayMchInfoMapper;
 import com.baosight.payment.mch.pojo.dto.MchInfoDTO;
 import com.baosight.payment.mch.pojo.dto.MchPageDTO;
 import com.baosight.payment.mch.pojo.entity.PayBankAccountInfo;
-import com.baosight.payment.mch.pojo.entity.PayMchInfo;
 import com.baosight.payment.mch.pojo.vo.PayMchInfoVO;
 import com.baosight.payment.mch.pojo.vo.PayMchListVO;
 import com.baosight.payment.mch.service.PayMchInfoService;
 import com.baosight.payment.pojo.entity.PayEnterpriseInfo;
-import com.baosight.payment.utils.IdGenUtil;
 import com.baosight.saas.auth.context.UserContext;
-import com.baosight.utils.utils.Assert;
 import com.baosight.web.core.exception.ApiException;
+import com.ronan.common.utils.Assert;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.function.Consumer;
 
@@ -42,6 +42,7 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
     private final PayMchInfoMapper payMchInfoMapper;
     private final PayEnterpriseInfoMapper payEnterpriseInfoMapper;
     private final PayBankAccountInfoMapper payBankAccountInfoMapper;
+
 //    @Resource
 //    private TenantInfoApi tenantInfoApi;
 
@@ -84,11 +85,10 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
         payMchInfo.setCreateBy(UserContext.INSTANCE.userId());
         payMchInfo.setCreateByName(UserContext.INSTANCE.username());
         if (mchInfoDTO.getType().equals(MchType.MERCHANT.code())) {
-            payMchInfo.setContactName(mchInfoDTO.getRepresentativeName()); // 联系人，如果是特约商户，使用租户联系人；普通商户使用企业法人
+            // 联系人，如果是特约商户，使用租户联系人；普通商户使用企业法人
+            payMchInfo.setContactName(mchInfoDTO.getRepresentativeName());
         }
-        String prefix = mchInfoDTO.getType().equals(MchType.MERCHANT.code()) ? "N" : "S";
-        String mchNo = IdGenUtil.generateId(SnowflakeIdUtil.nextId());
-        payMchInfo.setMchNo(prefix + mchNo);
+        payMchInfo.setMchNo("M" + SnowflakeIdUtil.nextId());
         payMchInfoMapper.insert(payMchInfo);
 
         return Boolean.TRUE;
@@ -119,10 +119,10 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
         PayMchInfoVO payMchInfoVO = PayMchInfoConvert.INSTANCE.toPayMchInfoVO(payMchInfo);
         // 补充企业信息
         PayEnterpriseInfo payEnterpriseInfo = payEnterpriseInfoMapper.selectById(payMchInfo.getEnterpriseInfoId());
-        PayMchInfoConvert.INSTANCE.toPayMchInfoVO(payEnterpriseInfo,payMchInfoVO);
+        PayMchInfoConvert.INSTANCE.toPayMchInfoVO(payEnterpriseInfo, payMchInfoVO);
         // 补充银行信息
         PayBankAccountInfo payBankAccountInfo = payBankAccountInfoMapper.selectById(payMchInfo.getBankAccountInfoId());
-        PayMchInfoConvert.INSTANCE.toPayMchInfoVO(payBankAccountInfo,payMchInfoVO);
+        PayMchInfoConvert.INSTANCE.toPayMchInfoVO(payBankAccountInfo, payMchInfoVO);
 
         return payMchInfoVO;
     }
@@ -157,6 +157,9 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
         }
         payMchInfo.setUpdateBy(UserContext.INSTANCE.userId());
         payMchInfo.setUpdateByName(UserContext.INSTANCE.username());
+        if (!StringUtils.hasText(payMchInfo.getMchNo())){
+            payMchInfo.setMchNo("M" + SnowflakeIdUtil.nextId());
+        }
         return payMchInfoMapper.updateById(payMchInfo) > 0;
     }
 

@@ -81,7 +81,7 @@ public class PayTongLianRelevanceAppServiceImpl implements PayTongLianRelevanceA
         Assert.isNull(payInterfaceDefine, ApiException.supplier(PayInterfaceError.PAY_INTERFACE_CHANNEL_NOT_CONFIG));
         MchInfoVO mchInfoVO = mchInfoApi.mchInfo(mchId);
 
-        PayInterfaceConfigVO payInterfaceConfigVO = payInterfaceConfigService.getConfigInfo(mchInfoVO.getIsvId(), PayingAgency.TONG_LIAN, payInterfaceDefine.getId());
+        PayInterfaceConfigVO payInterfaceConfigVO = payInterfaceConfigService.getConfigInfo(mchInfoVO.getIsvId(), PayingAgency.ALL_IN, payInterfaceDefine.getId());
         Assert.isNull(payInterfaceConfigVO, ApiException.supplier(PayInterfaceConfigError.MERCHANT_NOT_CONFIG_PAY_INTERFACE));
         Assert.isNull(payInterfaceConfigVO.getInterfaceRate(), ApiException.supplier(PayInterfaceConfigError.PAY_RATE_NOT_CONFIG));
 

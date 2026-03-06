@@ -1,9 +1,10 @@
-package com.baosight.payment.mch.pojo.entity;
+package com.baosight.payment.mch.dao.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baosight.database.mybatis.handler.BasePO;
+import com.ronan.common.enums.IBaseEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -34,6 +35,7 @@ public class PayMchInfo extends BasePO {
     /**
      * 租户ID
      */
+    @Deprecated
     private Long tenantId;
 
     /**
@@ -104,4 +106,19 @@ public class PayMchInfo extends BasePO {
      * 备注
      */
     private String remark;
+
+    public enum Type implements IBaseEnum<Integer> {
+        /**
+         * 普通商户
+         */
+        MERCHANT(2, "普通商户"),
+        /**
+         * 特约商户
+         */
+        SUB_MERCHANT(3, "特约商户");
+
+        Type(Integer code, String desc) {
+            initEnum(code, desc);
+        }
+    }
 }

@@ -10,6 +10,10 @@ import com.ronan.common.enums.IBaseEnum;
  */
 public enum MchType implements IBaseEnum<Integer> {
     /**
+     * 服务商户
+     */
+    SERVICER_MERCHANT(1, "服务商户"),
+    /**
      * 普通商户
      */
     MERCHANT(2, "普通商户"),

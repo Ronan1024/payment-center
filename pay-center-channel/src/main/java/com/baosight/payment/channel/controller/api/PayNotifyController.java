@@ -1,4 +1,4 @@
-package com.baosight.payment.channel.controller;
+package com.baosight.payment.channel.controller.api;
 
 
 import com.baosight.payment.channel.handler.NotifyDispatcher;
@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
 @Slf4j
 @RestController
 @RequestMapping("/call/back")
@@ -24,8 +22,7 @@ public class PayNotifyController {
     private NotifyDispatcher dispatcher;
 
     @PostMapping("/notify")
-    public ResponseEntity<String> notify(@RequestBody(required=false) String body, HttpServletRequest request) {
-
+    public ResponseEntity<String> notify(@RequestBody(required = false) String body, HttpServletRequest request) {
         if (body == null) {
             body = new String(request.getParameterMap().toString());
         }

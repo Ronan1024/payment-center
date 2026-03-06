@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.baosight.payment</groupId>
         <artifactId>payment-center-pom</artifactId>
-        <version>${revision}</version>
+        <version>1.1.0</version>
     </parent>
 
     <artifactId>payment-center</artifactId>
@@ -70,11 +70,16 @@
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>pay-center-check</artifactId>
-            <version>${revision}</version>
+            <version>1.1.0</version>
         </dependency>
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>pay-center-settlement</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.baosight.payment</groupId>
+            <artifactId>pay-center-channel</artifactId>
+            <version>1.1.0</version>
         </dependency>
         <dependency>
             <groupId>com.baosight.saas.auth.apply</groupId>

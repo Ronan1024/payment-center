@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.baosight.payment.mch.mapper.PayMchInfoMapper">
+<mapper namespace="com.baosight.payment.mch.dao.mapper.PayMchInfoMapper">
 
 
     <select id="page" resultType="com.baosight.payment.mch.pojo.vo.PayMchListVO">
@@ -14,23 +14,18 @@
         contact_name,
         contact_tel,
         create_time,
-        update_time
+        update_time,
+        mch_no
         from pay_mch_info
         <where>
-            <if test="mchPage.tenantId != null">
-                and tenant_id = #{mchPage.tenantId}
+            <if test="mchPage.mchNo != null and  mchPage.mchNo != ''">
+                and mch_no = #{mchPage.mchNo}
             </if>
             <if test="mchPage.mchName != null and mchPage.mchName != ''">
                 and `mch_name` LIKE CONCAT('%', #{mchPage.mchName}, '%')
             </if>
-            <if test="mchPage.state != null">
-                and state = #{mchPage.state}
-            </if>
             <if test="mchPage.type != null">
                 and type = #{mchPage.type}
-            </if>
-            <if test="mchPage.contactName != null and mchPage.contactName != ''">
-                and contact_name = #{mchPage.contactName}
             </if>
             <if test="mchPage.contactTel != null and mchPage.contactTel != ''">
                 and contact_tel = #{mchPage.contactTel}

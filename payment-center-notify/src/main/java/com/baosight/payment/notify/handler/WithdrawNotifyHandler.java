@@ -20,8 +20,8 @@ import java.util.Map;
  * @create: 2025/4/22
  */
 @Slf4j
-@Component(value = WithdrawNotifyHandler.MARK)
 @RequiredArgsConstructor
+@Component(value = WithdrawNotifyHandler.MARK)
 public class WithdrawNotifyHandler implements INotifyHandler {
     public static final String MARK = "withdrawNotifyHandler";
     private final MchAccountApi mchAccountApi;
@@ -50,6 +50,7 @@ public class WithdrawNotifyHandler implements INotifyHandler {
         }
         return result;
     }
+
 
     /**
      * 更新通知发送状态

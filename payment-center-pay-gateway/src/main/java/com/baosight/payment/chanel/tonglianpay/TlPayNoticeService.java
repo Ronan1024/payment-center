@@ -87,7 +87,7 @@ public class TlPayNoticeService implements IChannelNoticeService {
             parseChannelParamDAO.setMchId(receiverSignNum);
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             parseChannelParamDAO.setFinishTime(simpleDateFormat.parse(finishTime));
-            parseChannelParamDAO.setPayingAgency(PayingAgency.TONG_LIAN.getAgencyCode());
+            parseChannelParamDAO.setPayingAgency(PayingAgency.ALL_IN.getAgencyCode());
             if (jsonNode.has("channelParamInfo")) {
                 JsonNode channelParamInfo = JsonUtil.readTree(jsonNode.get("channelParamInfo").asText());
                 parseChannelParamDAO.setPayAgencyChannelOrder(channelParamInfo.get("chnlTrxid").asText());

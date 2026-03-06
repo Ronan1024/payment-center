@@ -4,6 +4,9 @@ import com.baosight.database.core.page.PageRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+/**
+ * @author L.J.Ran
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class PayWayPageDTO extends PageRequest {

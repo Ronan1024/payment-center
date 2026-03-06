@@ -16,9 +16,8 @@ import com.baosight.payment.system.pojo.vo.PayWayPageVO;
 import com.baosight.payment.system.pojo.vo.PayWayVO;
 import com.baosight.payment.system.service.PayWayService;
 import com.baosight.saas.auth.context.UserContext;
-import com.baosight.utils.utils.Assert;
 import com.baosight.web.core.exception.ApiException;
-import com.ronan.common.enums.IBaseEnum;
+import com.ronan.common.utils.Assert;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,6 +34,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PayWayServiceImpl extends ServiceImpl<PayWayMapper, PayWay> implements PayWayService {
     private final PayWayMapper payWayMapper;
+
+
     @Resource
     private MchInfoApi mchInfoApi;
 
@@ -58,9 +59,9 @@ public class PayWayServiceImpl extends ServiceImpl<PayWayMapper, PayWay> impleme
     public Boolean savePayWay(SavePayWayDTO payWayDTO) {
         Long count = payWayMapper.selectCount(new LambdaQueryWrapper<PayWay>()
                 .eq(PayWay::getPayCode, payWayDTO.getPayCode()));
-        Assert.isTrue(count > 0, () -> new ApiException(PayWayError.PAY_WAY_CODE_EXIST));
-        PayingAgency payingAgency = PayingAgency.getByCode(payWayDTO.getPayingAgency());
-        Assert.isNull(payingAgency, () -> new ApiException(PayWayError.PAY_WAY_AGENCY_ERROR));
+        Assert.isTrue(count > 0, ApiException.supplier(PayWayError.PAY_WAY_CODE_EXIST));
+//        PayingAgency payingAgency = PayingAgency.getByCode(payWayDTO.getPayingAgency());
+//        Assert.isNull(payingAgency, () -> new ApiException(PayWayError.PAY_WAY_AGENCY_ERROR));
         PayWay payWay = PayWayConvert.INSTANCE.toPayway(payWayDTO);
         // 设置创建人信息
         payWay.setCreateByName(UserContext.INSTANCE.username());
@@ -85,7 +86,7 @@ public class PayWayServiceImpl extends ServiceImpl<PayWayMapper, PayWay> impleme
                 .ne(PayWay::getId, payWay.getId()));
         Assert.isTrue(count > 0, () -> new ApiException(PayWayError.PAY_WAY_CODE_EXIST));
 
-        PayWayConvert.INSTANCE.toPayway(payWayDTO,payWay);
+        PayWayConvert.INSTANCE.toPayway(payWayDTO, payWay);
         payWay.setUpdateTime(new Date());
         payWay.setUpdateBy(UserContext.INSTANCE.userId());
         payWay.setUpdateByName(UserContext.INSTANCE.username());

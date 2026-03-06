@@ -28,7 +28,7 @@ public class TongLianOptionHandler implements IPayAgencyOption<PayInterfaceConfi
 
     @Override
     public String mark() {
-        return PayingAgency.TONG_LIAN.code();
+        return PayingAgency.ALL_IN.code();
     }
 
     @Override

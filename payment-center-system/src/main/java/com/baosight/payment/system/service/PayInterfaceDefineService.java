@@ -3,12 +3,12 @@ package com.baosight.payment.system.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baosight.database.core.page.PageResponse;
 import com.baosight.payment.enums.PayClientType;
-import com.baosight.payment.system.pojo.dto.PayInterFaceDefineDTO;
 import com.baosight.payment.system.pojo.dto.PayInterfaceListDTO;
+import com.baosight.payment.system.pojo.dto.req.PayInterFaceDefineReqDTO;
+import com.baosight.payment.system.pojo.dto.resp.PayingChannelDefineListRespDTO;
 import com.baosight.payment.system.pojo.entity.PayInterfaceDefine;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineVO;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,16 +24,15 @@ public interface PayInterfaceDefineService extends IService<PayInterfaceDefine> 
      *
      * @param payInterFaceDefine 支付接口配置
      */
-    @Transactional
-    Boolean insert(PayInterFaceDefineDTO payInterFaceDefine);
+    Boolean insert(PayInterFaceDefineReqDTO payInterFaceDefine);
 
     /**
      * 更新支付接口
      *
-     * @param id                    支付接口id
      * @param payInterFaceDefineDTO 支付接口更新信息
+     * @param id                    支付接口id
      */
-    Boolean updatePayInterface(PayInterFaceDefineDTO payInterFaceDefineDTO);
+    Boolean updatePayInterface(PayInterFaceDefineReqDTO payInterFaceDefineDTO, Long id);
 
     /**
      * 获取支付接口列表
@@ -98,8 +97,16 @@ public interface PayInterfaceDefineService extends IService<PayInterfaceDefine> 
 
     /**
      * 查询商户可以绑定的支付接口定义信息
+     *
      * @param payClientType
      * @return
      */
     List<PayInterfaceDefineListVO> queryList(Integer payClientType);
+
+    /**
+     * 获取支付通道列表
+     * @param mchType 商户类型
+     */
+    List<PayingChannelDefineListRespDTO> channelDefineList(Integer mchType);
+
 }

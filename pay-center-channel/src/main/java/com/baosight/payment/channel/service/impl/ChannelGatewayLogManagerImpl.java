@@ -2,12 +2,11 @@ package com.baosight.payment.channel.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baosight.payment.channel.mapper.ChannelGatewayLogMapper;
-import com.baosight.payment.channel.pojo.entity.ChannelGatewayLog;
+import com.baosight.payment.channel.pojo.dto.entity.ChannelGatewayLog;
 import com.baosight.payment.channel.service.ChannelGatewayLogManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.util.ObjectUtils;
 
 /**
  * <p>

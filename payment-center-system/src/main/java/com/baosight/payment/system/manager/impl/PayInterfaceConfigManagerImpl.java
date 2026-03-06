@@ -52,7 +52,7 @@ public class PayInterfaceConfigManagerImpl implements PayInterfaceConfigManager 
     public int saveInterfaceConfig(PayInterfaceConfig payInterfaceConfig, List<PayWay> payWayList) {
         // 支付机构分组
         List<String> distinctList = StreamBuild.of(payWayList).map(PayWay::getPayingAgency).toDistinctList();
-        distinctList.stream().filter(e -> e.equals(PayingAgency.TONG_LIAN.code())).forEach(e -> {
+        distinctList.stream().filter(e -> e.equals(PayingAgency.ALL_IN.code())).forEach(e -> {
             PayTongLianRelevance payTongLianRelevance = payTongLianRelevanceMapper.selectOne(new LambdaQueryWrapper<PayTongLianRelevance>()
                     .eq(PayTongLianRelevance::getMchId, payInterfaceConfig.getClientId()));
             if (!ObjectUtils.isEmpty(payTongLianRelevance)) {
