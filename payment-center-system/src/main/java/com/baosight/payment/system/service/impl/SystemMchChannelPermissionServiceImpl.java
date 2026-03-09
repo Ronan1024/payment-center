@@ -1,5 +1,6 @@
 package com.baosight.payment.system.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baosight.payment.system.dao.entity.SystemMchChannelPermission;
 import com.baosight.payment.system.dao.manager.PayInterFaceDefineManager;
@@ -13,6 +14,7 @@ import com.ronan.common.utils.Assert;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 import static com.baosight.payment.system.error.PayInterfaceError.PAY_INTERFACE_NOT_EXIST;
@@ -43,7 +45,6 @@ public class SystemMchChannelPermissionServiceImpl extends ServiceImpl<SystemMch
 
         Assert.isFalse(interfaceDefineList.size() == mchChannelPermission.getChannelId().size(), ApiException.supplier(PAY_INTERFACE_NOT_EXIST));
 
-
         List<SystemMchChannelPermission> mchChannelPermissions = interfaceDefineList.stream().map(e -> {
             SystemMchChannelPermission systemMchChannelPermission = new SystemMchChannelPermission();
             systemMchChannelPermission.setChannelCode(e.getCode());
@@ -52,7 +53,28 @@ public class SystemMchChannelPermissionServiceImpl extends ServiceImpl<SystemMch
             systemMchChannelPermission.setMchType(mchChannelPermission.getType());
             return systemMchChannelPermission;
         }).toList();
-         return systemMchChannelPermissionManager.saveChannelPermission(mchChannelPermissions, mchChannelPermission.getMchId());
+        // 获取用户已有的支付配置进行移除
+
+
+        return systemMchChannelPermissionManager.saveChannelPermission(mchChannelPermissions, mchChannelPermission.getMchId());
+    }
+
+    /**
+     * 获取商户已有的支付渠道权限
+     *
+     * @param type  当前商户类型
+     * @param mchId 当前商户id
+     */
+    @Override
+    public List<String> mchChannelPermission(Integer type, Long mchId) {
+        List<SystemMchChannelPermission> permissions = systemMchChannelPermissionManager.lambdaQuery()
+                .eq(SystemMchChannelPermission::getMchId, mchId)
+                .eq(SystemMchChannelPermission::getMchType, type).list();
+
+        if (CollectionUtils.isEmpty(permissions)) {
+            return Collections.emptyList();
+        }
+        return permissions.stream().map(SystemMchChannelPermission::getChannelDefineId).map(String::valueOf).toList();
     }
 }
 

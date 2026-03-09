@@ -90,6 +90,7 @@ public class SystemPayMchInterfaceConfigController {
     /**
      * 为商户绑定支付接口
      */
+    @Deprecated
     @PostMapping("/bind")
     public Boolean addPayInterfaceConfig(@RequestBody PayInterfaceDefineBindDTO payInterfaceDefineBindDTO){
         return payInterfaceConfigService.addPayInterfaceConfig(payInterfaceDefineBindDTO);

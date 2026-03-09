@@ -11,6 +11,9 @@ import java.util.List;
 
 import static com.baosight.payment.system.error.PayInterfaceError.*;
 
+/**
+ * @author L.J.Ran
+ */
 @Data
 public class PayInterFaceDefineReqDTO {
 
@@ -35,6 +38,11 @@ public class PayInterFaceDefineReqDTO {
      * 是否支持普通商户
      */
     private Boolean hasMch;
+
+    /**
+     * 是否开启
+     */
+    private Boolean enable;
 
     /**
      * 是否支持服务商模式

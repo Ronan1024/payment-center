@@ -2,6 +2,7 @@ package com.baosight.payment.system.convert;
 
 import com.baosight.payment.dao.TongLianConfigVO;
 import com.baosight.payment.system.pojo.dto.PayInterfaceConfigDTO;
+import com.baosight.payment.system.pojo.dto.resp.ClientChannelRespDTO;
 import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigListVO;
@@ -64,4 +65,8 @@ public interface PayInterfaceConfigConvert {
     IsvInterfaceConfigVO toIsvInterfaceConfigVO(PayInterfaceConfig payInterfaceConfig);
 
     PayInterfaceConfig toPayInterfaceConfig(PayInterfaceConfigDynamicVO payInterfaceConfigDynamicVO);
+
+    @Mapping(target = "channelName", ignore = true)
+    @Mapping(target = "channelId", source = "clientId")
+    ClientChannelRespDTO toClientChannelRespDTO(PayInterfaceConfig payInterfaceConfig);
 }

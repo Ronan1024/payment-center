@@ -1,12 +1,11 @@
 package com.baosight.payment.system.dao.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baosight.database.mybatis.handler.BasePO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.util.Date;
 
 /**
  * 服务商通道权限
@@ -20,7 +19,7 @@ public class SystemMchChannelPermission extends BasePO {
     /**
      * 
      */
-    @TableId
+    @TableId(type = IdType.ASSIGN_ID)
     private Long id;
 
     /**
@@ -29,7 +28,7 @@ public class SystemMchChannelPermission extends BasePO {
     private String channelCode;
 
     /**
-     * 通达配置定义id
+     * 通道配置定义id
      */
     private Long channelDefineId;
 
@@ -42,14 +41,4 @@ public class SystemMchChannelPermission extends BasePO {
      * 商户类型
      */
     private Integer mchType;
-
-    /**
-     * 
-     */
-    private Date createTime;
-
-    /**
-     * 
-     */
-    private Date updateTime;
 }

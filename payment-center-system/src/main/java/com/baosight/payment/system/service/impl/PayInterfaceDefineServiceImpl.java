@@ -203,6 +203,7 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
         if (Boolean.TRUE.equals(payInterFaceDefineDTO.getHasMch())) {
             payInterfaceDefine.setNormalMchParams(JsonUtil.toJson(payInterFaceDefineDTO.getNormalMchParams()));
         }
+        return payInterFaceDefineManager.updateById(payInterfaceDefine);
 //
 //
 //        boolean update = payInterfaceDefineMapper.updateById(payInterfaceDefine) > 0;
@@ -214,7 +215,7 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
 //            );
 //        }
 
-        return Boolean.TRUE;
+//        return Boolean.TRUE;
     }
 
     /**
@@ -387,6 +388,19 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
         List<PayInterfaceDefine> payInterfaceDefines = query.list();
 
         return payInterfaceDefines.stream().map(PayInterfaceDefineConvert.INSTANCE::toPayingChannelDefineListRespDTO).toList();
+    }
+
+    /**
+     * 修改支付通道启用状态
+     *
+     * @param id 支付通道id
+     */
+    @Override
+    public void editEnable(Long id) {
+        PayInterfaceDefine interfaceDefine = payInterFaceDefineManager.getById(id);
+        Assert.isNull(interfaceDefine, ApiException.supplier(PAY_INTERFACE_DEFINE_NOT_EXIST));
+        interfaceDefine.setEnable(!interfaceDefine.getEnable());
+        payInterFaceDefineManager.updateById(interfaceDefine);
     }
 
 

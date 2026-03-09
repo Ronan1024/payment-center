@@ -1,8 +1,8 @@
 package com.baosight.payment.system.handler.option;
 
 import com.baosight.payment.enums.PayingAgency;
+import com.baosight.payment.system.dao.manager.PayInterfaceConfigManager;
 import com.baosight.payment.system.enums.TongLianOption;
-import com.baosight.payment.system.manager.PayInterfaceConfigManager;
 import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
 import com.baosight.payment.system.pojo.entity.PayTongLianRelevance;
 import jakarta.annotation.Resource;

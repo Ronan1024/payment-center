@@ -23,6 +23,15 @@ public enum PayInterfaceConfigError implements IErrorEnum<String> {
      * 支付费率未配置
      */
     PAY_RATE_NOT_CONFIG("60002", "支付费率未配置"),
+
+    /**
+     * 表单字段不能为空
+     */
+    FORM_FIELD_CANNOT_BE_EMPTY("60004", "提交配置中 {} 不能为空"),
+    /**
+     * 当前商户未获取到当前通道权限
+     */
+    MERCHANT_HAS_NO_CHANNEL_PERMISSION("60005", "当前商户未获取到当前通道权限"),
     ;
 
     PayInterfaceConfigError(String code, String msg) {

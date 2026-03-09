@@ -109,4 +109,9 @@ public interface PayInterfaceDefineService extends IService<PayInterfaceDefine> 
      */
     List<PayingChannelDefineListRespDTO> channelDefineList(Integer mchType);
 
+    /**
+     * 修改支付通道启用状态
+     * @param id 支付通道id
+     */
+    void editEnable(Long id);
 }

@@ -1,24 +1,29 @@
 package com.baosight.payment.system.controller.system;
 
-import com.baosight.payment.system.pojo.vo.PayInterfaceConfigDynamicVO;
+import com.baosight.payment.system.pojo.dto.req.ClientChannelConfigReqDTO;
+import com.baosight.payment.system.pojo.dto.req.MchChannelPermissionReqDTO;
+import com.baosight.payment.system.pojo.dto.resp.ClientChannelConfigRespDTO;
+import com.baosight.payment.system.pojo.dto.resp.ClientChannelRespDTO;
+import com.baosight.payment.system.pojo.validation.InsertChannelConfigGroup;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
 import com.baosight.payment.system.service.app.PayInterfaceConfigAppService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 
 /**
- * 系统服务商支付配置管理
+ * 运营端支付通道配置管理
  *
  * @author L.J.Rab
  */
 @RestController
 @RequiredArgsConstructor
 //@RequestMapping(SYSTEM + "/pm/pay/isv/config/manage")
-@RequestMapping("/pm/pay/isv/config/manage")
-public class SystemPayIsvInterfaceConfigController {
+@RequestMapping("/pay/config/manage")
+public class SystemInterfaceConfigController {
     private final PayInterfaceConfigService payInterfaceConfigService;
     private final PayInterfaceConfigAppService payInterfaceConfigAppService;
 
@@ -67,20 +72,61 @@ public class SystemPayIsvInterfaceConfigController {
 
 
     /**
-     * 查询已签约的支付方式的列表
+     * 保存商户渠道权限
      */
-    @GetMapping("/list/{isvId}")
-    public List<PayInterfaceConfigDynamicVO> getPayInterfaceConfigs(@PathVariable("isvId")Long isvId){
-        return payInterfaceConfigService.getIsvPayInterfaceConfigs(isvId);
+    @PostMapping
+    public Boolean saveMchChannel(@RequestBody @Validated MchChannelPermissionReqDTO mchChannelPermission) {
+        return payInterfaceConfigService.saveMchChannel(mchChannelPermission);
     }
 
+
     /**
-     * 更新已签约的支付方式的列表
+     * 获取商户已有的支付渠道权限
+     *
+     * @param type  当前商户类型
+     * @param mchId 当前商户id
      */
-    @PutMapping
-    public Boolean getPayInterfaceConfigs(@RequestBody PayInterfaceConfigDynamicVO payInterfaceConfigDynamicVO){
-        return payInterfaceConfigService.updatePayInterfaceConfig4Isv(payInterfaceConfigDynamicVO);
+    @GetMapping
+    public List<String> getMchChannel(@RequestParam("type") Integer type, @RequestParam("mchId") Long mchId) {
+        return payInterfaceConfigService.getMchChannel(type, mchId);
     }
+
+
+    /**
+     * 查询已签约的支付方式的列表
+     */
+    @GetMapping("/{clientId}")
+    public List<ClientChannelRespDTO> mchChannelList(@PathVariable("clientId") Long clientId) {
+        return payInterfaceConfigService.mchChannelList(clientId);
+    }
+
+
+    /**
+     * 保存商户支付通道配置信息
+     */
+    @PostMapping("/channel")
+    public Boolean saveClientChannelConfig(@RequestBody @Validated(InsertChannelConfigGroup.class) ClientChannelConfigReqDTO channelConfigReq) {
+        return payInterfaceConfigService.saveClientChannelConfig(channelConfigReq);
+    }
+
+
+    /**
+     * 获取商户支付通道配置信息
+     */
+    @GetMapping("/channel/info")
+    public ClientChannelConfigRespDTO clientChannelConfigInfo(@RequestParam("channelId") Long channelId, @RequestParam("clientId") Long clientId, @RequestParam("type") Integer type){
+        return payInterfaceConfigService.clientChannelConfigInfo(channelId, clientId, type);
+    }
+
+
+//
+//    /**
+//     * 更新已签约的支付方式的列表
+//     */
+//    @PutMapping
+//    public Boolean getPayInterfaceConfigs(@RequestBody PayInterfaceConfigDynamicVO payInterfaceConfigDynamicVO) {
+//        return payInterfaceConfigService.updatePayInterfaceConfig4Isv(payInterfaceConfigDynamicVO);
+//    }
 
 //    /**
 //     * 为商户绑定支付接口

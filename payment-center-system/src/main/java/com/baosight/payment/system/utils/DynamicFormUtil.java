@@ -1,7 +1,17 @@
 package com.baosight.payment.system.utils;
 
+import com.baosight.payment.system.pojo.validation.InsertChannelConfigGroup;
+import com.baosight.payment.system.pojo.validation.InsertChannelDefineGroup;
+import com.baosight.web.core.exception.ApiException;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import org.springframework.util.StringUtils;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static com.baosight.payment.system.error.PayInterfaceConfigError.FORM_FIELD_CANNOT_BE_EMPTY;
 
 /**
  * @program: payment-center
@@ -13,6 +23,37 @@ public class DynamicFormUtil {
 
 
     /**
+     * 验证表单是否为空
+     *
+     * @param sourceDynamicForm 原始定义的表单
+     * @param verifyDynamicForm 需要进行校验的表单信息
+     * @throws IllegalArgumentException 如果表单必填字段为空
+     */
+    public static void validateDynamicForm(List<DynamicForm> sourceDynamicForm, List<DynamicForm> verifyDynamicForm) {
+        if (sourceDynamicForm == null || sourceDynamicForm.isEmpty()) {
+            throw new IllegalArgumentException("Source dynamic form list cannot be null or empty");
+        }
+        if (verifyDynamicForm == null || verifyDynamicForm.isEmpty()) {
+            throw new IllegalArgumentException("Verify dynamic form list cannot be null or empty");
+        }
+
+        Map<String, String> verifyDynamicFormMap = verifyDynamicForm.stream().collect(Collectors.toMap(DynamicForm::getName, DynamicForm::getValue));
+        for (DynamicForm sourceForm : sourceDynamicForm) {
+            if (Boolean.TRUE.equals(sourceForm.getRequired())) {
+                if (!verifyDynamicFormMap.containsKey(sourceForm.getName())) {
+                    throw new ApiException(FORM_FIELD_CANNOT_BE_EMPTY, sourceForm.getName());
+                }
+                String formValue = verifyDynamicFormMap.get(sourceForm.getName());
+                if (!StringUtils.hasText(formValue)) {
+                    throw new ApiException(FORM_FIELD_CANNOT_BE_EMPTY, sourceForm.getName());
+                }
+            }
+        }
+
+    }
+
+
+    /**
      * 动态表单
      */
     @Data
@@ -20,7 +61,7 @@ public class DynamicFormUtil {
         /**
          * 表单名
          */
-        @NotBlank(message = "字段名不能为空")
+        @NotBlank(message = "字段名不能为空", groups = {InsertChannelDefineGroup.class, InsertChannelConfigGroup.class})
         private String name;
 
 
@@ -32,18 +73,19 @@ public class DynamicFormUtil {
         /**
          * 表单值
          */
+        @NotBlank(message = "参数值不能为空", groups = {InsertChannelConfigGroup.class})
         private String value;
 
         /**
          * 字段类型
          */
-        @NotBlank(message = "字段类型不能为空")
+        @NotBlank(message = "字段类型不能为空", groups = {InsertChannelDefineGroup.class})
         private String type;
 
         /**
          * 是否必须
          */
-        @NotBlank(message = "是否必填不能为空")
+        @NotBlank(message = "是否必填不能为空", groups = {InsertChannelDefineGroup.class})
         private Boolean required;
 
         /**

@@ -1,8 +1,10 @@
 package com.baosight.payment.system.service;
 
-import com.baosight.payment.system.dao.entity.SystemMchChannelPermission;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.baosight.payment.system.dao.entity.SystemMchChannelPermission;
 import com.baosight.payment.system.pojo.dto.req.MchChannelPermissionReqDTO;
+
+import java.util.List;
 
 /**
 * @author longjiangran
@@ -16,4 +18,12 @@ public interface SystemMchChannelPermissionService extends IService<SystemMchCha
      * @param mchChannelPermission 商户通道权限请求参数
      */
     Boolean saveMhChannelPermission(MchChannelPermissionReqDTO mchChannelPermission);
+
+    /**
+     * 获取商户已有的支付渠道权限
+     *
+     * @param type  当前商户类型
+     * @param mchId 当前商户id
+     */
+    List<String> mchChannelPermission(Integer type, Long mchId);
 }

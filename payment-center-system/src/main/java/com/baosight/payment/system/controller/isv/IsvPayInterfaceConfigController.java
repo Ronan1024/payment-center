@@ -5,6 +5,7 @@ import com.baosight.payment.enums.PayClientType;
 import com.baosight.payment.system.pojo.dto.PayInterfaceListDTO;
 import com.baosight.payment.system.pojo.dto.req.PayInterFaceDefineReqDTO;
 import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
+import com.baosight.payment.system.pojo.validation.InsertChannelDefineGroup;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineVO;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
@@ -54,7 +55,7 @@ public class IsvPayInterfaceConfigController {
      * 新增支付接口
      */
     @PostMapping
-    public Boolean insert(@RequestBody @Validated PayInterFaceDefineReqDTO payInterFaceDefine) {
+    public Boolean insert(@RequestBody @Validated(InsertChannelDefineGroup.class) PayInterFaceDefineReqDTO payInterFaceDefine) {
         return payInterfaceDefineService.insert(payInterFaceDefine);
     }
 

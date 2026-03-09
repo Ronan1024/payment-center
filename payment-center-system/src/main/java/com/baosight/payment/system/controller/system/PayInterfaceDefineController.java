@@ -6,6 +6,7 @@ import com.baosight.payment.system.pojo.dto.PayInterfaceListDTO;
 import com.baosight.payment.system.pojo.dto.req.PayInterFaceDefineReqDTO;
 import com.baosight.payment.system.pojo.dto.resp.PayingChannelDefineListRespDTO;
 import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
+import com.baosight.payment.system.pojo.validation.InsertChannelDefineGroup;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineVO;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
@@ -26,7 +27,7 @@ import java.util.function.BiConsumer;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping( "/pm/pay/interface/define")
+@RequestMapping("/pm/pay/interface/define")
 public class PayInterfaceDefineController {
 
     private final PayInterfaceDefineService payInterfaceDefineService;
@@ -37,6 +38,7 @@ public class PayInterfaceDefineController {
 
     /**
      * 获取支付接口列表(商户绑定支付接口使用)
+     *
      * @param payClientType 取值参见PayClientType
      */
     @PostMapping("/list/{payClientType}")
@@ -53,7 +55,6 @@ public class PayInterfaceDefineController {
     }
 
 
-
     /**
      * 获取支付接口定义详情
      */
@@ -67,7 +68,7 @@ public class PayInterfaceDefineController {
      * 新增支付接口
      */
     @PostMapping
-    public Boolean insert(@RequestBody @Validated PayInterFaceDefineReqDTO payInterFaceDefine) {
+    public Boolean insert(@RequestBody @Validated(InsertChannelDefineGroup.class) PayInterFaceDefineReqDTO payInterFaceDefine) {
         return payInterfaceDefineService.insert(payInterFaceDefine);
     }
 
@@ -75,7 +76,7 @@ public class PayInterfaceDefineController {
      * 更新支付接口
      */
     @PutMapping("/{id}")
-    public Boolean update(@RequestBody @Validated PayInterFaceDefineReqDTO payInterFaceDefineDTO, @PathVariable("id") Long id) {
+    public Boolean update(@RequestBody @Validated(InsertChannelDefineGroup.class) PayInterFaceDefineReqDTO payInterFaceDefineDTO, @PathVariable("id") Long id) {
         return payInterfaceDefineService.updatePayInterface(payInterFaceDefineDTO, id);
     }
 
@@ -91,8 +92,18 @@ public class PayInterfaceDefineController {
 
 
     /**
-     * 服务商获取支付接口配置列表
+     * 修改支付通道状态
      */
+    @PutMapping("/enable/{id}")
+    public void editEnable(@PathVariable("id") Long id) {
+        payInterfaceDefineService.editEnable(id);
+    }
+
+
+    /**
+     * 服务商获取支付接口配置列表放
+     */
+    @Deprecated
     @GetMapping("/service/provider/list/{isvId}")
     public List<PayInterfaceDefineListVO> payInterfaceDefineList(@PathVariable("isvId") Long isvId) {
         List<PayInterfaceDefineListVO> result = payInterfaceDefineService.getPayInterfaceDefineList(PayClientType.SERVICE_PROVIDER);
@@ -100,6 +111,7 @@ public class PayInterfaceDefineController {
         return result;
     }
 
+    @Deprecated
     @GetMapping("/service/provider/list/mch/{mchId}")
     public List<PayInterfaceDefineListVO> mchPayInterfaceDefineList(@PathVariable("mchId") Long mchId) {
         List<PayInterfaceDefineListVO> result = payInterfaceDefineService.mchPayInterfaceDefineList(mchId);
@@ -109,14 +121,13 @@ public class PayInterfaceDefineController {
 
     /**
      * 获取支付通道列表信息
+     *
      * @param mchType 商户类型
      */
     @GetMapping("/list/{type}")
-    public List<PayingChannelDefineListRespDTO> channelDefineList(@PathVariable("type") Integer mchType){
+    public List<PayingChannelDefineListRespDTO> channelDefineList(@PathVariable("type") Integer mchType) {
         return payInterfaceDefineService.channelDefineList(mchType);
     }
-
-
 
 
     /**

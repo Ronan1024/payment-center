@@ -1,6 +1,7 @@
-package com.baosight.payment.system.manager.impl;
+package com.baosight.payment.system.dao.manager;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baosight.database.core.manager.impl.BaseManagerImpl;
 import com.baosight.payment.access.tl.model.TongLianIsvConfigDAO;
 import com.baosight.payment.annotation.Manager;
 import com.baosight.payment.dao.TongLianIsvAndMchConfigDAO;
@@ -8,7 +9,6 @@ import com.baosight.payment.dao.TongLianMchConfigDAO;
 import com.baosight.payment.enums.PayClientType;
 import com.baosight.payment.enums.PayingAgency;
 import com.baosight.payment.system.convert.PayInterfaceConfigConvert;
-import com.baosight.payment.system.manager.PayInterfaceConfigManager;
 import com.baosight.payment.system.mapper.PayInterfaceConfigMapper;
 import com.baosight.payment.system.mapper.PayTongLianRelevanceMapper;
 import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
@@ -20,6 +20,7 @@ import com.baosight.utils.utils.Assert;
 import com.baosight.utils.utils.ObjectUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -38,7 +39,7 @@ import java.util.function.Function;
 @Slf4j
 @Manager
 @RequiredArgsConstructor
-public class PayInterfaceConfigManagerImpl implements PayInterfaceConfigManager {
+public class PayInterfaceConfigManager extends BaseManagerImpl<PayInterfaceConfigMapper, PayInterfaceConfig> {
     private final PayInterfaceConfigMapper payInterfaceConfigMapper;
     private final PayTongLianRelevanceMapper payTongLianRelevanceMapper;
 
@@ -48,7 +49,6 @@ public class PayInterfaceConfigManagerImpl implements PayInterfaceConfigManager 
      * @param payInterfaceConfig 支付接口保存配置类
      * @param payWayList         支付方式列表
      */
-    @Override
     public int saveInterfaceConfig(PayInterfaceConfig payInterfaceConfig, List<PayWay> payWayList) {
         // 支付机构分组
         List<String> distinctList = StreamBuild.of(payWayList).map(PayWay::getPayingAgency).toDistinctList();
@@ -69,7 +69,6 @@ public class PayInterfaceConfigManagerImpl implements PayInterfaceConfigManager 
      *
      * @param mchId 商户id
      */
-    @Override
     public PayTongLianRelevance tongLianRelevance(Long mchId) {
         return payTongLianRelevanceMapper.selectOne(new LambdaQueryWrapper<PayTongLianRelevance>()
                 .eq(PayTongLianRelevance::getMchId, mchId)
@@ -83,7 +82,6 @@ public class PayInterfaceConfigManagerImpl implements PayInterfaceConfigManager 
      * @param interfaceCode 接口编号
      * @param isvId         服务商id
      */
-    @Override
     public TongLianIsvAndMchConfigDAO tongLianIsvAndMchConfig(Long mchId, String interfaceCode, Long isvId) {
         TongLianIsvConfigDAO tongLianIsvConfigDAO = tongLianIsvConfig(isvId, interfaceCode, null);
         TongLianMchConfigDAO tongLianMchConfigDAO = tongLianMchConfig(mchId, interfaceCode, null);
@@ -97,7 +95,6 @@ public class PayInterfaceConfigManagerImpl implements PayInterfaceConfigManager 
      * @param interfaceCode 接口编号
      * @param interfaceId   接口id
      */
-    @Override
     public TongLianIsvConfigDAO tongLianIsvConfig(Long isvId, String interfaceCode, Long interfaceId) {
         LambdaQueryWrapper<PayInterfaceConfig> queryWrapper = getConfigQueryWrapper(interfaceCode, interfaceId, isvId, PayClientType.SERVICE_PROVIDER.code());
         PayInterfaceConfig payInterfaceConfig = payInterfaceConfigMapper.selectOne(queryWrapper);
@@ -115,7 +112,6 @@ public class PayInterfaceConfigManagerImpl implements PayInterfaceConfigManager 
      * @param interfaceCode 接口编号
      * @param interfaceId   接口id
      */
-    @Override
     public TongLianMchConfigDAO tongLianMchConfig(Long mchId, String interfaceCode, Long interfaceId) {
         if (ObjectUtils.isEmpty(mchId)) {
             return null;
@@ -134,7 +130,6 @@ public class PayInterfaceConfigManagerImpl implements PayInterfaceConfigManager 
      *
      * @param interfaceCode 接口code
      */
-    @Override
     public List<MchInterfaceConfigVO> mchConfig(String interfaceCode) {
         List<PayInterfaceConfig> payInterfaceConfigs = payInterfaceConfigMapper.selectList(new LambdaQueryWrapper<PayInterfaceConfig>()
                 .eq(PayInterfaceConfig::getInterfaceCode, interfaceCode)
@@ -160,7 +155,6 @@ public class PayInterfaceConfigManagerImpl implements PayInterfaceConfigManager 
      * @param isvId         服务商id
      * @param interfaceCode 支付接口编号
      */
-    @Override
     public List<MchInterfaceConfigVO> mchConfig(Long isvId, String interfaceCode) {
         List<PayInterfaceConfig> interfaceConfigList = payInterfaceConfigMapper.selectList(new LambdaQueryWrapper<PayInterfaceConfig>()
                 .eq(PayInterfaceConfig::getInterfaceCode, interfaceCode)
@@ -199,5 +193,25 @@ public class PayInterfaceConfigManagerImpl implements PayInterfaceConfigManager 
         return new HashMap<>();
     };
 
+
+    /**
+     * 保存商户支付渠道配置
+     *
+     * @param channelId   需要进行移除的渠道id
+     * @param channelList 需要进行保存的渠道信息列表
+     * @param clientId    操作的商户id
+     * @param clientType  操作的商户类型
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean saveMchChannel(List<Long> channelId, List<PayInterfaceConfig> channelList, Long clientId, Integer clientType) {
+        if (!CollectionUtils.isEmpty(channelId)) {
+            remove(this.lambdaQuery().in(PayInterfaceConfig::getInterfaceId, channelId)
+                    .eq(PayInterfaceConfig::getClientId, clientId)
+                    .or()
+                    .eq(PayInterfaceConfig::getParentClientId, clientId));
+        }
+        // 保存新的商户支付渠道
+        return this.saveBatch(channelList);
+    }
 
 }
