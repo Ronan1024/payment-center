@@ -80,6 +80,10 @@ public enum PayInterfaceError implements IErrorEnum<String> {
      */
     CHANNEL_CODE_HAS_DEFINED_CONFIGURATION("10116","当前支付渠道编号已存在定义的配置信息"),
 
+    /**
+     * 商户类型异常
+     */
+    CLIENT_TYPE_ERROR("10117", "客户端类型异常"),
 
     ;
 

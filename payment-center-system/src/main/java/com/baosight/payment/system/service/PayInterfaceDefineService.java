@@ -5,6 +5,7 @@ import com.baosight.database.core.page.PageResponse;
 import com.baosight.payment.enums.PayClientType;
 import com.baosight.payment.system.pojo.dto.PayInterfaceListDTO;
 import com.baosight.payment.system.pojo.dto.req.PayInterFaceDefineReqDTO;
+import com.baosight.payment.system.pojo.dto.resp.ClientPayChannelDefineRespDTO;
 import com.baosight.payment.system.pojo.dto.resp.PayingChannelDefineListRespDTO;
 import com.baosight.payment.system.pojo.entity.PayInterfaceDefine;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
@@ -114,4 +115,13 @@ public interface PayInterfaceDefineService extends IService<PayInterfaceDefine> 
      * @param id 支付通道id
      */
     void editEnable(Long id);
+
+    /**
+     * 获取客户端支付渠道配置信息
+     *
+     * @param clientId  客户端id
+     * @param type      客户端类型
+     * @param channelId 渠道id
+     */
+    ClientPayChannelDefineRespDTO clientChannelDefine(Long clientId, Integer type, Long channelId);
 }

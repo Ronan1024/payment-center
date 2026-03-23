@@ -1,9 +1,8 @@
 package com.baosight.payment.system.pojo.dto.req;
 
-import com.baosight.payment.system.utils.DynamicFormUtil;
 import lombok.Data;
 
-import java.util.List;
+import java.util.Map;
 
 /**
  * @program: payment-center
@@ -39,5 +38,5 @@ public class ClientChannelConfigReqDTO {
     /**
      * 商户支付配置信息
      */
-    private List<DynamicFormUtil.DynamicForm> dynamicForm;
+    private Map<String, String> dynamicForm;
 }

@@ -4,6 +4,7 @@ import com.baosight.database.core.page.PageResponse;
 import com.baosight.payment.enums.PayClientType;
 import com.baosight.payment.system.pojo.dto.PayInterfaceListDTO;
 import com.baosight.payment.system.pojo.dto.req.PayInterFaceDefineReqDTO;
+import com.baosight.payment.system.pojo.dto.resp.ClientPayChannelDefineRespDTO;
 import com.baosight.payment.system.pojo.dto.resp.PayingChannelDefineListRespDTO;
 import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
 import com.baosight.payment.system.pojo.validation.InsertChannelDefineGroup;
@@ -98,6 +99,19 @@ public class PayInterfaceDefineController {
     public void editEnable(@PathVariable("id") Long id) {
         payInterfaceDefineService.editEnable(id);
     }
+
+
+    /**
+     * 获取客户端支付渠道配置信息
+     * @param clientId 客户端id
+     * @param type 客户端类型
+     * @param channelId 渠道id
+     */
+    @GetMapping("/client/channel/define")
+    public ClientPayChannelDefineRespDTO clientChannelDefine(@RequestParam("clientId") Long clientId, @RequestParam("type") Integer type, @RequestParam("channelId") Long channelId){
+        return payInterfaceDefineService.clientChannelDefine(clientId, type, channelId);
+    }
+
 
 
     /**

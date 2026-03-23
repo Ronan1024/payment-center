@@ -5,11 +5,11 @@ import com.baosight.payment.system.pojo.validation.InsertChannelDefineGroup;
 import com.baosight.web.core.exception.ApiException;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.baosight.payment.system.error.PayInterfaceConfigError.FORM_FIELD_CANNOT_BE_EMPTY;
 
@@ -29,21 +29,19 @@ public class DynamicFormUtil {
      * @param verifyDynamicForm 需要进行校验的表单信息
      * @throws IllegalArgumentException 如果表单必填字段为空
      */
-    public static void validateDynamicForm(List<DynamicForm> sourceDynamicForm, List<DynamicForm> verifyDynamicForm) {
+    public static void validateDynamicForm(List<DynamicForm> sourceDynamicForm, Map<String, String> verifyDynamicForm) {
         if (sourceDynamicForm == null || sourceDynamicForm.isEmpty()) {
             throw new IllegalArgumentException("Source dynamic form list cannot be null or empty");
         }
-        if (verifyDynamicForm == null || verifyDynamicForm.isEmpty()) {
+        if (CollectionUtils.isEmpty(verifyDynamicForm)) {
             throw new IllegalArgumentException("Verify dynamic form list cannot be null or empty");
         }
-
-        Map<String, String> verifyDynamicFormMap = verifyDynamicForm.stream().collect(Collectors.toMap(DynamicForm::getName, DynamicForm::getValue));
         for (DynamicForm sourceForm : sourceDynamicForm) {
             if (Boolean.TRUE.equals(sourceForm.getRequired())) {
-                if (!verifyDynamicFormMap.containsKey(sourceForm.getName())) {
+                if (!verifyDynamicForm.containsKey(sourceForm.getName())) {
                     throw new ApiException(FORM_FIELD_CANNOT_BE_EMPTY, sourceForm.getName());
                 }
-                String formValue = verifyDynamicFormMap.get(sourceForm.getName());
+                String formValue = verifyDynamicForm.get(sourceForm.getName());
                 if (!StringUtils.hasText(formValue)) {
                     throw new ApiException(FORM_FIELD_CANNOT_BE_EMPTY, sourceForm.getName());
                 }

@@ -233,7 +233,8 @@ public class DomainPayOrderServiceImpl implements DomainPayOrderService {
      */
     @Override
     public void confirmSuccess(OrderVO payOrder) {
-        // 查询查询订单详情
+        // 查询查询
+        // 订单详情
         payOrder = payOrderServiceManager.payOrderInfo(payOrder.getId());
         //设置订单状态
         payOrder.setState(PayOrderState.SUCCESS.code());

@@ -10,6 +10,8 @@ import com.baosight.payment.channel.api.ChannelInfoApi;
 import com.baosight.payment.channel.dto.resp.ChannelInfoRespDTO;
 import com.baosight.payment.enums.MchType;
 import com.baosight.payment.enums.PayClientType;
+import com.baosight.payment.isv.api.IsvInfoApi;
+import com.baosight.payment.isv.vo.IsvInfoVO;
 import com.baosight.payment.system.convert.PayInterfaceDefineConvert;
 import com.baosight.payment.system.dao.manager.PayInterFaceDefineManager;
 import com.baosight.payment.system.dao.manager.PayWayManager;
@@ -19,6 +21,7 @@ import com.baosight.payment.system.mapper.PayInterfaceDefineMapper;
 import com.baosight.payment.system.pojo.dto.PayInterFaceDefineDTO;
 import com.baosight.payment.system.pojo.dto.PayInterfaceListDTO;
 import com.baosight.payment.system.pojo.dto.req.PayInterFaceDefineReqDTO;
+import com.baosight.payment.system.pojo.dto.resp.ClientPayChannelDefineRespDTO;
 import com.baosight.payment.system.pojo.dto.resp.PayingChannelDefineListRespDTO;
 import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
 import com.baosight.payment.system.pojo.entity.PayInterfaceDefine;
@@ -27,6 +30,7 @@ import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineVO;
 import com.baosight.payment.system.service.PayInterfaceDefineService;
 import com.baosight.payment.system.service.PayWayService;
+import com.baosight.payment.system.utils.DynamicFormUtil;
 import com.baosight.payment.vo.MchInfoVO;
 import com.baosight.saas.auth.context.UserContext;
 import com.baosight.saas.entity.DynamicForm;
@@ -63,6 +67,9 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
     private final ChannelInfoApi channelInfoApi;
     @Resource
     private MchInfoApi mchInfoApi;
+    @Resource
+    private IsvInfoApi isvInfoApi;
+
     private final PayInterfaceConfigMapper payInterfaceConfigMapper;
     private final PayWayService payWayService;
     @Resource
@@ -401,6 +408,48 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
         Assert.isNull(interfaceDefine, ApiException.supplier(PAY_INTERFACE_DEFINE_NOT_EXIST));
         interfaceDefine.setEnable(!interfaceDefine.getEnable());
         payInterFaceDefineManager.updateById(interfaceDefine);
+    }
+
+    /**
+     * 获取客户端支付渠道配置信息
+     *
+     * @param clientId  客户端id
+     * @param type      客户端类型
+     * @param channelId 渠道id
+     */
+    @Override
+    public ClientPayChannelDefineRespDTO clientChannelDefine(Long clientId, Integer type, Long channelId) {
+        PayInterfaceDefine interfaceDefine = payInterFaceDefineManager.getById(channelId);
+        ChannelInfoRespDTO info = channelInfoApi.info(interfaceDefine.getCode());
+
+        Assert.isNull(interfaceDefine, ApiException.supplier(PAY_INTERFACE_DEFINE_NOT_EXIST));
+        ClientPayChannelDefineRespDTO result = new ClientPayChannelDefineRespDTO();
+        String dynamicFormStr = "";
+        if (MchType.SERVICER_MERCHANT.code().equals(type)) {
+            // 处理服务商
+            IsvInfoVO isvInfoVO = isvInfoApi.isvInfoById(clientId);
+            // TODO  处理异常信息写死问题
+            Assert.isNull(isvInfoVO, "服务商信息异常");
+            dynamicFormStr = interfaceDefine.getIsvParams();
+
+        } else if (MchType.SUB_MERCHANT.code().equals(type)) {
+            MchInfoVO mchInfoVO = mchInfoApi.mchInfo(clientId);
+            Assert.isNull(mchInfoVO, "商户信息异常");
+            Assert.isFalse(mchInfoVO.getType().equals(PayClientType.SUB_MERCHANT.code()), "商户类型异常");
+            dynamicFormStr = interfaceDefine.getIsvSubMchParams();
+        } else if (MchType.MERCHANT.code().equals(type)) {
+            MchInfoVO mchInfoVO = mchInfoApi.mchInfo(clientId);
+            Assert.isNull(mchInfoVO, "商户信息异常");
+            dynamicFormStr = interfaceDefine.getNormalMchParams();
+        } else {
+            throw new ApiException(CLIENT_TYPE_ERROR);
+        }
+        List<DynamicFormUtil.DynamicForm> dynamicFormList = JsonUtil.parseArray(dynamicFormStr, DynamicFormUtil.DynamicForm.class);
+        result.setDynamicForm(dynamicFormList);
+        result.setChannelCode(interfaceDefine.getCode());
+        result.setId(interfaceDefine.getId());
+        result.setChannelName(info.getChannelName());
+        return result;
     }
 
 

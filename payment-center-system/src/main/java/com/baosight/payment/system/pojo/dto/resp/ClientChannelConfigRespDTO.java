@@ -24,5 +24,5 @@ public class ClientChannelConfigRespDTO {
     /**
      * 商户支付配置信息
      */
-    private Map<String, String> dynamicForm;
+    private Map<String, Object> dynamicForm;
 }

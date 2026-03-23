@@ -67,6 +67,6 @@ public interface PayInterfaceConfigConvert {
     PayInterfaceConfig toPayInterfaceConfig(PayInterfaceConfigDynamicVO payInterfaceConfigDynamicVO);
 
     @Mapping(target = "channelName", ignore = true)
-    @Mapping(target = "channelId", source = "clientId")
+    @Mapping(target = "channelId", source = "interfaceId")
     ClientChannelRespDTO toClientChannelRespDTO(PayInterfaceConfig payInterfaceConfig);
 }

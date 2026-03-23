@@ -346,6 +346,7 @@ public class PayInterfaceConfigServiceImpl extends ServiceImpl<PayInterfaceConfi
             payInterfaceConfig.setInterfaceRate(channelConfigReq.getIsvRate());
         }
         payInterfaceConfig.setEnable(channelConfigReq.getEnable());
+        payInterfaceConfig.setInterfaceParams(JsonUtil.toJson(channelConfigReq.getDynamicForm()));
         return payInterfaceConfigManager.updateById(payInterfaceConfig);
     }
 
@@ -367,9 +368,8 @@ public class PayInterfaceConfigServiceImpl extends ServiceImpl<PayInterfaceConfi
         result.setEnable(interfaceConfig.getEnable());
         result.setIsvRate(interfaceConfig.getInterfaceRate());
         if (StringUtils.hasText(interfaceConfig.getInterfaceParams())) {
-            Map<String, String> collect = JsonUtil.parseArray(interfaceConfig.getInterfaceParams(), DynamicFormUtil.DynamicForm.class)
-                    .stream().collect(Collectors.toMap(DynamicFormUtil.DynamicForm::getName, DynamicFormUtil.DynamicForm::getValue));
-            result.setDynamicForm(collect);
+            Map<String, Object> param = JsonUtil.toMap(interfaceConfig.getInterfaceParams());
+            result.setDynamicForm(param);
         }
         return result;
     }
