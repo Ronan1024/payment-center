@@ -2,12 +2,12 @@ package com.baosight.payment.isv.controller.system;
 
 
 import com.baosight.database.core.page.PageResponse;
+import com.baosight.payment.enums.PayClientType;
 import com.baosight.payment.isv.pojo.dto.CreateIsvDTO;
 import com.baosight.payment.isv.pojo.dto.IsvPageDTO;
 import com.baosight.payment.isv.pojo.vo.PayIsvInfoVO;
 import com.baosight.payment.isv.pojo.vo.PayIsvPageVO;
 import com.baosight.payment.isv.service.PayIsvInfoService;
-import com.baosight.security.annotation.AllowAccess;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -49,7 +49,7 @@ public class SystemPayIsvInfoController {
      */
     @PostMapping
     public Boolean createIsv(@RequestBody @Validated CreateIsvDTO createIsvDTO) {
-        return payIsvInfoService.createIsv(createIsvDTO);
+        return payIsvInfoService.createIsv(createIsvDTO, PayClientType.OPERATOR);
     }
 
 

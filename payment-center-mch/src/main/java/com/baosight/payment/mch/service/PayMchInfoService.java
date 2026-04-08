@@ -2,12 +2,12 @@ package com.baosight.payment.mch.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baosight.database.core.page.PageResponse;
+import com.baosight.payment.enums.PayClientType;
 import com.baosight.payment.mch.dao.entity.PayMchInfo;
 import com.baosight.payment.mch.pojo.dto.MchInfoDTO;
 import com.baosight.payment.mch.pojo.dto.MchPageDTO;
 import com.baosight.payment.mch.pojo.vo.PayMchInfoVO;
 import com.baosight.payment.mch.pojo.vo.PayMchListVO;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author longjiangran
@@ -27,9 +27,9 @@ public interface PayMchInfoService extends IService<PayMchInfo> {
      * 创建商户信息
      *
      * @param mchInfoDTO 创建商户信息请求体
+     * @param clientType
      */
-    @Transactional
-    Boolean createMch(MchInfoDTO mchInfoDTO);
+    Boolean createMch(MchInfoDTO mchInfoDTO, PayClientType clientType);
 
     /**
      * 获取商户信息
@@ -43,9 +43,9 @@ public interface PayMchInfoService extends IService<PayMchInfo> {
      *
      * @param id         商户ID
      * @param mchInfoDTO 商户信息请求体
+     * @param clientType 操作人员客户端类型
      */
-    @Transactional
-    Boolean updateMch(Long id, MchInfoDTO mchInfoDTO);
+    Boolean updateMch(Long id, MchInfoDTO mchInfoDTO, PayClientType clientType);
 
     /**
      * 根据商户id 获取商户信息

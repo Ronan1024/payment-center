@@ -2,6 +2,7 @@ package com.baosight.payment.isv.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baosight.database.core.page.PageResponse;
+import com.baosight.payment.enums.PayClientType;
 import com.baosight.payment.isv.pojo.dto.CreateIsvDTO;
 import com.baosight.payment.isv.pojo.dto.IsvPageDTO;
 import com.baosight.payment.isv.pojo.entity.PayIsvInfo;
@@ -39,9 +40,9 @@ public interface PayIsvInfoService extends IService<PayIsvInfo> {
      * 新增服务商信息
      *
      * @param createIsvDTO 服务商请求信息
+     * @param clientType 创建客户端类型
      */
-    @Transactional
-    Boolean createIsv(CreateIsvDTO createIsvDTO);
+    Boolean createIsv(CreateIsvDTO createIsvDTO, PayClientType clientType);
 
     /**
      * 禁用｜启用 服务商

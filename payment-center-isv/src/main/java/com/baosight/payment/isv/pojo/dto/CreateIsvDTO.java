@@ -11,12 +11,6 @@ import java.util.Date;
  */
 @Data
 public class CreateIsvDTO {
-
-    /**
-     * 服务商id
-     */
-    private Long isvId;
-
     /**
      * 服务商名称
      */

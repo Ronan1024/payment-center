@@ -34,4 +34,14 @@ public class MchPageDTO extends PageRequest {
      * 联系人电话
      */
     private String contactTel;
+
+    /**
+     * 服务商编号
+     */
+    private String isvCode;
+
+    /**
+     * 服务商名称
+     */
+    private String isvName;
 }

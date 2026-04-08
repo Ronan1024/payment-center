@@ -103,6 +103,11 @@ public class PayMchInfo extends BasePO {
     private String updateByName;
 
     /**
+     * 服务商编号
+     */
+    private String isvCode;
+
+    /**
      * 备注
      */
     private String remark;

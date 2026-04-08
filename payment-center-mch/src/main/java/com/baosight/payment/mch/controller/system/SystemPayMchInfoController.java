@@ -2,6 +2,7 @@ package com.baosight.payment.mch.controller.system;
 
 
 import com.baosight.database.core.page.PageResponse;
+import com.baosight.payment.enums.PayClientType;
 import com.baosight.payment.mch.pojo.dto.MchInfoDTO;
 import com.baosight.payment.mch.pojo.dto.MchPageDTO;
 import com.baosight.payment.mch.pojo.vo.PayMchInfoVO;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 /**
- * 商户管理
+ * 运营端支付商户信息管理
  *
  * @program: payment-center
  * @description: 系统商户管理控制器
@@ -47,7 +48,7 @@ public class SystemPayMchInfoController {
      */
     @PostMapping
     public Boolean createMch(@RequestBody @Validated MchInfoDTO mchInfoDTO) {
-        return payMchInfoService.createMch(mchInfoDTO);
+        return payMchInfoService.createMch(mchInfoDTO, PayClientType.OPERATOR);
     }
 
 
@@ -82,6 +83,6 @@ public class SystemPayMchInfoController {
      */
     @PutMapping("/{id}")
     public Boolean updateMch(@PathVariable("id") Long id, @RequestBody @Validated MchInfoDTO mchInfoDTO) {
-        return payMchInfoService.updateMch(id, mchInfoDTO);
+        return payMchInfoService.updateMch(id, mchInfoDTO, PayClientType.OPERATOR);
     }
 }

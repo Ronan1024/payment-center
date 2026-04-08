@@ -32,8 +32,10 @@ public interface PayIsvInfoConvert {
 //    @Mapping(target = "representativeTel", source = "contactPhone")
 //    PayIsvInfoVO toPayIsvInfoVO(TenantDetailInfoVO tenantDetailInfo);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "enterpriseInfoId", ignore = true)
+    @Mapping(target = "code", ignore = true)
     @Mapping(target = "updateTime", ignore = true)
-    @Mapping(target = "id", source = "isvId")
     @Mapping(target = "updateByName", ignore = true)
     @Mapping(target = "updateBy", ignore = true)
     @Mapping(target = "createTime", ignore = true)
@@ -41,12 +43,12 @@ public interface PayIsvInfoConvert {
     @Mapping(target = "createBy", ignore = true)
     PayIsvInfo toPayIsvInfo(CreateIsvDTO createIsvDTO);
 
-    @Mapping(target = "id", source = "isvId")
     PayEnterpriseInfo toPayEnterpriseInfo(CreateIsvDTO createIsvDTO);
 
     MchInfoVO toMchInfoVO(PayIsvInfoVO info);
 
 
+    @Mapping(target = "contactEmail", ignore = true)
     IsvInfoVO toIsvInfoVO(PayIsvInfo payIsvInfo);
 
     PayIsvPageVO toPayIsvPageVO(PayIsvInfo payIsvInfo);

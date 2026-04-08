@@ -26,6 +26,11 @@ public class PayIsvInfo extends BasePO implements Serializable {
     private Long id;
 
     /**
+     * 服务商编号
+     */
+    private String code;
+
+    /**
      * 服务商名称
      */
     private String name;

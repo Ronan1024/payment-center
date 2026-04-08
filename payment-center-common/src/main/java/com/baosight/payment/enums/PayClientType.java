@@ -17,7 +17,12 @@ public enum PayClientType implements IBaseEnum<Integer> {
     /**
      * 服务商子商家
      */
-    SUB_MERCHANT(3, "服务商子商家");;
+    SUB_MERCHANT(3, "服务商子商家"),
+    /**
+     * 运营人员
+     */
+    OPERATOR(4, "运营人员"),
+    ;
 
     PayClientType(Integer code, String msg) {
         initEnum(code, msg);

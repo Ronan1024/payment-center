@@ -33,7 +33,9 @@ public interface PayMchInfoConvert {
     PayMchInfo toPayMchInfo(MchInfoDTO mchInfoDTO);
 
 
+    @Mapping(target = "updateTime", ignore = true)
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createTime", ignore = true)
     PayEnterpriseInfo toPayEnterpriseInfo(MchInfoDTO mchInfoDTO);
 
     @Mapping(target = "id", ignore = true)

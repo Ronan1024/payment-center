@@ -48,12 +48,6 @@ public class MchInfoDTO {
      */
     @JsonSerialize(using = ToStringSerializer.class)
     private Long isvId;
-
-    /**
-     * 服务商名称
-     */
-    private String isvName;
-
     /**
      * 商户名称
      */

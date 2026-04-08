@@ -15,7 +15,9 @@
         contact_tel,
         create_time,
         update_time,
-        mch_no
+        mch_no,
+        isv_id,
+        isv_code
         from pay_mch_info
         <where>
             <if test="mchPage.mchNo != null and  mchPage.mchNo != ''">
@@ -30,7 +32,9 @@
             <if test="mchPage.contactTel != null and mchPage.contactTel != ''">
                 and contact_tel = #{mchPage.contactTel}
             </if>
-
+            <if test="mchPage.isvCode != null and mchPage.isvCode != ''">
+                and isv_code = #{mchPage.isvCode}
+            </if>
         </where>
         order by create_time desc
     </select>

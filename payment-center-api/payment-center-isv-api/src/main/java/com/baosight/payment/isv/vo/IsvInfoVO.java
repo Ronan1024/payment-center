@@ -11,6 +11,12 @@ import lombok.Data;
 @Data
 public class IsvInfoVO {
     private Long id;
+
+    /**
+     * 编号
+     */
+    private String code;
+
     /**
      * 服务商名称
      */

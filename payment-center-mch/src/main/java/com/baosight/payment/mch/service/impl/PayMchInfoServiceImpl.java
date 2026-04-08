@@ -4,13 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baosight.database.core.page.PageResponse;
 import com.baosight.database.core.page.PageUtil;
-import com.baosight.distributedid.toolkit.SnowflakeIdUtil;
 import com.baosight.payment.enums.MchType;
+import com.baosight.payment.enums.PayClientType;
 import com.baosight.payment.isv.api.IsvInfoApi;
 import com.baosight.payment.isv.vo.IsvInfoVO;
 import com.baosight.payment.mapper.PayEnterpriseInfoMapper;
 import com.baosight.payment.mch.convert.PayMchInfoConvert;
 import com.baosight.payment.mch.dao.entity.PayMchInfo;
+import com.baosight.payment.mch.dao.manager.MchInfoManager;
 import com.baosight.payment.mch.dao.mapper.PayMchInfoMapper;
 import com.baosight.payment.mch.error.MchError;
 import com.baosight.payment.mch.mapper.PayBankAccountInfoMapper;
@@ -21,15 +22,30 @@ import com.baosight.payment.mch.pojo.vo.PayMchInfoVO;
 import com.baosight.payment.mch.pojo.vo.PayMchListVO;
 import com.baosight.payment.mch.service.PayMchInfoService;
 import com.baosight.payment.pojo.entity.PayEnterpriseInfo;
+import com.baosight.payment.utils.CodeUtil;
 import com.baosight.saas.auth.context.UserContext;
 import com.baosight.web.core.exception.ApiException;
 import com.ronan.common.utils.Assert;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+
+import static com.baosight.payment.mch.constant.RedisConstant.MCH_ID_SEQUENCE;
+import static com.baosight.payment.mch.constant.RedissonConstant.CREATE_MCH_USER;
 
 /**
  * @author longjiangran
@@ -40,11 +56,15 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchInfo> implements PayMchInfoService {
     private final PayMchInfoMapper payMchInfoMapper;
+    private final MchInfoManager mchInfoManager;
     private final PayEnterpriseInfoMapper payEnterpriseInfoMapper;
     private final PayBankAccountInfoMapper payBankAccountInfoMapper;
 
-//    @Resource
-//    private TenantInfoApi tenantInfoApi;
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
+
+    @Resource
+    private RedissonClient redissonClient;
 
     @Resource
     private IsvInfoApi isvInfoApi;
@@ -57,16 +77,37 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
     @Override
     public PageResponse<PayMchListVO> mchPage(MchPageDTO mchPage) {
         PageUtil<PayMchListVO> pageUtil = new PageUtil<>(mchPage);
-        return pageUtil.builder(payMchInfoMapper.page(pageUtil.Page(), mchPage)).build();
+        PageResponse<PayMchListVO> build = pageUtil.builder(payMchInfoMapper.page(pageUtil.Page(), mchPage)).build();
+        List<PayMchListVO> list = build.getList();
+        if (CollectionUtils.isEmpty(list)) {
+            return build;
+        }
+        List<Long> isvIdList = list.stream().filter(e -> e.getType().equals(MchType.SUB_MERCHANT.code())).map(PayMchListVO::getIsvId).toList();
+        List<IsvInfoVO> isvInfoVOS = isvInfoApi.isvInfoList(isvIdList);
+        if (!CollectionUtils.isEmpty(isvInfoVOS)) {
+            Map<Long, IsvInfoVO> isvInfoVOMap = isvInfoVOS.stream().collect(Collectors.toMap(IsvInfoVO::getId, e -> e));
+            list.stream().filter(e -> e.getType().equals(MchType.SUB_MERCHANT.code()))
+                    .filter(e -> isvInfoVOMap.containsKey(e.getIsvId()))
+                    .forEach(e -> {
+                        IsvInfoVO isvInfoVO = isvInfoVOMap.get(e.getIsvId());
+                        e.setIsvId(isvInfoVO.getId());
+                        e.setIsvName(isvInfoVO.getName());
+                        e.setIsvCode(isvInfoVO.getCode());
+                    });
+        }
+
+
+        return build;
     }
 
     /**
      * 创建商户信息
      *
      * @param mchInfoDTO 创建商户信息请求体
+     * @param clientType
      */
     @Override
-    public Boolean createMch(MchInfoDTO mchInfoDTO) {
+    public Boolean createMch(MchInfoDTO mchInfoDTO, PayClientType clientType) {
         //处理特约商户
         handlerSpecialMch.accept(mchInfoDTO);
         // 按商户名称+联系人做唯一性判断
@@ -75,23 +116,18 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
                 .eq(PayMchInfo::getContactTel, mchInfoDTO.getContactTel()));
         Assert.notNull(payMchInfo, ApiException.supplier(MchError.MCH_INFO_EXIST));
         payMchInfo = PayMchInfoConvert.INSTANCE.toPayMchInfo(mchInfoDTO);
-        PayEnterpriseInfo payEnterpriseInfo = PayMchInfoConvert.INSTANCE.toPayEnterpriseInfo(mchInfoDTO);
-        payEnterpriseInfoMapper.insert(payEnterpriseInfo);
-        PayBankAccountInfo payBankAccountInfo = PayMchInfoConvert.INSTANCE.toPayBankAccountInfo(mchInfoDTO);
-        payBankAccountInfoMapper.insert(payBankAccountInfo);
-
-        payMchInfo.setEnterpriseInfoId(payEnterpriseInfo.getId());
-        payMchInfo.setBankAccountInfoId(payBankAccountInfo.getId());
         payMchInfo.setCreateBy(UserContext.INSTANCE.userId());
         payMchInfo.setCreateByName(UserContext.INSTANCE.username());
         if (mchInfoDTO.getType().equals(MchType.MERCHANT.code())) {
             // 联系人，如果是特约商户，使用租户联系人；普通商户使用企业法人
             payMchInfo.setContactName(mchInfoDTO.getRepresentativeName());
         }
-        payMchInfo.setMchNo("M" + SnowflakeIdUtil.nextId());
-        payMchInfoMapper.insert(payMchInfo);
+        genMchCode(payMchInfo, clientType);
 
-        return Boolean.TRUE;
+        PayEnterpriseInfo payEnterpriseInfo = PayMchInfoConvert.INSTANCE.toPayEnterpriseInfo(mchInfoDTO);
+        PayBankAccountInfo payBankAccountInfo = PayMchInfoConvert.INSTANCE.toPayBankAccountInfo(mchInfoDTO);
+
+        return mchInfoManager.createMchInfo(payMchInfo, payEnterpriseInfo, payBankAccountInfo);
     }
 
 
@@ -123,7 +159,6 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
         // 补充银行信息
         PayBankAccountInfo payBankAccountInfo = payBankAccountInfoMapper.selectById(payMchInfo.getBankAccountInfoId());
         PayMchInfoConvert.INSTANCE.toPayMchInfoVO(payBankAccountInfo, payMchInfoVO);
-
         return payMchInfoVO;
     }
 
@@ -132,15 +167,14 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
      *
      * @param id         商户ID
      * @param mchInfoDTO 商户信息请求体
+     * @param clientType 操作人员客户端类型
      */
     @Override
-    public Boolean updateMch(Long id, MchInfoDTO mchInfoDTO) {
+    public Boolean updateMch(Long id, MchInfoDTO mchInfoDTO, PayClientType clientType) {
         PayMchInfo payMchInfo = infoById(id);
         Assert.isNull(payMchInfo, ApiException.supplier(MchError.MCH_INFO_NOT_FOUND));
-
         // 处理特约商户
         handlerSpecialMch.accept(mchInfoDTO);
-
         // 更新企业信息
         PayEnterpriseInfo payEnterpriseInfo = PayMchInfoConvert.INSTANCE.toPayEnterpriseInfo(mchInfoDTO);
         payEnterpriseInfo.setId(payMchInfo.getEnterpriseInfoId());
@@ -157,11 +191,54 @@ public class PayMchInfoServiceImpl extends ServiceImpl<PayMchInfoMapper, PayMchI
         }
         payMchInfo.setUpdateBy(UserContext.INSTANCE.userId());
         payMchInfo.setUpdateByName(UserContext.INSTANCE.username());
-        if (!StringUtils.hasText(payMchInfo.getMchNo())){
-            payMchInfo.setMchNo("M" + SnowflakeIdUtil.nextId());
+
+        if (!StringUtils.hasText(payMchInfo.getMchNo()) || !StringUtils.hasText(payMchInfo.getIsvCode())) {
+            genMchCode(payMchInfo, clientType);
         }
         return payMchInfoMapper.updateById(payMchInfo) > 0;
     }
+
+
+    /**
+     * 生成商户编号
+     *
+     * @param payMchInfo 商户信息
+     * @param clientType 操作客户端类型
+     */
+    private void genMchCode(PayMchInfo payMchInfo, PayClientType clientType) {
+        if (payMchInfo.getType().equals(PayClientType.SUB_MERCHANT.code()) && !StringUtils.hasText(payMchInfo.getIsvCode())) {
+            IsvInfoVO isvInfoVO = isvInfoApi.isvInfoById(payMchInfo.getIsvId());
+            payMchInfo.setIsvCode(isvInfoVO.getCode());
+        }
+        if (StringUtils.hasText(payMchInfo.getMchNo())) {
+            return;
+        }
+        RLock lock = redissonClient.getLock(CREATE_MCH_USER);
+        lock.lock();
+        try {
+            // 有效期23:59:59
+            Long increment = redisTemplate.opsForValue().increment(MCH_ID_SEQUENCE);
+            assert increment != null;
+            if (increment.equals(1L)) {
+                LocalDateTime now = LocalDateTime.now();
+                LocalDateTime endOfDay = LocalDate.now().atTime(23, 59, 59);
+                long seconds = Duration.between(now, endOfDay).getSeconds();
+                redisTemplate.expire(MCH_ID_SEQUENCE, seconds, TimeUnit.SECONDS);
+            }
+            String sequence = String.format("%04d", increment);
+            String mchCode;
+            if (payMchInfo.getType().equals(MchType.MERCHANT.code())) {
+                mchCode = CodeUtil.merchantCode(clientType, sequence);
+            } else {
+                mchCode = CodeUtil.subMerchantCode(clientType, sequence, payMchInfo.getIsvCode());
+            }
+            payMchInfo.setMchNo(mchCode);
+        } finally {
+            lock.unlock();
+        }
+
+    }
+
 
     /**
      * 根据商户id 获取商户信息
