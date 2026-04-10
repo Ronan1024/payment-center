@@ -9,7 +9,7 @@ import com.baosight.payment.system.pojo.validation.InsertChannelDefineGroup;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineVO;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
-import com.baosight.payment.system.service.PayInterfaceDefineService;
+import com.baosight.payment.system.service.SystemClientChannelDefineService;
 import com.baosight.utils.stream.StreamBuild;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.CollectionUtils;
@@ -30,7 +30,7 @@ import java.util.Map;
 @RequestMapping( "/isv/pay/config")
 public class IsvPayInterfaceConfigController {
 
-    private final PayInterfaceDefineService payInterfaceDefineService;
+    private final SystemClientChannelDefineService payInterfaceDefineService;
     private final PayInterfaceConfigService payInterfaceConfigService;
 
     /**

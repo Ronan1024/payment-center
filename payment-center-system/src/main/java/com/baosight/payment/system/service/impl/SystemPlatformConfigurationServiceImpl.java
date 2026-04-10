@@ -49,6 +49,7 @@ public class SystemPlatformConfigurationServiceImpl extends ServiceImpl<SystemPl
                 .eq(SystemPlatformConfiguration::getConfigType, type).one();
 
         Class<?> aClass = SystemPlatformConfiguration.getConfiguration(type);
+        Assert.isNull(aClass, ApiException.supplier(CONFIG_TYPE_ERROR));
 
         if (ObjectUtils.isEmpty(configuration)) {
             configuration = new SystemPlatformConfiguration();
@@ -62,7 +63,7 @@ public class SystemPlatformConfigurationServiceImpl extends ServiceImpl<SystemPl
             throw new ApiException(SYSTEM_PARAM_VALUE_FORMAT_ERROR);
         }
         configuration.setUpdateBy(UserContext.INSTANCE.userId());
-        return systemPlatformConfigurationManager.updateById(configuration);
+        return systemPlatformConfigurationManager.saveOrUpdate(configuration);
     }
 
     /**

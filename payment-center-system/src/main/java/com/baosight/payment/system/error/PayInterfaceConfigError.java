@@ -32,6 +32,10 @@ public enum PayInterfaceConfigError implements IErrorEnum<String> {
      * 当前商户未获取到当前通道权限
      */
     MERCHANT_HAS_NO_CHANNEL_PERMISSION("60005", "当前商户未获取到当前通道权限"),
+    /**
+     * 当前商户获取渠道配置定义信息异常
+     */
+    CLIENT_GET_CHANNEL_CONFIG_ERROR("60006", "当前商户获取渠道配置定义信息异常"),
     ;
 
     PayInterfaceConfigError(String code, String msg) {

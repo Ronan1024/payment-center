@@ -5,7 +5,7 @@ import com.baosight.payment.enums.PayClientType;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigListVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
-import com.baosight.payment.system.service.PayInterfaceDefineService;
+import com.baosight.payment.system.service.SystemClientChannelDefineService;
 import com.baosight.payment.system.service.app.PayInterfaceConfigAppService;
 import lombok.RequiredArgsConstructor;
 
@@ -20,7 +20,7 @@ import java.util.List;
 @ApplicationService
 @RequiredArgsConstructor
 public class PayInterfaceConfigAppServiceImpl implements PayInterfaceConfigAppService {
-    private final PayInterfaceDefineService payInterfaceDefineService;
+    private final SystemClientChannelDefineService payInterfaceDefineService;
     private final PayInterfaceConfigService payInterfaceConfigService;
 
     /**

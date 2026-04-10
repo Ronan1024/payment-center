@@ -1,37 +1,31 @@
 package com.baosight.payment.system.dao.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baosight.database.mybatis.handler.BasePO;
 import com.baosight.payment.enums.PlatformConfigEnum;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * 系统平台配置
  *
+ * @author L.J.Ran
  * @TableName system_platform_configuration
  */
-@TableName(value = "system_platform_configuration")
 @Data
-public class SystemPlatformConfiguration {
+@EqualsAndHashCode(callSuper = true)
+@TableName(value = "system_platform_configuration")
+public class SystemPlatformConfiguration extends BasePO {
     /**
      *
      */
-    @TableId
+    @TableId(type = IdType.ASSIGN_ID)
     private Long id;
-
-    /**
-     *
-     */
-    private Date createTime;
-
-    /**
-     *
-     */
-    private Date updateTime;
 
     /**
      * 配置类型
@@ -49,9 +43,10 @@ public class SystemPlatformConfiguration {
     private Long updateBy;
 
 
-    private static final Map<String, Class<?>>  CONFIG_MAP = new HashMap<>();
+    private static final Map<String, Class<?>> CONFIG_MAP = new HashMap<>();
+
     static {
-        CONFIG_MAP.put(PlatformConfigEnum.ALL_IN.name(), AllIn.class);
+        CONFIG_MAP.put(PlatformConfigEnum.ALL_IN.getCode(), AllIn.class);
     }
 
     public static Class<?> getConfiguration(String configType) {
@@ -65,9 +60,10 @@ public class SystemPlatformConfiguration {
     @Data
     public static class AllIn {
         /**
-         * 请求URL
+         * 会员类请求url
          */
-        private String requestUrl;
+        private String memberRequestUrl;
+
         /**
          * 通用公钥
          */

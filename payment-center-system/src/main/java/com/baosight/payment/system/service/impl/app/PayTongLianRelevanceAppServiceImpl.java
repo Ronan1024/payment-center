@@ -12,7 +12,7 @@ import com.baosight.payment.system.pojo.entity.PayInterfaceDefine;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigVO;
 import com.baosight.payment.system.pojo.vo.TongLianRelevanceVO;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
-import com.baosight.payment.system.service.PayInterfaceDefineService;
+import com.baosight.payment.system.service.SystemClientChannelDefineService;
 import com.baosight.payment.system.service.PayTongLianRelevanceService;
 import com.baosight.payment.system.service.app.PayTongLianRelevanceAppService;
 import com.baosight.payment.vo.MchInfoVO;
@@ -30,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 public class PayTongLianRelevanceAppServiceImpl implements PayTongLianRelevanceAppService {
 
     private final PayTongLianRelevanceService payTongLianRelevanceService;
-    private final PayInterfaceDefineService payInterfaceDefineService;
+    private final SystemClientChannelDefineService payInterfaceDefineService;
     private final PayInterfaceConfigService payInterfaceConfigService;
     private final MchInfoApi mchInfoApi;
 

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baosight.payment.system.dao.mapper.SystemChannelFlowDefineMapper">
+
+    <resultMap id="BaseResultMap" type="com.baosight.payment.system.dao.entity.SystemChannelFlowDefine">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="channelCode" column="channel_code" jdbcType="VARCHAR"/>
+            <result property="channelId" column="channel_id" jdbcType="BIGINT"/>
+            <result property="flowName" column="flow_name" jdbcType="VARCHAR"/>
+            <result property="stepOrder" column="step_order" jdbcType="INTEGER"/>
+            <result property="stepType" column="step_type" jdbcType="VARCHAR"/>
+            <result property="userInput" column="user_input" jdbcType="VARCHAR"/>
+            <result property="stepParams" column="step_params" jdbcType="VARCHAR"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,channel_code,channel_id,
+        flow_name,step_order,step_type,
+        user_input,step_params,update_time,
+        create_time
+    </sql>
+</mapper>

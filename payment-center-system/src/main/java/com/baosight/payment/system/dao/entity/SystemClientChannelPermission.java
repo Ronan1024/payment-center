@@ -10,12 +10,12 @@ import lombok.EqualsAndHashCode;
 /**
  * 服务商通道权限
  * @author L.J.Ran
- * @TableName system_mch_channel_permission
+ * @TableName system_client_channel_permission
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName(value ="system_mch_channel_permission")
-public class SystemMchChannelPermission extends BasePO {
+@TableName(value ="system_client_channel_permission")
+public class SystemClientChannelPermission extends BasePO {
     /**
      * 
      */
@@ -33,12 +33,12 @@ public class SystemMchChannelPermission extends BasePO {
     private Long channelDefineId;
 
     /**
-     * 商户id
+     * 客户端id
      */
-    private Long mchId;
+    private Long clientId;
 
     /**
-     * 商户类型
+     * 客户端类型
      */
-    private Integer mchType;
+    private Integer clientType;
 }

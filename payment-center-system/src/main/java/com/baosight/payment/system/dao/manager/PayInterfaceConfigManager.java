@@ -9,6 +9,10 @@ import com.baosight.payment.dao.TongLianMchConfigDAO;
 import com.baosight.payment.enums.PayClientType;
 import com.baosight.payment.enums.PayingAgency;
 import com.baosight.payment.system.convert.PayInterfaceConfigConvert;
+import com.baosight.payment.system.dao.entity.SystemClientChannelPermission;
+import com.baosight.payment.system.dao.entity.SystemMchChannelConfigFlow;
+import com.baosight.payment.system.dao.mapper.SystemClientChannelPermissionMapper;
+import com.baosight.payment.system.dao.mapper.SystemMchChannelConfigFlowMapper;
 import com.baosight.payment.system.mapper.PayInterfaceConfigMapper;
 import com.baosight.payment.system.mapper.PayTongLianRelevanceMapper;
 import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
@@ -16,12 +20,12 @@ import com.baosight.payment.system.pojo.entity.PayTongLianRelevance;
 import com.baosight.payment.system.pojo.entity.PayWay;
 import com.baosight.payment.vo.MchInterfaceConfigVO;
 import com.baosight.utils.stream.StreamBuild;
-import com.baosight.utils.utils.Assert;
-import com.baosight.utils.utils.ObjectUtils;
+import com.ronan.common.utils.Assert;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -42,6 +46,8 @@ import java.util.function.Function;
 public class PayInterfaceConfigManager extends BaseManagerImpl<PayInterfaceConfigMapper, PayInterfaceConfig> {
     private final PayInterfaceConfigMapper payInterfaceConfigMapper;
     private final PayTongLianRelevanceMapper payTongLianRelevanceMapper;
+    private final SystemMchChannelConfigFlowMapper systemMchChannelConfigFlowMapper;
+    private final SystemClientChannelPermissionMapper systemMchChannelPermissionMapper;
 
     /**
      * 保存支付接口配置
@@ -197,21 +203,41 @@ public class PayInterfaceConfigManager extends BaseManagerImpl<PayInterfaceConfi
     /**
      * 保存商户支付渠道配置
      *
-     * @param channelId   需要进行移除的渠道id
+     * @param channelDefineId   需要进行移除的渠道id
      * @param channelList 需要进行保存的渠道信息列表
      * @param clientId    操作的商户id
      * @param clientType  操作的商户类型
      */
     @Transactional(rollbackFor = Exception.class)
-    public Boolean saveMchChannel(List<Long> channelId, List<PayInterfaceConfig> channelList, Long clientId, Integer clientType) {
-        if (!CollectionUtils.isEmpty(channelId)) {
-            remove(this.lambdaQuery().in(PayInterfaceConfig::getInterfaceId, channelId)
+    public Boolean saveMchChannel(List<Long> channelDefineId, List<PayInterfaceConfig> channelList, List<SystemMchChannelConfigFlow> channelConfigFlowList, Long clientId, Integer clientType) {
+        if (!CollectionUtils.isEmpty(channelDefineId)) {
+            remove(this.lambdaQuery().in(PayInterfaceConfig::getInterfaceId, channelDefineId)
                     .eq(PayInterfaceConfig::getClientId, clientId)
-                    .or()
-                    .eq(PayInterfaceConfig::getParentClientId, clientId));
+                    .or().eq(PayInterfaceConfig::getParentClientId, clientId));
         }
+        // 初始化商户渠道流程操作集
+        if (!CollectionUtils.isEmpty(channelConfigFlowList)) {
+            systemMchChannelConfigFlowMapper.insert(channelConfigFlowList);
+        }
+
         // 保存新的商户支付渠道
-        return this.saveBatch(channelList);
+        payInterfaceConfigMapper.insert(channelList);
+        if (clientType.equals(PayClientType.SERVICE_PROVIDER.code())) {
+            systemMchChannelPermissionMapper.delete(new LambdaQueryWrapper<SystemClientChannelPermission>()
+                    .eq(SystemClientChannelPermission::getClientId, clientId)
+                    .eq(SystemClientChannelPermission::getClientType, clientType));
+
+            List<SystemClientChannelPermission> channelPermissionList = channelList.stream().map(e -> {
+                SystemClientChannelPermission systemMchChannelPermission = new SystemClientChannelPermission();
+                systemMchChannelPermission.setChannelCode(e.getInterfaceCode());
+                systemMchChannelPermission.setClientId(clientId);
+                systemMchChannelPermission.setClientType(clientType);
+                systemMchChannelPermission.setChannelDefineId(e.getInterfaceId());
+                return systemMchChannelPermission;
+            }).toList();
+            systemMchChannelPermissionMapper.insert(channelPermissionList);
+        }
+        return Boolean.TRUE;
     }
 
 }

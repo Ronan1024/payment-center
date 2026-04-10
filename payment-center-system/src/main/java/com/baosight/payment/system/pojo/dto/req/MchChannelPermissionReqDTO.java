@@ -16,12 +16,12 @@ public class MchChannelPermissionReqDTO {
     /**
      * 商户id
      */
-    private Long mchId;
+    private Long clientId;
 
     /**
      * 商户类型
      */
-    private Integer type;
+    private Integer clientType;
 
 
     /**

@@ -2,13 +2,13 @@ package com.baosight.payment.system.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.baosight.payment.system.dao.entity.SystemMchChannelPermission;
+import com.baosight.payment.system.dao.entity.SystemClientChannelPermission;
 import com.baosight.payment.system.dao.manager.PayInterFaceDefineManager;
-import com.baosight.payment.system.dao.manager.SystemMchChannelPermissionManager;
-import com.baosight.payment.system.dao.mapper.SystemMchChannelPermissionMapper;
+import com.baosight.payment.system.dao.manager.SystemClientChannelPermissionManager;
+import com.baosight.payment.system.dao.mapper.SystemClientChannelPermissionMapper;
 import com.baosight.payment.system.pojo.dto.req.MchChannelPermissionReqDTO;
 import com.baosight.payment.system.pojo.entity.PayInterfaceDefine;
-import com.baosight.payment.system.service.SystemMchChannelPermissionService;
+import com.baosight.payment.system.service.SystemClientChannelPermissionService;
 import com.baosight.web.core.exception.ApiException;
 import com.ronan.common.utils.Assert;
 import lombok.RequiredArgsConstructor;
@@ -26,10 +26,10 @@ import static com.baosight.payment.system.error.PayInterfaceError.PAY_INTERFACE_
  */
 @Service
 @RequiredArgsConstructor
-public class SystemMchChannelPermissionServiceImpl extends ServiceImpl<SystemMchChannelPermissionMapper, SystemMchChannelPermission>
-        implements SystemMchChannelPermissionService {
+public class SystemClientChannelPermissionServiceImpl extends ServiceImpl<SystemClientChannelPermissionMapper, SystemClientChannelPermission>
+        implements SystemClientChannelPermissionService {
 
-    private final SystemMchChannelPermissionManager systemMchChannelPermissionManager;
+    private final SystemClientChannelPermissionManager systemMchChannelPermissionManager;
     private final PayInterFaceDefineManager payInterFaceDefineManager;
 
     /**
@@ -45,36 +45,36 @@ public class SystemMchChannelPermissionServiceImpl extends ServiceImpl<SystemMch
 
         Assert.isFalse(interfaceDefineList.size() == mchChannelPermission.getChannelId().size(), ApiException.supplier(PAY_INTERFACE_NOT_EXIST));
 
-        List<SystemMchChannelPermission> mchChannelPermissions = interfaceDefineList.stream().map(e -> {
-            SystemMchChannelPermission systemMchChannelPermission = new SystemMchChannelPermission();
+        List<SystemClientChannelPermission> mchChannelPermissions = interfaceDefineList.stream().map(e -> {
+            SystemClientChannelPermission systemMchChannelPermission = new SystemClientChannelPermission();
             systemMchChannelPermission.setChannelCode(e.getCode());
             systemMchChannelPermission.setChannelDefineId(e.getId());
-            systemMchChannelPermission.setMchId(mchChannelPermission.getMchId());
-            systemMchChannelPermission.setMchType(mchChannelPermission.getType());
+            systemMchChannelPermission.setClientId(mchChannelPermission.getClientId());
+            systemMchChannelPermission.setClientType(mchChannelPermission.getClientType());
             return systemMchChannelPermission;
         }).toList();
         // 获取用户已有的支付配置进行移除
 
 
-        return systemMchChannelPermissionManager.saveChannelPermission(mchChannelPermissions, mchChannelPermission.getMchId());
+        return systemMchChannelPermissionManager.saveChannelPermission(mchChannelPermissions, mchChannelPermission.getClientId());
     }
 
     /**
      * 获取商户已有的支付渠道权限
      *
      * @param type  当前商户类型
-     * @param mchId 当前商户id
+     * @param clientId 当前商户id
      */
     @Override
-    public List<String> mchChannelPermission(Integer type, Long mchId) {
-        List<SystemMchChannelPermission> permissions = systemMchChannelPermissionManager.lambdaQuery()
-                .eq(SystemMchChannelPermission::getMchId, mchId)
-                .eq(SystemMchChannelPermission::getMchType, type).list();
+    public List<String> mchChannelPermission(Integer type, Long clientId) {
+        List<SystemClientChannelPermission> permissions = systemMchChannelPermissionManager.lambdaQuery()
+                .eq(SystemClientChannelPermission::getClientId, clientId)
+                .eq(SystemClientChannelPermission::getClientType, type).list();
 
         if (CollectionUtils.isEmpty(permissions)) {
             return Collections.emptyList();
         }
-        return permissions.stream().map(SystemMchChannelPermission::getChannelDefineId).map(String::valueOf).toList();
+        return permissions.stream().map(SystemClientChannelPermission::getChannelDefineId).map(String::valueOf).toList();
     }
 }
 
