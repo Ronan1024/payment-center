@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.baosight.payment.system.dao.mapper.SystemMchChannelPermissionMapper">
+<mapper namespace="com.baosight.payment.system.dao.mapper.SystemClientChannelPermissionMapper">
 
-    <resultMap id="BaseResultMap" type="com.baosight.payment.system.dao.entity.SystemMchChannelPermission">
+    <resultMap id="BaseResultMap" type="com.baosight.payment.system.dao.entity.SystemClientChannelPermission">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="channelCode" column="channel_code" jdbcType="VARCHAR"/>
             <result property="channelDefineId" column="channel_define_id" jdbcType="BIGINT"/>

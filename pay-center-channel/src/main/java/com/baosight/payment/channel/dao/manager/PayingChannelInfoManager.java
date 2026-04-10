@@ -6,6 +6,8 @@ import com.baosight.payment.channel.dao.entity.PayingChannelInfo;
 import com.baosight.payment.channel.dao.mapper.PayingChannelInfoMapper;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 /**
  * @program: payment-center
  * @description:
@@ -22,6 +24,14 @@ public class PayingChannelInfoManager extends BaseManagerImpl<PayingChannelInfoM
      */
     public PayingChannelInfo infoByCode(String code){
         return this.lambdaQuery().eq(PayingChannelInfo::getChannelCode, code).one();
+    }
+
+    /**
+     * 根据支付渠道编号获取信息
+     * @param codes  支付渠道编号
+     */
+    public List<PayingChannelInfo> infoByCode(List<String> codes){
+        return this.lambdaQuery().in(PayingChannelInfo::getChannelCode, codes).list();
     }
 
 

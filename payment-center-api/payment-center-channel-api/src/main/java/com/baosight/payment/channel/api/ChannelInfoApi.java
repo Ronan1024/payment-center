@@ -2,6 +2,8 @@ package com.baosight.payment.channel.api;
 
 import com.baosight.payment.channel.dto.resp.ChannelInfoRespDTO;
 
+import java.util.List;
+
 /**
  * @program: payment-center
  * @description:
@@ -17,5 +19,10 @@ public interface  ChannelInfoApi {
      */
     ChannelInfoRespDTO info(String code);
 
+    /**
+     * 获取渠道信息
+     * @param codes 渠道编号
+     */
+    List<ChannelInfoRespDTO> info(List<String> codes);
 
 }

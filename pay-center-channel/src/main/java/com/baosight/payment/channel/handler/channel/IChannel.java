@@ -1,4 +1,4 @@
-package com.baosight.payment.channel.handler;
+package com.baosight.payment.channel.handler.channel;
 
 import com.baosight.payment.enums.PayingAgency;
 

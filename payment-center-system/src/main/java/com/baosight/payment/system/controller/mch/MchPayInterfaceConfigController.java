@@ -7,7 +7,7 @@ import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineVO;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
-import com.baosight.payment.system.service.PayInterfaceDefineService;
+import com.baosight.payment.system.service.SystemClientChannelDefineService;
 import com.baosight.payment.system.service.app.PayInterfaceConfigAppService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -26,7 +26,7 @@ import java.util.Map;
 @RequestMapping( "/isv/pay/interface/define")
 public class MchPayInterfaceConfigController {
 
-    private final PayInterfaceDefineService payInterfaceDefineService;
+    private final SystemClientChannelDefineService payInterfaceDefineService;
     private final PayInterfaceConfigService payInterfaceConfigService;
     private final PayInterfaceConfigAppService payInterfaceConfigAppService;
 

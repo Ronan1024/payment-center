@@ -3,10 +3,8 @@ package com.baosight.payment.system.controller.system;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baosight.payment.system.constant.SystemConstant;
 import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
-import com.baosight.payment.system.pojo.entity.PayInterfaceDefine;
 import com.baosight.payment.system.pojo.entity.PayTongLianRelevance;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
-import com.baosight.payment.system.service.PayInterfaceDefineService;
 import com.baosight.payment.system.service.PayTongLianRelevanceService;
 import com.baosight.utils.json.JsonUtil;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -20,8 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.http.HttpRequest;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 

@@ -5,9 +5,10 @@ import com.baosight.payment.system.pojo.dto.req.MchChannelPermissionReqDTO;
 import com.baosight.payment.system.pojo.dto.resp.ClientChannelConfigRespDTO;
 import com.baosight.payment.system.pojo.dto.resp.ClientChannelRespDTO;
 import com.baosight.payment.system.pojo.validation.InsertChannelConfigGroup;
-import com.baosight.payment.system.service.PayInterfaceConfigService;
-import com.baosight.payment.system.service.app.PayInterfaceConfigAppService;
+import com.baosight.payment.system.service.SystemMchChannelConfigFlowService;
+import com.baosight.payment.system.service.SystemMchChannelConfigService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,9 +24,9 @@ import java.util.List;
 @RequiredArgsConstructor
 //@RequestMapping(SYSTEM + "/pm/pay/isv/config/manage")
 @RequestMapping("/pay/config/manage")
-public class SystemInterfaceConfigController {
-    private final PayInterfaceConfigService payInterfaceConfigService;
-    private final PayInterfaceConfigAppService payInterfaceConfigAppService;
+public class SystemClientChannelConfigController {
+    private final SystemMchChannelConfigService systemMchChannelConfigService;
+    private final SystemMchChannelConfigFlowService systemMchChannelConfigFlowService;
 
 
 //    /**
@@ -76,7 +77,7 @@ public class SystemInterfaceConfigController {
      */
     @PostMapping
     public Boolean saveMchChannel(@RequestBody @Validated MchChannelPermissionReqDTO mchChannelPermission) {
-        return payInterfaceConfigService.saveMchChannel(mchChannelPermission);
+        return systemMchChannelConfigService.saveClientChannelPermission(mchChannelPermission);
     }
 
 
@@ -88,7 +89,7 @@ public class SystemInterfaceConfigController {
      */
     @GetMapping
     public List<String> getMchChannel(@RequestParam("type") Integer type, @RequestParam("mchId") Long mchId) {
-        return payInterfaceConfigService.getMchChannel(type, mchId);
+        return systemMchChannelConfigService.getMchChannel(type, mchId);
     }
 
 
@@ -97,7 +98,7 @@ public class SystemInterfaceConfigController {
      */
     @GetMapping("/{clientId}")
     public List<ClientChannelRespDTO> mchChannelList(@PathVariable("clientId") Long clientId) {
-        return payInterfaceConfigService.mchChannelList(clientId);
+        return systemMchChannelConfigService.mchChannelList(clientId);
     }
 
 
@@ -106,7 +107,13 @@ public class SystemInterfaceConfigController {
      */
     @PostMapping("/channel")
     public Boolean saveClientChannelConfig(@RequestBody @Validated(InsertChannelConfigGroup.class) ClientChannelConfigReqDTO channelConfigReq) {
-        return payInterfaceConfigService.saveClientChannelConfig(channelConfigReq);
+        String channelCode = systemMchChannelConfigService.saveClientChannelConfig(channelConfigReq);
+        if (StringUtils.hasText(channelCode)) {
+            // 进行渠道后续流程执行
+            systemMchChannelConfigFlowService.execute(channelConfigReq.getClientId(), channelConfigReq.getClientType(), channelCode, "");
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
     }
 
 
@@ -114,8 +121,18 @@ public class SystemInterfaceConfigController {
      * 获取商户支付通道配置信息
      */
     @GetMapping("/channel/info")
-    public ClientChannelConfigRespDTO clientChannelConfigInfo(@RequestParam("channelId") Long channelId, @RequestParam("clientId") Long clientId, @RequestParam("type") Integer type){
-        return payInterfaceConfigService.clientChannelConfigInfo(channelId, clientId, type);
+    public ClientChannelConfigRespDTO clientChannelConfigInfo(@RequestParam("channelId") Long channelId, @RequestParam("clientId") Long clientId, @RequestParam("type") Integer type) {
+        return systemMchChannelConfigService.clientChannelConfigInfo(channelId, clientId, type);
+    }
+
+
+    /**
+     * 执行通道流程
+     */
+    @Deprecated
+    @PostMapping("/channel/execute")
+    public Boolean executeChannelProcess(@RequestParam("clientId") Long clientId, @RequestParam("channel_code") String channelCode, @RequestBody Object body) {
+        return systemMchChannelConfigService.executeChannelProcess(clientId, channelCode, body);
     }
 
 

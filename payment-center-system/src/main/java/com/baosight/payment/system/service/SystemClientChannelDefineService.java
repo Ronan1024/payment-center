@@ -14,11 +14,12 @@ import com.baosight.payment.system.pojo.vo.PayInterfaceDefineVO;
 import java.util.List;
 
 /**
+ * 支付渠道配置定义信息
  * @author longjiangran
  * @description 针对表【pay_interface_define(支付接口定义表)】的数据库操作Service
  * @createDate 2025-01-17 16:12:49
  */
-public interface PayInterfaceDefineService extends IService<PayInterfaceDefine> {
+public interface SystemClientChannelDefineService extends IService<PayInterfaceDefine> {
 
     /**
      * 新增支付接口参数配置
@@ -106,9 +107,10 @@ public interface PayInterfaceDefineService extends IService<PayInterfaceDefine> 
 
     /**
      * 获取支付通道列表
-     * @param mchType 商户类型
+     * @param clientId 客户端ID
+     * @param clientType 客户端类型
      */
-    List<PayingChannelDefineListRespDTO> channelDefineList(Integer mchType);
+    List<PayingChannelDefineListRespDTO> channelDefineList(Integer clientType, Long clientId);
 
     /**
      * 修改支付通道启用状态

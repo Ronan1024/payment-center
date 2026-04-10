@@ -10,6 +10,8 @@ import com.ronan.common.utils.Assert;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 import static com.baosight.payment.channel.error.ChannelError.CHANNEL_INFO_NOT_EXIST;
 
 /**
@@ -33,5 +35,17 @@ public class ChannelInfoApiImpl implements ChannelInfoApi {
         PayingChannelInfo payingChannelInfo = payingChannelInfoManager.infoByCode(code);
         Assert.isNull(payingChannelInfo, ApiException.supplier(CHANNEL_INFO_NOT_EXIST));
         return PayingChannelInfoConvert.INSTANCE.toChannelInfoRespDTO(payingChannelInfo);
+    }
+
+    /**
+     * 获取渠道信息
+     *
+     * @param codes 渠道编号
+     */
+    @Override
+    public List<ChannelInfoRespDTO> info(List<String> codes) {
+        List<PayingChannelInfo> payingChannelInfos = payingChannelInfoManager.infoByCode(codes);
+        Assert.isFalse(codes.size()==payingChannelInfos.size(), ApiException.supplier(CHANNEL_INFO_NOT_EXIST));
+        return payingChannelInfos.stream().map(PayingChannelInfoConvert.INSTANCE::toChannelInfoRespDTO).toList();
     }
 }

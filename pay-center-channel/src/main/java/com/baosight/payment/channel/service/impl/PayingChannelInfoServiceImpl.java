@@ -11,7 +11,7 @@ import com.baosight.payment.channel.dao.entity.PayingChannelInfo;
 import com.baosight.payment.channel.dao.manager.PayingChannelInfoManager;
 import com.baosight.payment.channel.dao.mapper.PayingChannelInfoMapper;
 import com.baosight.payment.channel.handler.ChannelContext;
-import com.baosight.payment.channel.handler.IChannel;
+import com.baosight.payment.channel.handler.channel.IChannel;
 import com.baosight.payment.channel.pojo.dto.PayingChannelInfoDTO;
 import com.baosight.payment.channel.pojo.dto.PayingChannelInfoPageDTO;
 import com.baosight.payment.channel.pojo.vo.PayingChannelInfoVO;

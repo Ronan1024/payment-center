@@ -1,7 +1,6 @@
 package com.baosight.payment.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baosight.database.core.page.PageResponse;
 import com.baosight.database.core.page.PageUtil;
@@ -13,8 +12,10 @@ import com.baosight.payment.enums.PayClientType;
 import com.baosight.payment.isv.api.IsvInfoApi;
 import com.baosight.payment.isv.vo.IsvInfoVO;
 import com.baosight.payment.system.convert.PayInterfaceDefineConvert;
+import com.baosight.payment.system.dao.entity.SystemClientChannelPermission;
 import com.baosight.payment.system.dao.manager.PayInterFaceDefineManager;
 import com.baosight.payment.system.dao.manager.PayWayManager;
+import com.baosight.payment.system.dao.manager.SystemClientChannelPermissionManager;
 import com.baosight.payment.system.error.PayInterfaceError;
 import com.baosight.payment.system.mapper.PayInterfaceConfigMapper;
 import com.baosight.payment.system.mapper.PayInterfaceDefineMapper;
@@ -28,8 +29,8 @@ import com.baosight.payment.system.pojo.entity.PayInterfaceDefine;
 import com.baosight.payment.system.pojo.entity.PayWay;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineVO;
-import com.baosight.payment.system.service.PayInterfaceDefineService;
 import com.baosight.payment.system.service.PayWayService;
+import com.baosight.payment.system.service.SystemClientChannelDefineService;
 import com.baosight.payment.system.utils.DynamicFormUtil;
 import com.baosight.payment.vo.MchInfoVO;
 import com.baosight.saas.auth.context.UserContext;
@@ -43,25 +44,31 @@ import com.ronan.common.utils.Assert;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
+import static com.baosight.payment.system.error.PayInterfaceConfigError.CLIENT_GET_CHANNEL_CONFIG_ERROR;
 import static com.baosight.payment.system.error.PayInterfaceError.*;
 import static com.baosight.payment.system.error.PayWayError.PAY_WAY_NOT_FOUND;
 
 /**
+ *
  * @author longjiangran
  * @description 针对表【pay_interface_define(支付接口定义表)】的数据库操作Service实现
  * @createDate 2025-01-17 16:12:49
  */
 @Service
 @RequiredArgsConstructor
-public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefineMapper, PayInterfaceDefine> implements PayInterfaceDefineService {
+public class SystemClientChannelDefineServiceImpl extends ServiceImpl<PayInterfaceDefineMapper, PayInterfaceDefine> implements SystemClientChannelDefineService {
     private final PayInterfaceDefineMapper payInterfaceDefineMapper;
     private final PayInterFaceDefineManager payInterFaceDefineManager;
+    private final PayInterfaceConfigMapper payInterfaceConfigMapper;
+    private final SystemClientChannelPermissionManager systemClientChannelPermissionManager;
     private final PayWayManager payWayManager;
 
     private final ChannelInfoApi channelInfoApi;
@@ -70,7 +77,6 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
     @Resource
     private IsvInfoApi isvInfoApi;
 
-    private final PayInterfaceConfigMapper payInterfaceConfigMapper;
     private final PayWayService payWayService;
     @Resource
     private ObjectMapper objectMapper;
@@ -132,6 +138,7 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
      *
      * @param payInterfaceDefine
      */
+    @Deprecated
     private void verify(PayInterFaceDefineDTO payInterfaceDefine) {
         Assert.isTrue(payInterfaceDefine.getHasMch() && !StringUtils.hasText(payInterfaceDefine.getNormalMchParams()), () -> new ApiException(PAY_INTERFACE_NORMAL_MCH_PARAMS_NULL));
         Assert.isTrue(payInterfaceDefine.getHasIsvMch() && !StringUtils.hasText(payInterfaceDefine.getIsvSubMchParams()), () -> new ApiException(PayInterfaceError.PAY_INTERFACE_ISV_SUB_MCH_PARAMS_NULL));
@@ -382,18 +389,33 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
      * 获取支付通道列表
      */
     @Override
-    public List<PayingChannelDefineListRespDTO> channelDefineList(Integer mchType) {
-
-        LambdaQueryChainWrapper<PayInterfaceDefine> query = payInterFaceDefineManager.lambdaQuery()
-                .eq(PayInterfaceDefine::getEnable, Boolean.TRUE);
-
-        if (mchType.equals(MchType.SUB_MERCHANT.code()) || MchType.SERVICER_MERCHANT.code().equals(mchType)) {
-            query.eq(PayInterfaceDefine::getHasIsvMch, Boolean.TRUE);
-        } else {
-            query.eq(PayInterfaceDefine::getHasMch, Boolean.TRUE);
+    public List<PayingChannelDefineListRespDTO> channelDefineList(Integer clientType, Long clientId) {
+        // TODO 忽略已配置的信息
+        if (clientType.equals(PayClientType.SERVICE_PROVIDER.code()) || clientType.equals(PayClientType.MERCHANT.code())) {
+            // 服务商普通商家直接返回
+            List<PayInterfaceDefine> list = payInterFaceDefineManager.lambdaQuery()
+                    .eq(clientType.equals(PayClientType.SERVICE_PROVIDER.code()), PayInterfaceDefine::getHasIsvMch, Boolean.TRUE)
+                    .eq(clientType.equals(PayClientType.MERCHANT.code()), PayInterfaceDefine::getHasMch, Boolean.TRUE)
+                    .eq(PayInterfaceDefine::getEnable, Boolean.TRUE)
+                    .list();
+            return list.stream().map(PayInterfaceDefineConvert.INSTANCE::toPayingChannelDefineListRespDTO).toList();
         }
-        List<PayInterfaceDefine> payInterfaceDefines = query.list();
 
+        MchInfoVO mchInfoVO = mchInfoApi.mchInfo(clientId);
+        List<SystemClientChannelPermission> list = systemClientChannelPermissionManager.lambdaQuery()
+                .eq(SystemClientChannelPermission::getClientType, PayClientType.SERVICE_PROVIDER.code())
+                .eq(SystemClientChannelPermission::getClientId, mchInfoVO.getIsvId()).list();
+
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+
+
+        List<Long> channelDefineIds = list.stream().map(SystemClientChannelPermission::getChannelDefineId).toList();
+
+        List<PayInterfaceDefine> payInterfaceDefines = payInterFaceDefineManager.lambdaQuery()
+                .in(PayInterfaceDefine::getId, channelDefineIds)
+                .list();
         return payInterfaceDefines.stream().map(PayInterfaceDefineConvert.INSTANCE::toPayingChannelDefineListRespDTO).toList();
     }
 
@@ -424,22 +446,20 @@ public class PayInterfaceDefineServiceImpl extends ServiceImpl<PayInterfaceDefin
 
         Assert.isNull(interfaceDefine, ApiException.supplier(PAY_INTERFACE_DEFINE_NOT_EXIST));
         ClientPayChannelDefineRespDTO result = new ClientPayChannelDefineRespDTO();
-        String dynamicFormStr = "";
+        String dynamicFormStr;
         if (MchType.SERVICER_MERCHANT.code().equals(type)) {
             // 处理服务商
             IsvInfoVO isvInfoVO = isvInfoApi.isvInfoById(clientId);
-            // TODO  处理异常信息写死问题
-            Assert.isNull(isvInfoVO, "服务商信息异常");
+            Assert.isNull(isvInfoVO, ApiException.supplier(CLIENT_GET_CHANNEL_CONFIG_ERROR ));
             dynamicFormStr = interfaceDefine.getIsvParams();
-
         } else if (MchType.SUB_MERCHANT.code().equals(type)) {
             MchInfoVO mchInfoVO = mchInfoApi.mchInfo(clientId);
-            Assert.isNull(mchInfoVO, "商户信息异常");
-            Assert.isFalse(mchInfoVO.getType().equals(PayClientType.SUB_MERCHANT.code()), "商户类型异常");
+            Assert.isNull(mchInfoVO, ApiException.supplier(CLIENT_GET_CHANNEL_CONFIG_ERROR));
+            Assert.isFalse(mchInfoVO.getType().equals(PayClientType.SUB_MERCHANT.code()), ApiException.supplier(CLIENT_GET_CHANNEL_CONFIG_ERROR));
             dynamicFormStr = interfaceDefine.getIsvSubMchParams();
         } else if (MchType.MERCHANT.code().equals(type)) {
             MchInfoVO mchInfoVO = mchInfoApi.mchInfo(clientId);
-            Assert.isNull(mchInfoVO, "商户信息异常");
+            Assert.isNull(mchInfoVO, ApiException.supplier(CLIENT_GET_CHANNEL_CONFIG_ERROR));
             dynamicFormStr = interfaceDefine.getNormalMchParams();
         } else {
             throw new ApiException(CLIENT_TYPE_ERROR);

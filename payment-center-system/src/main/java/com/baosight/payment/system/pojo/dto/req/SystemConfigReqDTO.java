@@ -1,6 +1,6 @@
 package com.baosight.payment.system.pojo.dto.req;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
@@ -14,6 +14,6 @@ public class SystemConfigReqDTO {
     /**
      * 配置值
      */
-    @NotBlank(message = "配置值不能为空")
+    @NotNull(message = "配置值不能为空")
     private Object value;
 }

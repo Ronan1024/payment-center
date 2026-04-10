@@ -1,8 +1,10 @@
-package com.baosight.payment.channel.handler.allinpay;
+package com.baosight.payment.channel.handler.channel.allinpay;
 
-import com.baosight.payment.channel.handler.IChannel;
+import com.baosight.payment.channel.handler.channel.IChannel;
 import com.baosight.payment.enums.PayingAgency;
 import org.springframework.stereotype.Component;
+
+import static com.baosight.payment.channel.enums.ChannelCode.ALLIN_PAY;
 
 /**
  * @program: payment-center
@@ -17,7 +19,7 @@ public class AllinPay implements IChannel {
      */
     @Override
     public String channelCode() {
-        return "ALLIN-PAY";
+        return ALLIN_PAY.getCode();
     }
 
     /**
@@ -26,7 +28,7 @@ public class AllinPay implements IChannel {
      */
     @Override
     public String channelName() {
-        return "通联支付";
+        return ALLIN_PAY.getChannelName();
     }
 
     /**

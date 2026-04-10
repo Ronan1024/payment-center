@@ -19,10 +19,6 @@ import com.baosight.payment.system.error.PayInterfaceError;
 import com.baosight.payment.system.mapper.PayInterfaceConfigMapper;
 import com.baosight.payment.system.pojo.dto.PayInterfaceConfigDTO;
 import com.baosight.payment.system.pojo.dto.PayInterfaceDefineBindDTO;
-import com.baosight.payment.system.pojo.dto.req.ClientChannelConfigReqDTO;
-import com.baosight.payment.system.pojo.dto.req.MchChannelPermissionReqDTO;
-import com.baosight.payment.system.pojo.dto.resp.ClientChannelConfigRespDTO;
-import com.baosight.payment.system.pojo.dto.resp.ClientChannelRespDTO;
 import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
 import com.baosight.payment.system.pojo.entity.PayInterfaceDefine;
 import com.baosight.payment.system.pojo.entity.PayWay;
@@ -31,9 +27,8 @@ import com.baosight.payment.system.pojo.vo.PayInterfaceConfigListVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
 import com.baosight.payment.system.service.PayInterfaceConfigService;
-import com.baosight.payment.system.service.PayInterfaceDefineService;
+import com.baosight.payment.system.service.SystemClientChannelDefineService;
 import com.baosight.payment.system.service.PayWayService;
-import com.baosight.payment.system.utils.DynamicFormUtil;
 import com.baosight.payment.vo.IsvInterfaceConfigVO;
 import com.baosight.payment.vo.MchInfoVO;
 import com.baosight.payment.vo.MchInterfaceConfigVO;
@@ -61,8 +56,6 @@ import java.util.*;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
-import static com.baosight.payment.system.error.PayInterfaceConfigError.MERCHANT_HAS_NO_CHANNEL_PERMISSION;
-import static com.baosight.payment.system.error.PayInterfaceError.PAY_INTERFACE_NOT_EXIST;
 import static com.baosight.payment.system.error.PayInterfaceError.PAY_INTERFACE_UPDATE_CONFIG_FAIL;
 
 /**
@@ -76,7 +69,7 @@ import static com.baosight.payment.system.error.PayInterfaceError.PAY_INTERFACE_
 public class PayInterfaceConfigServiceImpl extends ServiceImpl<PayInterfaceConfigMapper, PayInterfaceConfig> implements PayInterfaceConfigService {
     private final PayInterfaceConfigMapper payInterfaceConfigMapper;
     private final PayInterFaceDefineManager payInterFaceDefineManager;
-    private final PayInterfaceDefineService payInterfaceDefineService;
+    private final SystemClientChannelDefineService payInterfaceDefineService;
     private final PayInterfaceConfigManager payInterfaceConfigManager;
     private final PayWayService payWayService;
     private final IsvInfoApi isvInfoApi;
@@ -221,159 +214,6 @@ public class PayInterfaceConfigServiceImpl extends ServiceImpl<PayInterfaceConfi
         payInterfaceConfigMapper.insert(payInterfaceConfigs);
         return Boolean.TRUE;
     }
-
-    /**
-     * 保存商户支付渠道权限
-     *
-     * @param mchChannelPermission 商户支付渠道权限
-     */
-    @Override
-    public Boolean saveMchChannel(MchChannelPermissionReqDTO mchChannelPermission) {
-        MchInfoVO mchInfoVO;
-        if (mchChannelPermission.getType().equals(PayClientType.MERCHANT.code())) {
-            mchInfoVO = mchInfoApi.mchInfo(mchChannelPermission.getMchId());
-        } else {
-            mchInfoVO = null;
-        }
-
-        List<PayInterfaceDefine> interfaceDefineList = payInterFaceDefineManager.lambdaQuery()
-                .in(PayInterfaceDefine::getId, mchChannelPermission.getChannelId())
-                .eq(PayInterfaceDefine::getEnable, Boolean.TRUE).list();
-        Assert.isFalse(interfaceDefineList.size() == mchChannelPermission.getChannelId().size(), ApiException.supplier(PAY_INTERFACE_NOT_EXIST));
-
-        List<PayInterfaceConfig> configList = payInterfaceConfigManager.lambdaQuery()
-                .eq(PayInterfaceConfig::getClientId, mchChannelPermission.getMchId())
-                .eq(PayInterfaceConfig::getClientType, mchChannelPermission.getType()).list();
-        // 当前商户需要移除的渠道列表
-        List<Long> channelId = configList.stream().map(PayInterfaceConfig::getInterfaceId)
-                .filter(interfaceId -> !mchChannelPermission.getChannelId().contains(interfaceId)).toList();
-
-        // 当前商户已有的支付渠道列表
-        List<Long> mchChannelId = configList.stream().map(PayInterfaceConfig::getInterfaceId).toList();
-        // 需要新增加的配置
-        List<PayInterfaceConfig> list = interfaceDefineList.stream().filter(e -> !mchChannelId.contains(e.getId()))
-                .map(e -> {
-                    PayInterfaceConfig payInterfaceConfig = new PayInterfaceConfig();
-                    payInterfaceConfig.setInterfaceId(e.getId());
-                    payInterfaceConfig.setClientId(mchChannelPermission.getMchId());
-                    payInterfaceConfig.setClientType(mchChannelPermission.getType());
-                    payInterfaceConfig.setInterfaceCode(e.getCode());
-                    payInterfaceConfig.setParentClientId(0L);
-                    if (!ObjectUtils.isEmpty(mchInfoVO)) {
-                        payInterfaceConfig.setParentClientId(mchInfoVO.getIsvId());
-                    }
-                    payInterfaceConfig.setEnable(Boolean.FALSE);
-                    return payInterfaceConfig;
-                }).toList();
-
-        return payInterfaceConfigManager.saveMchChannel(channelId, list, mchChannelPermission.getMchId(), mchChannelPermission.getType());
-//        List<SystemMchChannelPermission> mchChannelPermissions = interfaceDefineList.stream().map(e -> {
-//            SystemMchChannelPermission systemMchChannelPermission = new SystemMchChannelPermission();
-//            systemMchChannelPermission.setChannelCode(e.getCode());
-//            systemMchChannelPermission.setChannelDefineId(e.getId());
-//            systemMchChannelPermission.setMchId(mchChannelPermission.getMchId());
-//            systemMchChannelPermission.setMchType(mchChannelPermission.getType());
-//            return systemMchChannelPermission;
-//        }).toList();
-        // 获取用户已有的支付配置进行移除
-
-
-//        return systemMchChannelPermissionManager.saveChannelPermission(mchChannelPermissions, mchChannelPermission.getMchId());
-//        return null;
-    }
-
-    /**
-     * 获取商户已授权的支付渠道
-     *
-     * @param type  商户类型
-     * @param mchId 商户ID
-     */
-    @Override
-    public List<String> getMchChannel(Integer type, Long mchId) {
-        List<PayInterfaceConfig> configList = payInterfaceConfigManager.lambdaQuery()
-                .eq(PayInterfaceConfig::getClientId, mchId)
-                .eq(PayInterfaceConfig::getClientType, type).list();
-        return configList.stream().map(e -> String.valueOf(e.getInterfaceId())).toList();
-    }
-
-    /**
-     * 获取当前商户渠道配置列表
-     *
-     * @param clientId 商户id
-     */
-    @Override
-    public List<ClientChannelRespDTO> mchChannelList(Long clientId) {
-        List<PayInterfaceConfig> configList = payInterfaceConfigManager.lambdaQuery().eq(PayInterfaceConfig::getClientId, clientId).list();
-
-        if (CollectionUtils.isEmpty(configList)) {
-            return Collections.emptyList();
-        }
-
-        List<Long> channelIdList = configList.stream().map(PayInterfaceConfig::getInterfaceId).toList();
-        List<PayInterfaceDefine> interfaceDefineList = payInterFaceDefineManager.lambdaQuery().in(PayInterfaceDefine::getId, channelIdList).list();
-        Map<Long, String> interfaceDefineNameByMap = interfaceDefineList.stream().collect(Collectors.toMap(PayInterfaceDefine::getId, PayInterfaceDefine::getName));
-        return configList.stream().map(e -> {
-            ClientChannelRespDTO clientChannelRespDTO = PayInterfaceConfigConvert.INSTANCE.toClientChannelRespDTO(e);
-            clientChannelRespDTO.setChannelName(interfaceDefineNameByMap.get(e.getInterfaceId()));
-            return clientChannelRespDTO;
-        }).toList();
-    }
-
-    /**
-     * 保存商户渠道配置信息
-     *
-     * @param channelConfigReq 渠道配置信息请求参数
-     */
-    @Override
-    public Boolean saveClientChannelConfig(ClientChannelConfigReqDTO channelConfigReq) {
-        PayInterfaceDefine payInterfaceDefine = payInterFaceDefineManager.infoById(channelConfigReq.getChannelId());
-        if (channelConfigReq.getClientType().equals(PayClientType.SERVICE_PROVIDER.code())) {
-            List<DynamicFormUtil.DynamicForm> parse = JsonUtil.parseArray(payInterfaceDefine.getIsvParams(), DynamicFormUtil.DynamicForm.class);
-            DynamicFormUtil.validateDynamicForm(parse, channelConfigReq.getDynamicForm());
-        } else if (channelConfigReq.getClientType().equals(PayClientType.SUB_MERCHANT.code())) {
-            List<DynamicFormUtil.DynamicForm> parse = JsonUtil.parseArray(payInterfaceDefine.getIsvSubMchParams(), DynamicFormUtil.DynamicForm.class);
-            DynamicFormUtil.validateDynamicForm(parse, channelConfigReq.getDynamicForm());
-        } else {
-            List<DynamicFormUtil.DynamicForm> parse = JsonUtil.parseArray(payInterfaceDefine.getNormalMchParams(), DynamicFormUtil.DynamicForm.class);
-            DynamicFormUtil.validateDynamicForm(parse, channelConfigReq.getDynamicForm());
-        }
-        PayInterfaceConfig payInterfaceConfig = payInterfaceConfigManager.lambdaQuery()
-                .eq(PayInterfaceConfig::getClientId, channelConfigReq.getClientId())
-                .eq(PayInterfaceConfig::getInterfaceId, channelConfigReq.getChannelId())
-                .eq(PayInterfaceConfig::getClientType, channelConfigReq.getClientType()).one();
-        Assert.isNull(payInterfaceConfig, ApiException.supplier(MERCHANT_HAS_NO_CHANNEL_PERMISSION));
-        if (channelConfigReq.getClientType().equals(PayClientType.SERVICE_PROVIDER.code())) {
-            payInterfaceConfig.setInterfaceRate(channelConfigReq.getIsvRate());
-        }
-        payInterfaceConfig.setEnable(channelConfigReq.getEnable());
-        payInterfaceConfig.setInterfaceParams(JsonUtil.toJson(channelConfigReq.getDynamicForm()));
-        return payInterfaceConfigManager.updateById(payInterfaceConfig);
-    }
-
-    /**
-     * 获取客户端支付渠道配置信息
-     *
-     * @param channelId 支付渠道id
-     * @param clientId  客户端id
-     * @param type      客户端类型
-     */
-    @Override
-    public ClientChannelConfigRespDTO clientChannelConfigInfo(Long channelId, Long clientId, Integer type) {
-        PayInterfaceConfig interfaceConfig = payInterfaceConfigManager.lambdaQuery()
-                .eq(PayInterfaceConfig::getClientId, clientId)
-                .eq(PayInterfaceConfig::getInterfaceId, channelId)
-                .eq(PayInterfaceConfig::getClientType, type).one();
-        Assert.isNull(interfaceConfig, ApiException.supplier(MERCHANT_HAS_NO_CHANNEL_PERMISSION));
-        ClientChannelConfigRespDTO result = new ClientChannelConfigRespDTO();
-        result.setEnable(interfaceConfig.getEnable());
-        result.setIsvRate(interfaceConfig.getInterfaceRate());
-        if (StringUtils.hasText(interfaceConfig.getInterfaceParams())) {
-            Map<String, Object> param = JsonUtil.toMap(interfaceConfig.getInterfaceParams());
-            result.setDynamicForm(param);
-        }
-        return result;
-    }
-
 
     /**
      * 根据接口定义和接口配置动态返回支付配置信息

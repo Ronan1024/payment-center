@@ -75,7 +75,7 @@ public class SystemPayMchInterfaceConfigController {
      * 查询商户已绑定的支付配置列表
      */
     @GetMapping("/list/{mchId}")
-    public List<PayInterfaceConfigDynamicVO> getPayInterfaceConfigs(@PathVariable("mchId")Long mchId){
+    public List<PayInterfaceConfigDynamicVO> getPayInterfaceConfigs(@PathVariable Long mchId){
         return payInterfaceConfigService.getMchPayInterfaceConfigs(mchId);
     }
 

@@ -2,6 +2,7 @@ package com.baosight.payment.system.pojo.dto.resp;
 
 import lombok.Data;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,4 +26,15 @@ public class ClientChannelConfigRespDTO {
      * 商户支付配置信息
      */
     private Map<String, Object> dynamicForm;
+
+    /**
+     * 渠道流程
+     */
+    private String flow;
+
+
+    /**
+     * 渠道流程列表
+     */
+    private List<MchChannelFlowRespDTO> channelFlowList;
 }

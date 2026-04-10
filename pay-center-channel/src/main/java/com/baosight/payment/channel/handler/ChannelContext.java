@@ -2,6 +2,7 @@ package com.baosight.payment.channel.handler;
 
 
 import com.baosight.payment.channel.error.ChannelError;
+import com.baosight.payment.channel.handler.channel.IChannel;
 import com.baosight.web.core.exception.ServerException;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;

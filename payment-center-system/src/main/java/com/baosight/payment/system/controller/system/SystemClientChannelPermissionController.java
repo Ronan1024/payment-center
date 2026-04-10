@@ -1,7 +1,7 @@
 package com.baosight.payment.system.controller.system;
 
 import com.baosight.payment.system.pojo.dto.req.MchChannelPermissionReqDTO;
-import com.baosight.payment.system.service.SystemMchChannelPermissionService;
+import com.baosight.payment.system.service.SystemClientChannelPermissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +19,8 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/paying/channel/permission")
-public class SystemMchChannelPermissionController {
-    private final SystemMchChannelPermissionService systemMchChannelPermissionService;
+public class SystemClientChannelPermissionController {
+    private final SystemClientChannelPermissionService systemMchChannelPermissionService;
 
 
     /**

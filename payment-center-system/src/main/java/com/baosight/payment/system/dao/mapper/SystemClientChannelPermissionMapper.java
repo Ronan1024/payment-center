@@ -1,7 +1,7 @@
 package com.baosight.payment.system.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baosight.payment.system.dao.entity.SystemMchChannelPermission;
+import com.baosight.payment.system.dao.entity.SystemClientChannelPermission;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -11,7 +11,7 @@ import org.apache.ibatis.annotations.Mapper;
 * @Entity com.baosight.payment.system.dao.entity.SystemMchChannelPermission
 */
 @Mapper
-public interface SystemMchChannelPermissionMapper extends BaseMapper<SystemMchChannelPermission> {
+public interface SystemClientChannelPermissionMapper extends BaseMapper<SystemClientChannelPermission> {
 
 }
 

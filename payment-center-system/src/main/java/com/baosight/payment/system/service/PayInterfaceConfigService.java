@@ -6,14 +6,10 @@ import com.baosight.payment.enums.PayClientType;
 import com.baosight.payment.enums.PayingAgency;
 import com.baosight.payment.system.pojo.dto.PayInterfaceConfigDTO;
 import com.baosight.payment.system.pojo.dto.PayInterfaceDefineBindDTO;
-import com.baosight.payment.system.pojo.dto.req.ClientChannelConfigReqDTO;
-import com.baosight.payment.system.pojo.dto.req.MchChannelPermissionReqDTO;
-import com.baosight.payment.system.pojo.dto.resp.ClientChannelConfigRespDTO;
-import com.baosight.payment.system.pojo.dto.resp.ClientChannelRespDTO;
 import com.baosight.payment.system.pojo.entity.PayInterfaceConfig;
-import com.baosight.payment.system.pojo.vo.PayInterfaceConfigVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigDynamicVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceConfigListVO;
+import com.baosight.payment.system.pojo.vo.PayInterfaceConfigVO;
 import com.baosight.payment.system.pojo.vo.PayInterfaceDefineListVO;
 import com.baosight.payment.vo.IsvInterfaceConfigVO;
 import com.baosight.payment.vo.MchInterfaceConfigVO;
@@ -247,39 +243,5 @@ public interface PayInterfaceConfigService extends IService<PayInterfaceConfig> 
      */
     Boolean bindIsv(Long mchId, Long isvId);
 
-    /**
-     * 保存商户支付渠道权限
-     *
-     * @param mchChannelPermission 商户支付渠道权限
-     */
-    Boolean saveMchChannel(MchChannelPermissionReqDTO mchChannelPermission);
 
-    /**
-     * 获取商户已授权的支付渠道
-     *
-     * @param type  商户类型
-     * @param mchId 商户ID
-     */
-    List<String> getMchChannel(Integer type, Long mchId);
-
-    /**
-     * 获取当前商户渠道配置列表
-     *
-     * @param clientId 商户id
-     */
-    List<ClientChannelRespDTO> mchChannelList(Long clientId);
-
-    /**
-     * 保存商户渠道配置信息
-     * @param channelConfigReq 渠道配置信息请求参数
-     */
-    Boolean saveClientChannelConfig(ClientChannelConfigReqDTO channelConfigReq);
-
-    /**
-     * 获取客户端支付渠道配置信息
-     * @param channelId 支付渠道id
-     * @param clientId 客户端id
-     * @param type 客户端类型
-     */
-    ClientChannelConfigRespDTO clientChannelConfigInfo(Long channelId, Long clientId, Integer type);
 }
