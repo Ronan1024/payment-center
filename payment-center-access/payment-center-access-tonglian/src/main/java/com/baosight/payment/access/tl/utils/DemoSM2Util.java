@@ -24,9 +24,12 @@ public class DemoSM2Util {
      * 算法常量:SM3withSM2
      */
     public static final String ALGORITHM_SM3SM2_BCPROV = "SM3withSM2";
+    private static final String BC_PROVIDER = "BC";
 
     static {
-        Security.addProvider(new BouncyCastleProvider());
+        if (Security.getProvider(BC_PROVIDER) == null) {
+            Security.addProvider(new BouncyCastleProvider());
+        }
     }
 
     public static String jsonMapToStr(Map<String, Object> map) {
@@ -50,9 +53,9 @@ public class DemoSM2Util {
      */
     public static PrivateKey privKeySM2FromBase64Str(String keystr) {
         try {
-            KeyFactory keyFactory = KeyFactory.getInstance("EC");
-            return keyFactory.generatePrivate(new PKCS8EncodedKeySpec(Base64.decode(keystr)));
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            KeyFactory keyFactory = KeyFactory.getInstance("EC", BC_PROVIDER);
+            return keyFactory.generatePrivate(new PKCS8EncodedKeySpec(Base64.decode(normalizeKey(keystr))));
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchProviderException e) {
             throw new RuntimeException(e);
         }
     }
@@ -62,9 +65,9 @@ public class DemoSM2Util {
      */
     public static PublicKey pubKeySM2FromBase64Str(String keystr) {
         try {
-            KeyFactory keyFactory = KeyFactory.getInstance("EC");
-            return keyFactory.generatePublic(new X509EncodedKeySpec(Base64.decode(keystr)));
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            KeyFactory keyFactory = KeyFactory.getInstance("EC", BC_PROVIDER);
+            return keyFactory.generatePublic(new X509EncodedKeySpec(Base64.decode(normalizeKey(keystr))));
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchProviderException e) {
             throw new RuntimeException(e);
         }
     }
@@ -96,5 +99,13 @@ public class DemoSM2Util {
 
     public static boolean isEmpty(String str) {
         return str == null || "".equals(str) || "".equals(str.trim());
+    }
+
+    private static String normalizeKey(String key) {
+        return key.replace("-----BEGIN PUBLIC KEY-----", "")
+                .replace("-----END PUBLIC KEY-----", "")
+                .replace("-----BEGIN PRIVATE KEY-----", "")
+                .replace("-----END PRIVATE KEY-----", "")
+                .replaceAll("\\s", "");
     }
 }
