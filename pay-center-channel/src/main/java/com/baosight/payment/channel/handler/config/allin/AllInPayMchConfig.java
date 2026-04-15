@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 public class AllInPayMchConfig {
     /**
-     * 收银宝商户号
+     * 通联商户私钥
      */
     private String signNum;
     /**

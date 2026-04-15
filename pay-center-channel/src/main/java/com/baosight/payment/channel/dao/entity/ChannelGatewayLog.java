@@ -1,4 +1,4 @@
-package com.baosight.payment.channel.pojo.dto.entity;
+package com.baosight.payment.channel.dao.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -7,9 +7,6 @@ import com.baosight.common.enums.IBaseEnum;
 import com.baosight.database.mybatis.handler.BasePO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-
-import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -36,9 +33,30 @@ public class ChannelGatewayLog extends BasePO {
     private Integer operation;
 
     /**
+     * 业务id
+     */
+    private Long bizId;
+
+    /**
+     * 业务类型
+     */
+    private String bizType;
+
+    /**
      * 系统流水号/请求编号
      */
     private Long requestNo;
+
+    /**
+     * 操作客户端类型
+     */
+    private String clientType;
+
+    /**
+     * 操作客户端编号
+     */
+    private String clientId;
+
 
     /**
      * 外部系统交易号
@@ -91,17 +109,24 @@ public class ChannelGatewayLog extends BasePO {
     private Long channelInterfaceId;
 
 
-    public enum Operation implements IBaseEnum<Integer> {
+    /**
+     * 出站url
+     */
+    private String reqUrl;
 
-        /**
-         * 出站
-         */
-        IN_SIDE(1,"出站"),
+
+
+    public enum Operation implements IBaseEnum<Integer> {
 
         /**
          * 入站
          */
-        OUT_SIDE(2,"入站");
+        IN_SIDE(1,"入站"),
+
+        /**
+         * 出站
+         */
+        OUT_SIDE(2,"出站");
 
 
         Operation(Integer code, String msg) {

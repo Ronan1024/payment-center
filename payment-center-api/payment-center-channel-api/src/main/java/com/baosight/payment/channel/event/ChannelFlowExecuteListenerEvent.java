@@ -16,6 +16,10 @@ public class ChannelFlowExecuteListenerEvent {
      *  渠道编号
      */
     private String channelCode;
+    /**
+     * 渠道ID
+     */
+    private Long channelId;
 
 
     /**

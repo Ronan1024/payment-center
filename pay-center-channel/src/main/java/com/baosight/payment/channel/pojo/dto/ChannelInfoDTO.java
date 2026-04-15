@@ -12,7 +12,7 @@ import lombok.Data;
  * @since 2026-03-04
  */
 @Data
-public class PayingChannelInfoDTO {
+public class ChannelInfoDTO {
 
     /**
      * 渠道ID（更新时必填）

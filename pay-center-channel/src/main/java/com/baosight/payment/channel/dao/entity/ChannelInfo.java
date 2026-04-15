@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baosight.database.mybatis.handler.BasePO;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 支付渠道信息
@@ -12,8 +13,9 @@ import lombok.Data;
  * @TableName paying_channel_info
  */
 @Data
-@TableName(value = "paying_channel_info")
-public class PayingChannelInfo  extends BasePO {
+@TableName(value = "channel_info")
+@EqualsAndHashCode(callSuper = true)
+public class ChannelInfo extends BasePO {
 
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;

@@ -1,9 +1,9 @@
 package com.baosight.payment.channel.open;
 
 import com.baosight.payment.channel.api.ChannelInfoApi;
-import com.baosight.payment.channel.convert.PayingChannelInfoConvert;
-import com.baosight.payment.channel.dao.entity.PayingChannelInfo;
-import com.baosight.payment.channel.dao.manager.PayingChannelInfoManager;
+import com.baosight.payment.channel.convert.ChannelInfoConvert;
+import com.baosight.payment.channel.dao.entity.ChannelInfo;
+import com.baosight.payment.channel.dao.manager.ChannelInfoManager;
 import com.baosight.payment.channel.dto.resp.ChannelInfoRespDTO;
 import com.baosight.web.core.exception.ApiException;
 import com.ronan.common.utils.Assert;
@@ -24,7 +24,7 @@ import static com.baosight.payment.channel.error.ChannelError.CHANNEL_INFO_NOT_E
 @RequiredArgsConstructor
 public class ChannelInfoApiImpl implements ChannelInfoApi {
 
-    private final PayingChannelInfoManager payingChannelInfoManager;
+    private final ChannelInfoManager channelInfoManager;
     /**
      * 获取渠道信息
      *
@@ -32,9 +32,9 @@ public class ChannelInfoApiImpl implements ChannelInfoApi {
      */
     @Override
     public ChannelInfoRespDTO info(String code) {
-        PayingChannelInfo payingChannelInfo = payingChannelInfoManager.infoByCode(code);
-        Assert.isNull(payingChannelInfo, ApiException.supplier(CHANNEL_INFO_NOT_EXIST));
-        return PayingChannelInfoConvert.INSTANCE.toChannelInfoRespDTO(payingChannelInfo);
+        ChannelInfo channelInfo = channelInfoManager.infoByCode(code);
+        Assert.isNull(channelInfo, ApiException.supplier(CHANNEL_INFO_NOT_EXIST));
+        return ChannelInfoConvert.INSTANCE.toChannelInfoRespDTO(channelInfo);
     }
 
     /**
@@ -44,8 +44,8 @@ public class ChannelInfoApiImpl implements ChannelInfoApi {
      */
     @Override
     public List<ChannelInfoRespDTO> info(List<String> codes) {
-        List<PayingChannelInfo> payingChannelInfos = payingChannelInfoManager.infoByCode(codes);
-        Assert.isFalse(codes.size()==payingChannelInfos.size(), ApiException.supplier(CHANNEL_INFO_NOT_EXIST));
-        return payingChannelInfos.stream().map(PayingChannelInfoConvert.INSTANCE::toChannelInfoRespDTO).toList();
+        List<ChannelInfo> channelInfos = channelInfoManager.infoByCode(codes);
+        Assert.isFalse(codes.size()== channelInfos.size(), ApiException.supplier(CHANNEL_INFO_NOT_EXIST));
+        return channelInfos.stream().map(ChannelInfoConvert.INSTANCE::toChannelInfoRespDTO).toList();
     }
 }

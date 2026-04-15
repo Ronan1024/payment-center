@@ -76,6 +76,7 @@ public class SystemMchChannelConfigFlowServiceImpl extends ServiceImpl<SystemMch
         Assert.isTrue(mchChannelConfigFlow.getStatus().equals(SystemMchChannelConfigFlow.Status.PROCESSING.code()), ApiException.supplier(MERCHANT_CHANNEL_FLOW_PROCESSING));
         ChannelFlowExecuteListenerEvent listenerEvent = new ChannelFlowExecuteListenerEvent();
         listenerEvent.setChannelCode(mchChannelConfigFlow.getChannelCode())
+                .setChannelId(mchChannelConfigFlow.getChannelId())
                 .setClientId(clientId)
                 .setChannelFlowType(channelFlowDefine.getStepType())
                 .setClientType(clientType)

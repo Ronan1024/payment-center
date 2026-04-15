@@ -1,12 +1,12 @@
 package com.baosight.payment.channel.controller.system;
 
 import com.baosight.database.core.page.PageResponse;
-import com.baosight.payment.channel.pojo.dto.PayingChannelInfoDTO;
-import com.baosight.payment.channel.pojo.dto.PayingChannelInfoPageDTO;
+import com.baosight.payment.channel.pojo.dto.ChannelInfoDTO;
+import com.baosight.payment.channel.pojo.dto.ChannelInfoPageDTO;
 import com.baosight.payment.channel.pojo.resp.ChannelCodeRespDTO;
-import com.baosight.payment.channel.pojo.vo.PayingChannelInfoVO;
+import com.baosight.payment.channel.pojo.vo.ChannelInfoVO;
+import com.baosight.payment.channel.service.ChannelInfoService;
 import com.baosight.payment.channel.service.PayChannelService;
-import com.baosight.payment.channel.service.PayingChannelInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +27,7 @@ import java.util.List;
 public class SystemChannelManagerController {
 
     private final PayChannelService payChannelService;
-    private final PayingChannelInfoService payingChannelInfoService;
+    private final ChannelInfoService channelInfoService;
 
     /**
      * 获取所有的渠道
@@ -41,24 +41,24 @@ public class SystemChannelManagerController {
      * 分页查询支付渠道信息
      */
     @PostMapping("/page")
-    public PageResponse<PayingChannelInfoVO> page(@RequestBody PayingChannelInfoPageDTO pageDTO) {
-        return payingChannelInfoService.page(pageDTO);
+    public PageResponse<ChannelInfoVO> page(@RequestBody ChannelInfoPageDTO pageDTO) {
+        return channelInfoService.page(pageDTO);
     }
 
     /**
      * 新增支付渠道信息
      */
     @PostMapping
-    public Boolean save(@RequestBody @Validated PayingChannelInfoDTO dto) {
-        return payingChannelInfoService.savePayingChannelInfo(dto);
+    public Boolean save(@RequestBody @Validated ChannelInfoDTO dto) {
+        return channelInfoService.saveChannelInfo(dto);
     }
 
     /**
      * 更新支付渠道信息
      */
     @PutMapping
-    public Boolean update(@RequestBody @Validated PayingChannelInfoDTO dto) {
-        return payingChannelInfoService.updatePayingChannelInfo(dto);
+    public Boolean update(@RequestBody @Validated ChannelInfoDTO dto) {
+        return channelInfoService.updateChannelInfo(dto);
     }
 
     /**
@@ -66,14 +66,14 @@ public class SystemChannelManagerController {
      */
     @DeleteMapping("/{id}")
     public Boolean delete(@PathVariable("id") Long id) {
-        return payingChannelInfoService.deletePayingChannelInfo(id);
+        return channelInfoService.deleteChannelInfo(id);
     }
 
     /**
      * 根据ID获取支付渠道信息详情
      */
     @GetMapping("/{id}")
-    public PayingChannelInfoVO getInfoById(@PathVariable("id") Long id) {
-        return payingChannelInfoService.getInfoById(id);
+    public ChannelInfoVO getInfoById(@PathVariable("id") Long id) {
+        return channelInfoService.getInfoById(id);
     }
 }

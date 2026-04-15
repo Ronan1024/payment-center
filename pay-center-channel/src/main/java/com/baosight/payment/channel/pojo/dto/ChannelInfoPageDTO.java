@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class PayingChannelInfoPageDTO extends PageRequest {
+public class ChannelInfoPageDTO extends PageRequest {
 
     /**
      * 渠道名称（模糊查询）

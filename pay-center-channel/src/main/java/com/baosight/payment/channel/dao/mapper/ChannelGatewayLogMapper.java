@@ -1,7 +1,7 @@
-package com.baosight.payment.channel.mapper;
+package com.baosight.payment.channel.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baosight.payment.channel.pojo.dto.entity.ChannelGatewayLog;
+import com.baosight.payment.channel.dao.entity.ChannelGatewayLog;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

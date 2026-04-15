@@ -12,7 +12,7 @@ import java.util.Date;
  * @since 2026-03-04
  */
 @Data
-public class PayingChannelInfoVO {
+public class ChannelInfoVO {
 
     /**
      * 渠道ID

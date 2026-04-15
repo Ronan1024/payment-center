@@ -1,10 +1,12 @@
 package com.baosight.payment.channel.handler;
 
-import com.baosight.payment.channel.service.ChannelGatewayLogManager;
-import com.baosight.payment.channel.service.impl.PayNotifyProcessor;
-import com.baosight.utils.json.JsonUtil;
+//import com.baosight.payment.channel.service.ChannelGatewayLogManager;
+
+import com.baosight.payment.channel.dao.manager.ChannelGatewayLogManager;
 import com.baosight.payment.channel.pojo.dao.WechatNotifyDTO;
 import com.baosight.payment.channel.service.PayNotifyHandler;
+import com.baosight.payment.channel.service.impl.PayNotifyProcessor;
+import com.baosight.utils.json.JsonUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

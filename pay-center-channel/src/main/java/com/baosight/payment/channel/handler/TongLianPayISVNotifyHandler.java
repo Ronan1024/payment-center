@@ -2,10 +2,9 @@ package com.baosight.payment.channel.handler;
 
 import cn.hutool.core.date.DateUtil;
 import com.baosight.common.exception.ServiceException;
+import com.baosight.payment.channel.dao.entity.ChannelGatewayLog;
 import com.baosight.payment.channel.pojo.dao.TongLianOrderResultNotifyDTO;
 import com.baosight.payment.channel.pojo.dao.UnifiedPayNotifyDTO;
-import com.baosight.payment.channel.pojo.dto.entity.ChannelGatewayLog;
-import com.baosight.payment.channel.service.ChannelGatewayLogManager;
 import com.baosight.payment.channel.service.PayNotifyHandler;
 import com.baosight.payment.channel.service.impl.PayNotifyProcessor;
 import com.baosight.utils.json.JsonUtil;
@@ -19,8 +18,8 @@ public class TongLianPayISVNotifyHandler implements PayNotifyHandler {
     @Autowired
     private PayNotifyProcessor payNotifyProcessor;
 
-    @Autowired
-    private ChannelGatewayLogManager channelGatewayLogManager;
+//    @Autowired
+//    private ChannelGatewayLogManager channelGatewayLogManager;
 
 
     /**
@@ -51,7 +50,7 @@ public class TongLianPayISVNotifyHandler implements PayNotifyHandler {
         channelGatewayLog.setBizStatus(ChannelGatewayLog.BizStatus.PROCESS.getCode());
         channelGatewayLog.setResParams(body);
         channelGatewayLog.setOutTradeNo(dto.getRespTraceNum());
-        channelGatewayLogManager.saveChannelGatewayLog(channelGatewayLog);
+//        channelGatewayLogManager.saveChannelGatewayLog(channelGatewayLog);
         try {
             //2.更新商城订单状态
         UnifiedPayNotifyDTO payNotifyDTO = new UnifiedPayNotifyDTO();
@@ -71,7 +70,7 @@ public class TongLianPayISVNotifyHandler implements PayNotifyHandler {
             //3.更新渠道日志
             Long cost = DateUtil.current() - startTime;
             channelGatewayLog.setCostTime(Math.toIntExact(cost));
-            channelGatewayLogManager.updateById(channelGatewayLog);
+//            channelGatewayLogManager.updateById(channelGatewayLog);
         }
         return "success";  // 通联统一要求返回 success
     }
