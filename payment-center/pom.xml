@@ -39,10 +39,6 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-loadbalancer</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.baosight.saas.oauth</groupId>-->
-<!--            <artifactId>saas-oauth-feign</artifactId>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-mch</artifactId>
@@ -95,11 +91,6 @@
             <artifactId>flyway-mysql</artifactId>
             <version>11.9.1</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.baosight.saas.tenant.api</groupId>-->
-<!--            <artifactId>saas-tenant-feign</artifactId>-->
-<!--            <version>1.0.0</version>-->
-<!--        </dependency>-->
     </dependencies>
 
     <build>

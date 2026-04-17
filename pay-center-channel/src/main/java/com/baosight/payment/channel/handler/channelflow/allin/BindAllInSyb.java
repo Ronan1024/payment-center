@@ -2,20 +2,24 @@ package com.baosight.payment.channel.handler.channelflow.allin;
 
 import com.baosight.common.exception.ServiceException;
 import com.baosight.payment.api.MchChannelConfigApi;
+import com.baosight.payment.api.MchInfoApi;
 import com.baosight.payment.api.PlatformConfigurationApi;
 import com.baosight.payment.channel.dao.entity.ChannelGatewayLog;
 import com.baosight.payment.channel.dao.manager.ChannelGatewayLogManager;
 import com.baosight.payment.channel.handler.channelflow.IChannelFlowOption;
+import com.baosight.payment.channel.handler.config.allin.AllInPayIsvConfig;
 import com.baosight.payment.channel.handler.config.allin.AllInPayMchConfig;
 import com.baosight.payment.channel.pojo.dao.ChannelGatewayLogDAO;
 import com.baosight.payment.channel.utils.AllInPayClient;
 import com.baosight.payment.dao.resp.AllInRespDTO;
 import com.baosight.payment.enums.PayingAgency;
+import com.baosight.payment.vo.MchInfoVO;
 import com.baosight.utils.json.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StopWatch;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -40,7 +44,7 @@ public class BindAllInSyb implements IChannelFlowOption {
 
     private final PlatformConfigurationApi platformConfigurationApi;
     private final MchChannelConfigApi mchChannelConfigApi;
-    private final IsvConfigApi isvConfigApi;
+    private final MchInfoApi mchInfoApi;
     private final WebClient webClient;
     private final ChannelGatewayLogManager channelGatewayLogManager;
 
@@ -68,25 +72,6 @@ public class BindAllInSyb implements IChannelFlowOption {
     public String name() {
         return "绑定收银宝";
     }
-
-//
-//    /**
-//     * 会员绑定收银宝商户
-//     *
-//     * @param reqTraceNum     请求流水号 要求唯一
-//     * @param signNum         商户会员编号
-//     * @param sybMerchantCode 收银宝商户号
-//     */
-//    public static TongLianClient.SendBuild memberBindSyb(Long reqTraceNum, String signNum, String sybMerchantCode) {
-//        String transCode = TongLianInterfaceCode.BIND_SYB.getCode();
-//        Map<String, String> map = new HashMap<>(4);
-//        map.put("reqTraceNum", String.valueOf(reqTraceNum));
-//        map.put("signNum", signNum);
-//        map.put("opType", "set");
-//        map.put("memberRole", "收单商户");
-//        map.put("sybMerchantCode", sybMerchantCode);
-//        return new TongLianClient.SendBuild(reqTraceNum, transCode, JsonUtil.toJson(map));
-//    }
 
 
     /**
@@ -117,6 +102,7 @@ public class BindAllInSyb implements IChannelFlowOption {
     public ExecuteResult execute(Long clientId, Integer clientType, String param) {
         ExecuteResult result = new ExecuteResult();
         ChannelGatewayLogDAO log = new ChannelGatewayLogDAO();
+        MchInfoVO mchInfoVO = mchInfoApi.mchInfo(clientId);
         log.setOperation(OUT_SIDE.getCode())
                 .setBizType(stepType())
                 .setBizTypeName(name())
@@ -135,10 +121,18 @@ public class BindAllInSyb implements IChannelFlowOption {
             if (CollectionUtils.isEmpty(allInPayMchConfigMap)) {
                 throw new ServiceException("未获取到商户配置信息");
             }
-            // TODO 获取商户服务商通联配置信息
+            if (ObjectUtils.isEmpty(mchInfoVO)) {
+                throw new ServiceException("商户信息不存在");
+            }
+            // 获取商户服务商通联配置信息
+            Map<String, String> allInPayIsvConfigMap = mchChannelConfigApi.mchChannelConfig(mchInfoVO.getIsvId(), ALLIN_PAY.getCode());
+            if (CollectionUtils.isEmpty(allInPayIsvConfigMap)) {
+                throw new ServiceException("未获取到商户 " + mchInfoVO.getMchName() + " 服务商配置信息");
+            }
 
             AllInPayMchConfig parse = JsonUtil.parse(JsonUtil.toJson(allInPayMchConfigMap), AllInPayMchConfig.class);
-            AllInPayClient allInPayClient = AllInPayClient.init(allInRespDTO.getPublicKey(), allInRespDTO.getAppId(), allInRespDTO.getMemberRequestUrl(), allInRespDTO.getVersion());
+            AllInPayIsvConfig allInPayIsvConfig = JsonUtil.parse(JsonUtil.toJson(allInPayIsvConfigMap), AllInPayIsvConfig.class);
+            AllInPayClient allInPayClient = AllInPayClient.init(allInRespDTO.getPublicKey(), allInPayIsvConfig.getAppId(), allInRespDTO.getMemberRequestUrl(), allInRespDTO.getVersion());
             allInPayClient.privateKey(parse.getSignNum());
             allInPayClient.webClient(webClient);
             Map<String, String> buildParam = buildParam(String.valueOf(clientId), parse.getCusid());

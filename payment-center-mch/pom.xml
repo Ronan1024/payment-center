@@ -21,22 +21,18 @@
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-common</artifactId>
-            <version>1.1.0</version>
         </dependency>
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-partner-common</artifactId>
-            <version>1.1.0</version>
         </dependency>
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-mch-api</artifactId>
-            <version>${payment-center-api.version}</version>
         </dependency>
         <dependency>
             <groupId>com.baosight.payment</groupId>
             <artifactId>payment-center-isv-api</artifactId>
-            <version>${payment-center-api.version}</version>
         </dependency>
         <dependency>
             <groupId>com.baosight.web.framework</groupId>

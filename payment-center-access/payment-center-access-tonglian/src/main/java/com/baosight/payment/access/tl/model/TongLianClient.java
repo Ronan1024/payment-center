@@ -27,7 +27,6 @@ public class TongLianClient {
     private final TongLianIsvConfigDAO config;
     private final PrivateKey privateKey;
     private final PublicKey tlPublicKey;
-    // TODO 待处理url管理
 //    public static final String URL = "http://116.228.64.55:28082/yst-service-api/tx/handle";
 
     public TongLianClient(TongLianIsvConfigDAO config) {

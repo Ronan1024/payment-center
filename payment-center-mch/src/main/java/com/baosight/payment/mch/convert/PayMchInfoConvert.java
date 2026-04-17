@@ -72,5 +72,7 @@ public interface PayMchInfoConvert {
     @Mapping(target = "enterpriseName", source = "mchName")
     void copyPayMchInfo(MchInfoDTO mchInfoDTO, @MappingTarget PayMchInfo payMchInfo);
 
+    @Mapping(target = "mchShortName", ignore = true)
+    @Mapping(target = "contactEmail", ignore = true)
     MchInfoVO toMchInfoVO(PayMchInfo info);
 }

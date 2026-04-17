@@ -88,11 +88,59 @@
                 <version>${mapstruct.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.baosight.utils</groupId>
+                <artifactId>common-util-validation</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baosight.distributedid</groupId>
+                <artifactId>distributed-id-spring-boot-starter</artifactId>
+                <version>${distributed-id.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ronan.common</groupId>
+                <artifactId>common-all</artifactId>
+                <version>${common.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.baosight.saas</groupId>
+                <artifactId>saas-common-dependencies</artifactId>
+                <version>${saas-common.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baosight.web.framework</groupId>
+                <artifactId>web-spring-boot-dependencies</artifactId>
+                <version>${web-framework.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-spring</artifactId>
+                <version>3.5.15</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-core</artifactId>
+                <version>3.5.15</version>
+            </dependency>
+
+            <!--       module        -->
+            <dependency>
                 <groupId>com.baosight.payment</groupId>
                 <artifactId>payment-center-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>com.baosight.payment</groupId>
+                <artifactId>payment-center-partner-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.baosight.payment</groupId>
                 <artifactId>payment-center-mch</artifactId>
@@ -133,51 +181,47 @@
                 <artifactId>payment-center-trade</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <!--      module-api      -->
             <dependency>
-                <groupId>com.baosight.utils</groupId>
-                <artifactId>common-util-validation</artifactId>
-                <version>1.0.0</version>
+                <groupId>com.baosight.payment</groupId>
+                <artifactId>payment-center-isv-api</artifactId>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.baosight.distributedid</groupId>
-                <artifactId>distributed-id-spring-boot-starter</artifactId>
-                <version>${distributed-id.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.ronan.common</groupId>
-                <artifactId>common-all</artifactId>
-                <version>${common.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.baosight.saas</groupId>
-                <artifactId>saas-common-dependencies</artifactId>
-                <version>${saas-common.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
+                <groupId>com.baosight.payment.channel</groupId>
+                <artifactId>payment-center-channel-api</artifactId>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.baosight.payment</groupId>
-                <artifactId>payment-center-api</artifactId>
-                <version>1.1.0</version>
+                <artifactId>payment-center-system-api</artifactId>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.baosight.web.framework</groupId>
-                <artifactId>web-spring-boot-dependencies</artifactId>
-                <version>${web-framework.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
+                <groupId>com.baosight.payment</groupId>
+                <artifactId>payment-center-order-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baosight.payment</groupId>
+                <artifactId>payment-center-settlement-api</artifactId>
+                <version>${payment-center-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-spring</artifactId>
-                <version>3.5.15</version>
+                <groupId>com.baosight.payment</groupId>
+                <artifactId>payment-center-check-api</artifactId>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-core</artifactId>
-                <version>3.5.15</version>
+                <groupId>com.baosight.payment</groupId>
+                <artifactId>payment-center-notify-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baosight.payment</groupId>
+                <artifactId>payment-center-mch-api</artifactId>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
