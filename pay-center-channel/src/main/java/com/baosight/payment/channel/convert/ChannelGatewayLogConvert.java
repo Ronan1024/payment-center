@@ -2,6 +2,7 @@ package com.baosight.payment.channel.convert;
 
 import com.baosight.payment.channel.dao.entity.ChannelGatewayLog;
 import com.baosight.payment.channel.pojo.dao.ChannelGatewayLogDAO;
+import com.baosight.payment.channel.pojo.dto.resp.ChannelGatewayLogInfoRespDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -20,4 +21,7 @@ public interface ChannelGatewayLogConvert {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createTime", ignore = true)
     ChannelGatewayLog toChannelGatewayLog(ChannelGatewayLogDAO channelGatewayLogDAO);
+
+
+    ChannelGatewayLogInfoRespDTO toChannelGatewayLogInfoRespDTO(ChannelGatewayLog one);
 }

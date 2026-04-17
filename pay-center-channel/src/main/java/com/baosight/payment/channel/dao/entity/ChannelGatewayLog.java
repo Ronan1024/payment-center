@@ -55,7 +55,7 @@ public class ChannelGatewayLog extends BasePO {
     /**
      * 操作客户端编号
      */
-    private String clientId;
+    private Long clientId;
 
 
     /**

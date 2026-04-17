@@ -4,20 +4,20 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.baosight.payment.channel.dao.entity.ChannelGatewayLog">
-        <result column="id" property="id" />
-        <result column="create_time" property="createTime" />
-        <result column="operation" property="operation" />
-        <result column="request_no" property="requestNo" />
-        <result column="out_trade_no" property="outTradeNo" />
-        <result column="inst_code" property="instCode" />
-        <result column="channel_code" property="channelCode" />
-        <result column="error_code" property="errorCode" />
-        <result column="error_msg" property="errorMsg" />
-        <result column="cost_time" property="costTime" />
-        <result column="req_params" property="reqParams" />
-        <result column="res_params" property="resParams" />
-        <result column="biz_status" property="bizStatus" />
-        <result column="channel_interface_id" property="channelInterfaceId" />
+        <result column="id" property="id"/>
+        <result column="create_time" property="createTime"/>
+        <result column="operation" property="operation"/>
+        <result column="request_no" property="requestNo"/>
+        <result column="out_trade_no" property="outTradeNo"/>
+        <result column="inst_code" property="instCode"/>
+        <result column="channel_code" property="channelCode"/>
+        <result column="error_code" property="errorCode"/>
+        <result column="error_msg" property="errorMsg"/>
+        <result column="cost_time" property="costTime"/>
+        <result column="req_params" property="reqParams"/>
+        <result column="res_params" property="resParams"/>
+        <result column="biz_status" property="bizStatus"/>
+        <result column="channel_interface_id" property="channelInterfaceId"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -26,5 +26,46 @@
         create_time,
         operation, request_no, out_trade_no, inst_code, channel_code, error_code, error_msg, updated_time, cost_time, req_params, res_params, biz_status, channel_interface_id
     </sql>
+    <select id="page" resultType="com.baosight.payment.channel.pojo.dto.resp.ChannelGatewayLogPageRespDTO">
+        select id,
+        operation,
+        biz_id as bizId,
+        biz_type as bizType,
+        request_no as requestNo,
+        client_type as clientType,
+        client_id as clientId,
+        out_trade_no as outTradeNo,
+        inst_code as instCode,
+        channel_code as channelCode,
+        cost_time as costTime,
+        biz_status as bizStatus
+        from channel_gateway_log
+        <where>
+            <if test="req.operation != null">
+                and operation = #{req.operation}
+            </if>
+            <if test="req.bizId != null">
+                and biz_id = #{req.bizId}
+            </if>
+            <if test="req.bizType != null and req.bizType != ''">
+                and biz_type = #{req.bizType}
+            </if>
+            <if test="req.clientType != null and req.clientType != ''">
+                and client_type = #{req.clientType}
+            </if>
+            <if test="req.clientId != null">
+                and client_id = #{req.clientId}
+            </if>
+            <if test="req.instCode != null and req.instCode != ''">
+                and inst_code = #{req.instCode}
+            </if>
+            <if test="req.channelCode != null and req.channelCode != ''">
+                and channel_code = #{req.channelCode}
+            </if>
+            <if test="req.bizStatus != null">
+                and biz_status = #{req.bizStatus}
+            </if>
+        </where>
+    </select>
 
 </mapper>
