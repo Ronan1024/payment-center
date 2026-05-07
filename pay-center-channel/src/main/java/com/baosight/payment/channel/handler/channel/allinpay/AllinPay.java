@@ -19,7 +19,7 @@ public class AllinPay implements IChannel {
      */
     @Override
     public String channelCode() {
-        return ALLIN_PAY.getCode();
+        return ALLIN_PAY.code();
     }
 
     /**
@@ -28,7 +28,7 @@ public class AllinPay implements IChannel {
      */
     @Override
     public String channelName() {
-        return ALLIN_PAY.getChannelName();
+        return ALLIN_PAY.desc();
     }
 
     /**

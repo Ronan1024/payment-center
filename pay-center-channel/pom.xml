@@ -35,6 +35,14 @@
             <artifactId>payment-center-system-api</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.baosight.payment</groupId>
+            <artifactId>payment-center-order-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.baosight.payment</groupId>
+            <artifactId>payment-center-notify-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
             <version>${bouncycastle.version}</version>

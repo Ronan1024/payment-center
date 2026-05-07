@@ -18,7 +18,7 @@ public class UmsPay implements IChannel {
      */
     @Override
     public String channelCode() {
-        return ChannelCode.UMS_PAY.getCode();
+        return ChannelCode.UMS_PAY.code();
     }
 
     /**
@@ -27,7 +27,7 @@ public class UmsPay implements IChannel {
      */
     @Override
     public String channelName() {
-        return ChannelCode.UMS_PAY.getChannelName();
+        return ChannelCode.UMS_PAY.desc();
     }
 
     /**

@@ -88,6 +88,11 @@ public class ChannelGatewayLogDAO {
      */
     private String reqUrl;
 
+    /**
+     * 入站Url
+     */
+    private String resUrl;
+
 
     /**
      * 入站参数

@@ -2,6 +2,7 @@ package com.baosight.payment.system.api;
 
 import com.baosight.payment.api.PlatformConfigurationApi;
 import com.baosight.payment.dao.resp.AllInRespDTO;
+import com.baosight.payment.dao.resp.SystemRespDTO;
 import com.baosight.payment.enums.PlatformConfigEnum;
 import com.baosight.payment.system.convert.SystemPlatformConfigurationConvert;
 import com.baosight.payment.system.dao.entity.SystemPlatformConfiguration;
@@ -36,5 +37,13 @@ public class PlatformConfigurationApiImpl implements PlatformConfigurationApi {
         Class<?> configuration = SystemPlatformConfiguration.getConfiguration(PlatformConfigEnum.ALL_IN.getCode());
         SystemPlatformConfiguration.AllIn parse = (SystemPlatformConfiguration.AllIn) JsonUtil.parse(systemPlatformConfiguration.getConfigValue(), configuration);
         return SystemPlatformConfigurationConvert.INSTANCE.toAllInRespDTO(parse);
+    }
+
+    /**
+     * 获取平台系统配置
+     */
+    @Override
+    public SystemRespDTO systemConfig() {
+        return null;
     }
 }

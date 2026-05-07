@@ -29,8 +29,8 @@ public class ChannelFlowHandler {
 
     public ChannelFlowHandler(List<IChannelFlowOption> channelFlowOption) {
         for (IChannelFlowOption option : channelFlowOption) {
-            String key = option.channelCode() + "-" + option.stepType();
-            Assert.isTrue(CONTEXT.containsKey(key), "渠道流程装载失败【" + option.stepType() + "】已存在");
+            String key = option.channelCode().code() + "-" + option.eventType().code();
+            Assert.isTrue(CONTEXT.containsKey(key), "渠道流程装载失败【" + option.eventType().code() + "】已存在");
             CONTEXT.put(key, option);
         }
     }
@@ -43,8 +43,8 @@ public class ChannelFlowHandler {
      */
     public Map<String, String> executeList(String channelCode) {
         return CONTEXT.values().stream()
-                .filter(e -> e.channelCode().equals(channelCode))
-                .collect(Collectors.toMap(IChannelFlowOption::name, IChannelFlowOption::stepType));
+                .filter(e -> e.channelCode().code().equals(channelCode))
+                .collect(Collectors.toMap(e->e.eventType().code(), e->e.eventType().desc()));
     }
 
     /**

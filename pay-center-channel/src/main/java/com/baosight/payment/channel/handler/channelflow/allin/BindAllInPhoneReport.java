@@ -14,9 +14,12 @@ import com.baosight.payment.channel.handler.config.allin.AllInPayMchConfig;
 import com.baosight.payment.channel.pojo.dao.ChannelGatewayLogDAO;
 import com.baosight.payment.channel.utils.AllInPayClient;
 import com.baosight.payment.dao.resp.AllInRespDTO;
+import com.baosight.payment.dao.resp.SystemRespDTO;
 import com.baosight.payment.enums.PayingAgency;
 import com.baosight.payment.vo.MchInfoVO;
+import com.baosight.utils.json.JsonUtil;
 import jakarta.annotation.Resource;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -30,17 +33,14 @@ import static com.baosight.payment.channel.dao.entity.ChannelGatewayLog.Operatio
 import static com.baosight.payment.channel.enums.ChannelCode.ALLIN_PAY;
 
 /**
- * 绑定收银宝
- *
  * @program: payment-center
  * @description:
  * @author: L.J.Ran
- * @create: 2026/3/27
+ * @create: 2026/4/17
  */
 @Slf4j
 @Component
-public class BindAllInSyb extends AllInAbstractHandler implements IChannelFlowOption {
-
+public class BindAllInPhoneReport extends AllInAbstractHandler implements IChannelFlowOption {
     @Resource
     private MchInfoApi mchInfoApi;
     @Resource
@@ -48,50 +48,49 @@ public class BindAllInSyb extends AllInAbstractHandler implements IChannelFlowOp
     @Resource
     private ChannelGatewayLogManager channelGatewayLogManager;
 
-    protected BindAllInSyb(PlatformConfigurationApi platformConfigurationApi, MchChannelConfigApi mchChannelConfigApi) {
+    protected BindAllInPhoneReport(PlatformConfigurationApi platformConfigurationApi, MchChannelConfigApi mchChannelConfigApi) {
         super(platformConfigurationApi, mchChannelConfigApi);
     }
 
     /**
      * 渠道编号
-     *
      */
     @Override
     public ChannelCode channelCode() {
         return ALLIN_PAY;
+
     }
 
     /**
-     * 执行类型 绑定收银宝
+     * 执行类型
      */
     @Override
     public ChannelEventType eventType() {
-        return ChannelEventType.BIND_ALL_IN_SYB;
+        return ChannelEventType.BIND_PHONE_REPORT;
     }
 
-
-    /**
-     * 构建绑定收银宝参数信息
-     *
-     * @param signNum         商户会员编号
-     * @param sybMerchantCode 收银宝商户号
-     */
-    private Map<String, String> buildParam(String signNum, String sybMerchantCode) {
+    private Map<String, String> buildParam(Long clientId, String mobile, String domainUrl) {
         Map<String, String> map = new HashMap<>(5);
-        map.put("signNum", signNum);
-        map.put("opType", "set");
-        map.put("memberRole", "收单商户");
-        map.put("sybMerchantCode", sybMerchantCode);
+        map.put("signNum", String.valueOf(clientId));
+        map.put("phone", mobile);
+        // 手机号类型 1 法人 2 非法人 系统目前只支持法人的方式进行绑定
+        map.put("phoneType", "1");
+        // 回调地址
+        map.put("notifyUrl", domainUrl);
         return map;
     }
 
+    @Data
+    private static class RequestParam {
+        private String phone;
+    }
 
     /**
-     * 执行
+     * 渠道流程事件执行
      *
-     * @param clientId   客户端id
+     * @param clientId   客户端ID
      * @param clientType 客户端类型
-     * @param param      执行参数
+     * @param param      事件执行参数
      */
     @Override
     public ExecuteResult execute(Long clientId, Integer clientType, String param) {
@@ -101,31 +100,40 @@ public class BindAllInSyb extends AllInAbstractHandler implements IChannelFlowOp
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         try {
-            AllInRespDTO allInRespDTO = allInPayConfig();
+
             if (ObjectUtils.isEmpty(mchInfoVO)) {
                 throw new ServiceException("商户信息不存在");
             }
 
+            // 获取系统配置
+            SystemRespDTO systemedConfig = systemConfig();
+            // 获取通联通用配置
+            AllInRespDTO allInRespDTO = allInPayConfig();
+
+            RequestParam requestParam = JsonUtil.parse(param, RequestParam.class);
+
+
             AllInPayMchConfig allInPayMchConfig = allInPayMchConfig(clientId);
             AllInPayIsvConfig allInPayIsvConfig = allInPayIsvConfig(mchInfoVO.getIsvId());
 
-            //调用逻辑处理
+            // 处理调用逻辑
             AllInPayClient allInPayClient = AllInPayClient.init(allInRespDTO.getPublicKey(), allInPayIsvConfig.getAppId(), allInRespDTO.getMemberRequestUrl(), allInRespDTO.getVersion());
             allInPayClient.privateKey(allInPayMchConfig.getSignNum());
             allInPayClient.webClient(webClient);
-            Map<String, String> buildParam = buildParam(String.valueOf(clientId), allInPayMchConfig.getCusid());
+            String notifyUrl = systemedConfig.getNotifyUrl()+"/" + channelCode()+"/"+"";
+            Map<String, String> buildParam = buildParam(clientId, requestParam.getPhone(), notifyUrl);
             allInPayClient.setRequestParams(buildParam);
-            AllInPayClient.Response response = allInPayClient.sendRequest("1024");
+            AllInPayClient.Response response = allInPayClient.sendRequest("1030");
 
             handlerResponse(response, log, result);
         } catch (Exception e) {
-            result.setSuccess(false);
-            result.setErrorMsg(e.getMessage());
+            result.setSuccess(false).setErrorMsg(e.getMessage());
             log.setBizStatus(ChannelGatewayLog.BizStatus.FAIL.getCode()).setErrorMsg(e.getMessage());
         } finally {
             stopWatch.stop();
             log.setCostTime(stopWatch.getTotalTimeMillis());
             channelGatewayLogManager.saveChannelGatewayLog(log);
+
         }
         return result;
     }

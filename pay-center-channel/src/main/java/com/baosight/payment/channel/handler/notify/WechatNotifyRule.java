@@ -1,78 +1,101 @@
-package com.baosight.payment.channel.handler;
+package com.baosight.payment.channel.handler.notify;
 
 import cn.hutool.core.date.DateUtil;
 import com.baosight.payment.channel.enums.ChannelEventType;
 import com.baosight.payment.channel.enums.CallbackHandleStatus;
 import com.baosight.payment.channel.enums.ChannelCode;
-import com.baosight.payment.channel.pojo.dao.WechatNotifyDTO;
 import com.baosight.payment.channel.pojo.dao.UnifiedPayNotifyDTO;
-import com.baosight.payment.channel.service.PayNotifyHandler;
-import com.baosight.payment.channel.service.impl.PayNotifyProcessor;
+import com.baosight.payment.channel.pojo.dao.WechatNotifyDTO;
 import com.baosight.utils.json.JsonUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
 
+/**
+ * 微信支付回调识别与解析规则。
+ *
+ * @author L.J.Ran
+ * @date 2026/04/21
+ */
 @Component
 @Order(10)
-public class WechatNotifyHandler implements PayNotifyHandler {
-
+public class WechatNotifyRule implements IChannelNotifyRule {
+ // TODO 微信支付回调规则
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    @Autowired
-    private PayNotifyProcessor payNotifyProcessor;
-
     /**
-     * 判断是否为微信回调
-     * @param body
-     * @param request
-     * @return
+     * 渠道编号
      */
     @Override
-    public boolean support(String body, HttpServletRequest request) {
-        // 微信支付 v3 特有头部
-        return request.getHeader("Wechatpay-Serial") != null;
+    public ChannelCode channelCode() {
+        return null;
     }
 
-
     /**
-     * 处理微信回调，改变商城订单状态
-     * @param body
-     * @param request
-     * @return
+     * 支持的回调事件类型。
+     *
+     * @return 回调事件类型
      */
     @Override
-    public String handle(String body, HttpServletRequest request) {
-        // 1. 验签（使用微信SDK 或 自己实现）
-//        wechatVerifier.verify(request, body);
+    public ChannelEventType eventType() {
+        return null;
+    }
 
-        // 2. 解析 JSON
-        WechatNotifyDTO notify = JsonUtil.parse(body, WechatNotifyDTO.class);
+    /**
+     * 判断是否为微信支付回调。
+     *
+     * @param request 渠道回调入站请求
+     * @param key
+     * @return true 表示微信支付回调
+     */
+    @Override
+    public boolean support(ChannelNotifyRequest request, String key) {
+        return request.getHeaders().containsKey("wechatpay-serial");
+    }
 
-        // 3. 解密 resource
-//        String plain = wechatDecrypt(notify.getResource());
-
-        // 4. 解析 decrypted JSON
-//        WechatTransactionDTO txn = JSON.parseObject(plain, WechatTransactionDTO.class);
-//
-        UnifiedPayNotifyDTO result = new UnifiedPayNotifyDTO()
+    /**
+     * 解析微信支付回调为统一结果。
+     *
+     * @param request 渠道回调入站请求
+     * @return 统一渠道回调结果
+     */
+    @Override
+    public UnifiedPayNotifyDTO parse(ChannelNotifyRequest request) {
+        WechatNotifyDTO notify = JsonUtil.parse(request.getBody(), WechatNotifyDTO.class);
+        return new UnifiedPayNotifyDTO()
                 .setChannelCode(ChannelCode.WECHAT_PAY)
                 .setEventType(resolveEventType(notify))
                 .setHandleStatus(resolveStatus(notify))
-//                .setBizOrderNo(resolveText(body, "out_trade_no", "out_refund_no", "id"))
-                .setChannelOrderNo(resolveText(body, "transaction_id", "refund_id", "id"))
-                .setOriginChannelOrderNo(resolveText(body, "original_transaction_id"))
-                .setFinishTime(resolveFinishTime(body, notify))
-                .setRawBody(body);
-        payNotifyProcessor.process(result);
+//                .setBizOrderNo(resolveText(request.getBody(), "out_trade_no", "out_refund_no", "id"))
+                .setChannelOrderNo(resolveText(request.getBody(), "transaction_id", "refund_id", "id"))
+                .setOriginChannelOrderNo(resolveText(request.getBody(), "original_transaction_id"))
+                .setFinishTime(resolveFinishTime(request.getBody(), notify))
+                .setRawBody(request.getBody());
+    }
 
-        return "SUCCESS";  // 微信要求返回 SUCCESS
+    /**
+     * 获取微信支付成功响应内容。
+     *
+     * @return 微信支付成功响应内容
+     */
+    @Override
+    public String successResponse() {
+        return "SUCCESS";
+    }
+
+    /**
+     * 执行处理
+     *
+     * @param dto 统一渠道回调结果
+     * @return true 表示处理成功
+     */
+    @Override
+    public Boolean process(UnifiedPayNotifyDTO dto) {
+        return null;
     }
 
     private ChannelEventType resolveEventType(WechatNotifyDTO notify) {

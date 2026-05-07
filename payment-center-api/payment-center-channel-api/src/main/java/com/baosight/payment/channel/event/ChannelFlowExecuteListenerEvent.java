@@ -37,6 +37,8 @@ public class ChannelFlowExecuteListenerEvent {
      */
     private Integer clientType;
 
+
+
     /**
      * 参数体
      */

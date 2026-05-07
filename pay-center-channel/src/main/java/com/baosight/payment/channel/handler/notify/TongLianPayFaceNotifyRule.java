@@ -1,4 +1,4 @@
-package com.baosight.payment.channel.handler;
+package com.baosight.payment.channel.handler.notify;
 
 import cn.hutool.core.date.DateUtil;
 import com.baosight.payment.channel.enums.ChannelEventType;
@@ -6,63 +6,92 @@ import com.baosight.payment.channel.enums.CallbackHandleStatus;
 import com.baosight.payment.channel.enums.ChannelCode;
 import com.baosight.payment.channel.pojo.dao.TongLianPayResultNotifyDTO;
 import com.baosight.payment.channel.pojo.dao.UnifiedPayNotifyDTO;
-import com.baosight.payment.channel.service.PayNotifyHandler;
-import com.baosight.payment.channel.service.impl.PayNotifyProcessor;
 import com.baosight.utils.json.JsonUtil;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+/**
+ * 通联收银宝回调识别与解析规则。
+ *
+ * @author L.J.Ran
+ * @date 2026/04/21
+ */
 @Component
 @Order(20)
-public class TongLianPayFaceNotifyHandler implements PayNotifyHandler {
-
-
-    @Autowired
-    private PayNotifyProcessor payNotifyProcessor;
-
-//    @Autowired
-//    private ChannelGatewayLogManager channelGatewayLogManager;
-
+public class TongLianPayFaceNotifyRule implements IChannelNotifyRule {
 
     /**
-     * 判断是否为通联当面付
-     * @param body
-     * @param request
-     * @return
+     * 渠道编号
      */
     @Override
-    public boolean support(String body, HttpServletRequest request) {
-        // 可能同时判断 bizseq 或 trxstatus
-        return body != null && body.contains("bizseq");
+    public ChannelCode channelCode() {
+        return ChannelCode.ALLIN_PAY;
     }
 
-
     /**
-     * 处理入参信息，改变商城订单状态，新增渠道日志
-     * @param body
-     * @param request
-     * @return
+     * 支持的回调事件类型。
+     *
+     * @return 回调事件类型
      */
     @Override
-    public String handle(String body, HttpServletRequest request) {
-        TongLianPayResultNotifyDTO dto = JsonUtil.parse(body, TongLianPayResultNotifyDTO.class);
-        UnifiedPayNotifyDTO result = new UnifiedPayNotifyDTO()
-                .setChannelCode(ChannelCode.ALLIN_PAY)
+    public ChannelEventType eventType() {
+        // TODO  处理通联收银宝事件类型
+        return null;
+    }
+
+    /**
+     * 判断是否为通联收银宝回调。
+     *
+     * @param request 渠道回调入站请求
+     * @param key
+     * @return true 表示通联收银宝回调
+     */
+    @Override
+    public boolean support(ChannelNotifyRequest request, String key) {
+        return request.getBody() != null && request.getBody().contains("bizseq");
+    }
+
+    /**
+     * 解析通联收银宝回调为统一结果。
+     *
+     * @param request 渠道回调入站请求
+     * @return 统一渠道回调结果
+     */
+    @Override
+    public UnifiedPayNotifyDTO parse(ChannelNotifyRequest request) {
+        TongLianPayResultNotifyDTO dto = JsonUtil.parse(request.getBody(), TongLianPayResultNotifyDTO.class);
+        return new UnifiedPayNotifyDTO()
+                .setChannelCode(channelCode())
                 .setEventType(resolveEventType(dto))
                 .setHandleStatus(resolveStatus(dto.getTrxstatus()))
-                // TODO 待处理
-//                .setBizOrderNo(dto.getBizseq())
                 .setChannelOrderNo(StringUtils.hasText(dto.getChnltrxid()) ? dto.getChnltrxid() : dto.getTrxid())
                 .setOriginChannelOrderNo(dto.getSrctrxid())
                 .setChannelMchNo(dto.getCusid())
                 .setChannelUser(dto.getLogonid())
                 .setFinishTime(StringUtils.hasText(dto.getPaytime()) ? DateUtil.parse(dto.getPaytime(), "yyyyMMddHHmmss") : null)
-                .setRawBody(body);
-        payNotifyProcessor.process(result);
+                .setRawBody(request.getBody());
+    }
+
+    /**
+     * 获取通联成功响应内容。
+     *
+     * @return 通联成功响应内容
+     */
+    @Override
+    public String successResponse() {
         return "success";
+    }
+
+    /**
+     * 执行处理
+     *
+     * @param dto 统一渠道回调结果
+     * @return true 表示处理成功
+     */
+    @Override
+    public Boolean process(UnifiedPayNotifyDTO dto) {
+        return null;
     }
 
     private ChannelEventType resolveEventType(TongLianPayResultNotifyDTO dto) {

@@ -26,6 +26,30 @@ public enum ChannelError implements IErrorEnum<String> {
      * 渠道信息不存在
      */
     CHANNEL_INFO_NOT_EXIST ("A000013", "渠道信息不存在"),
+    /**
+     * 未找到渠道回调业务处理器
+     */
+    CALLBACK_HANDLER_NOT_FOUND("A000014", "未找到渠道回调业务处理器"),
+    /**
+     * 未找到渠道回调识别规则
+     */
+    CALLBACK_RULE_NOT_FOUND("A000019", "未找到渠道回调识别规则"),
+    /**
+     * 支付回调未识别到系统支付订单号
+     */
+    CALLBACK_PAY_ORDER_ID_MISSING("A000015", "支付回调未识别到系统支付订单号"),
+    /**
+     * 退款回调未识别到系统退款订单号
+     */
+    CALLBACK_REFUND_ORDER_ID_MISSING("A000016", "退款回调未识别到系统退款订单号"),
+    /**
+     * 支付订单不存在
+     */
+    CALLBACK_PAY_ORDER_NOT_FOUND("A000017", "支付订单不存在"),
+    /**
+     * 退款订单不存在
+     */
+    CALLBACK_REFUND_ORDER_NOT_FOUND("A000018", "退款订单不存在"),
 
     ;
 

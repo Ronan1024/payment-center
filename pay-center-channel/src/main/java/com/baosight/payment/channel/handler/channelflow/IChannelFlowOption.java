@@ -1,6 +1,8 @@
 package com.baosight.payment.channel.handler.channelflow;
 
+import com.baosight.payment.channel.handler.BaseChannel;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * 渠道流程选择器抽象接口
@@ -10,31 +12,19 @@ import lombok.Data;
  * @author: L.J.Ran
  * @create: 2026/3/27
  */
-public interface IChannelFlowOption {
+public interface IChannelFlowOption extends BaseChannel {
 
     /**
-     * 渠道编号
+     * 渠道流程事件执行
      *
-     * @return
+     * @param clientId   客户端ID
+     * @param clientType 客户端类型
+     * @param param      事件执行参数
      */
-    String channelCode();
-
-    /**
-     * 执行类型
-     */
-    String stepType();
-
-    /**
-     * 执行名称
-     */
-    String name();
-
-    /**
-     * 执行
-     */
-    ExecuteResult execute(Long mchId, Integer mchType, String param);
+    ExecuteResult execute(Long clientId, Integer clientType, String param);
 
     @Data
+    @Accessors(chain = true)
     class ExecuteResult {
         /**
          * 执行结果是否成功
@@ -50,6 +40,7 @@ public interface IChannelFlowOption {
          * 执行错误信息
          */
         private String errorMsg;
-
     }
 }
+
+  

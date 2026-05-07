@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -55,7 +56,8 @@ public class AllInPayClient {
     /**
      * 请求流水号
      */
-    private String requestId;
+    @Getter
+    private Long requestId;
     /**
      * 请求参数
      */
@@ -80,7 +82,7 @@ public class AllInPayClient {
 
     public AllInPayClient() {
         this.config = new Config();
-        this.requestId = SnowflakeIdUtil.nextIdStr();
+        this.requestId = SnowflakeIdUtil.nextId();
     }
 
     public AllInPayClient(Config config) {
@@ -96,7 +98,7 @@ public class AllInPayClient {
         allInPayClient.allInPublicKey = pubKeySM2FromBase64Str(publicKey);
         allInPayClient.url = url;
         allInPayClient.version = version;
-        allInPayClient.requestId = SnowflakeIdUtil.nextIdStr();
+        allInPayClient.requestId = SnowflakeIdUtil.nextId();
         return allInPayClient;
     }
 
@@ -134,7 +136,7 @@ public class AllInPayClient {
         request.setTransTime(new SimpleDateFormat(HH_MM_SS).format(new Date()));
         request.setVersion(version);
         if (!requestParam.containsKey("reqTraceNum")) {
-            requestParam.put("reqTraceNum", requestId);
+            requestParam.put("reqTraceNum", String.valueOf(requestId));
         }
         request.setBizData(JsonUtil.toJson(requestParam));
         this.signedValue = jsonMapToStr(JsonUtil.toMap(JsonUtil.toJson(request)));
