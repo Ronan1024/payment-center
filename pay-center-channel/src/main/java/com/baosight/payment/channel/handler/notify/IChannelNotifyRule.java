@@ -17,6 +17,7 @@ public interface IChannelNotifyRule extends BaseChannel {
     /**
      * 渠道编号
      */
+    @Override
     ChannelCode channelCode();
 
 
@@ -25,16 +26,17 @@ public interface IChannelNotifyRule extends BaseChannel {
      *
      * @return 回调事件类型
      */
+    @Override
     ChannelEventType eventType();
 
     /**
      * 判断当前规则是否支持该入站请求。
      *
      * @param request 渠道回调入站请求
-     * @param tag     标识
+     * @param route   渠道回调路由
      * @return true 表示支持
      */
-    boolean support(ChannelNotifyRequest request, String tag);
+    boolean support(ChannelNotifyRequest request, ChannelNotifyRoute route);
 
     /**
      * 解析渠道回调为统一结果。

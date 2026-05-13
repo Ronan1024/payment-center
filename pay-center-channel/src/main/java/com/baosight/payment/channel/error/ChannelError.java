@@ -35,6 +35,18 @@ public enum ChannelError implements IErrorEnum<String> {
      */
     CALLBACK_RULE_NOT_FOUND("A000019", "未找到渠道回调识别规则"),
     /**
+     * 渠道回调事件类型异常
+     */
+    CALLBACK_EVENT_TYPE_ERROR("A000020", "渠道回调事件类型异常"),
+    /**
+     * 渠道回调事件类型不匹配
+     */
+    CALLBACK_EVENT_TYPE_NOT_MATCH("A000021", "渠道回调事件类型不匹配"),
+    /**
+     * 渠道回调渠道不匹配
+     */
+    CALLBACK_CHANNEL_NOT_MATCH("A000022", "渠道回调渠道不匹配"),
+    /**
      * 支付回调未识别到系统支付订单号
      */
     CALLBACK_PAY_ORDER_ID_MISSING("A000015", "支付回调未识别到系统支付订单号"),

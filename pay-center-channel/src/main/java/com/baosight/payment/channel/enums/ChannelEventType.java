@@ -1,7 +1,11 @@
 package com.baosight.payment.channel.enums;
 
+import com.baosight.payment.channel.error.ChannelError;
+import com.baosight.web.core.exception.ApiException;
 import com.ronan.common.enums.IBaseEnum;
 import lombok.Getter;
+
+import java.util.Optional;
 
 /**
  * 渠道事件类型。
@@ -30,20 +34,25 @@ public enum ChannelEventType implements IBaseEnum<String> {
     /**
      * 支付订单
      */
-    PAY_ORDER("pay_order", "订单支付"),
+    PAY_ORDER("PAY_ORDER", "订单支付"),
 
     /**
      * 退款结果。
      */
-    REFUND("refund", "退款结果"),
+    REFUND("REFUND", "退款结果"),
 
 
     /**
      * 协议签订结果。
      */
-    AGREEMENT_SIGN("agreement_sign", "协议签订结果");
+    AGREEMENT_SIGN("AGREEMENT_SIGN", "协议签订结果");
 
     ChannelEventType(String code, String description) {
         initEnum(code, description);
+    }
+
+    public static ChannelEventType fromCode(String code) {
+        ChannelEventType result = IBaseEnum.getByCode(ChannelEventType.class, code);
+        return Optional.ofNullable(result).orElseThrow(ApiException.supplier(ChannelError.CHANNEL_CODE_ERROR));
     }
 }

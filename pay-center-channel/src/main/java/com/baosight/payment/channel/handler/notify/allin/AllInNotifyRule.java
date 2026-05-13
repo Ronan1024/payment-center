@@ -1,14 +1,14 @@
-package com.baosight.payment.channel.handler.notify;
+package com.baosight.payment.channel.handler.notify.allin;
 
 import cn.hutool.core.date.DateUtil;
-import com.baosight.payment.channel.enums.ChannelEventType;
 import com.baosight.payment.channel.enums.CallbackHandleStatus;
 import com.baosight.payment.channel.enums.ChannelCode;
+import com.baosight.payment.channel.enums.ChannelEventType;
+import com.baosight.payment.channel.handler.notify.ChannelNotifyRequest;
+import com.baosight.payment.channel.handler.notify.IChannelNotifyRule;
 import com.baosight.payment.channel.pojo.dao.TongLianOrderResultNotifyDTO;
 import com.baosight.payment.channel.pojo.dao.UnifiedPayNotifyDTO;
 import com.baosight.utils.json.JsonUtil;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 /**
@@ -17,45 +17,14 @@ import org.springframework.util.StringUtils;
  * @author L.J.Ran
  * @date 2026/04/21
  */
-@Component
-@Order(30)
-public class TongLianOrderNotifyRule implements IChannelNotifyRule {
-    // TODO   通联订单回调规则待处理
+public abstract class AllInNotifyRule implements IChannelNotifyRule {
+
     /**
      * 渠道编号
      */
     @Override
     public ChannelCode channelCode() {
-        return null;
-    }
-
-    /**
-     * 支持的回调事件类型。
-     *
-     * @return 回调事件类型
-     */
-    @Override
-    public ChannelEventType eventType() {
-        return null;
-    }
-
-    /**
-     * 判断是否为通联订单、会员或协议类回调。
-     *
-     * @param request 渠道回调入站请求
-     * @param key
-     * @return true 表示通联订单、会员或协议类回调
-     */
-    @Override
-    public boolean support(ChannelNotifyRequest request, String key) {
-        String body = request.getBody();
-        return body != null && (body.contains("\"reqTraceNum\"")
-                || body.contains("\"orgReqTraceNum\"")
-                || body.contains("\"signNum\"")
-                || containsIgnoreCase(body, "agreement")
-                || containsIgnoreCase(body, "protocol")
-                || containsIgnoreCase(body, "phone")
-                || containsIgnoreCase(body, "mobile"));
+        return ChannelCode.ALLIN_PAY;
     }
 
     /**
@@ -100,6 +69,17 @@ public class TongLianOrderNotifyRule implements IChannelNotifyRule {
     @Override
     public Boolean process(UnifiedPayNotifyDTO dto) {
         return null;
+    }
+
+    protected boolean isAllInOrderNotify(ChannelNotifyRequest request) {
+        String body = request.getBody();
+        return body != null && (body.contains("reqTraceNum")
+                || body.contains("orgReqTraceNum")
+                || body.contains("signNum")
+                || containsIgnoreCase(body, "agreement")
+                || containsIgnoreCase(body, "protocol")
+                || containsIgnoreCase(body, "phone")
+                || containsIgnoreCase(body, "mobile"));
     }
 
     private ChannelEventType resolveEventType(String body, TongLianOrderResultNotifyDTO dto) {

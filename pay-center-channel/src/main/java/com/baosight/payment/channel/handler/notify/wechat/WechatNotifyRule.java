@@ -1,16 +1,16 @@
-package com.baosight.payment.channel.handler.notify;
+package com.baosight.payment.channel.handler.notify.wechat;
 
 import cn.hutool.core.date.DateUtil;
-import com.baosight.payment.channel.enums.ChannelEventType;
 import com.baosight.payment.channel.enums.CallbackHandleStatus;
 import com.baosight.payment.channel.enums.ChannelCode;
+import com.baosight.payment.channel.enums.ChannelEventType;
+import com.baosight.payment.channel.handler.notify.ChannelNotifyRequest;
+import com.baosight.payment.channel.handler.notify.IChannelNotifyRule;
 import com.baosight.payment.channel.pojo.dao.UnifiedPayNotifyDTO;
 import com.baosight.payment.channel.pojo.dao.WechatNotifyDTO;
 import com.baosight.utils.json.JsonUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
@@ -21,10 +21,8 @@ import java.util.Date;
  * @author L.J.Ran
  * @date 2026/04/21
  */
-@Component
-@Order(10)
-public class WechatNotifyRule implements IChannelNotifyRule {
- // TODO 微信支付回调规则
+public abstract class WechatNotifyRule implements IChannelNotifyRule {
+
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     /**
@@ -32,29 +30,7 @@ public class WechatNotifyRule implements IChannelNotifyRule {
      */
     @Override
     public ChannelCode channelCode() {
-        return null;
-    }
-
-    /**
-     * 支持的回调事件类型。
-     *
-     * @return 回调事件类型
-     */
-    @Override
-    public ChannelEventType eventType() {
-        return null;
-    }
-
-    /**
-     * 判断是否为微信支付回调。
-     *
-     * @param request 渠道回调入站请求
-     * @param key
-     * @return true 表示微信支付回调
-     */
-    @Override
-    public boolean support(ChannelNotifyRequest request, String key) {
-        return request.getHeaders().containsKey("wechatpay-serial");
+        return ChannelCode.WECHAT_PAY;
     }
 
     /**
@@ -96,6 +72,10 @@ public class WechatNotifyRule implements IChannelNotifyRule {
     @Override
     public Boolean process(UnifiedPayNotifyDTO dto) {
         return null;
+    }
+
+    protected boolean isWechatNotify(ChannelNotifyRequest request) {
+        return request.getHeaders().containsKey("wechatpay-serial");
     }
 
     private ChannelEventType resolveEventType(WechatNotifyDTO notify) {
