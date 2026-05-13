@@ -76,16 +76,29 @@ public abstract class AllInAbstractHandler extends ChannelFlowAbstractHandler {
      */
     protected void handlerResponse(AllInPayClient.Response response, ChannelGatewayLogDAO log, ExecuteResult result){
         log.setReqParams(response.getRequest())
-                .setOutTradeNo(response.getRespCode()).setReqUrl(response.getUrl())
-                .setRequestNo(response.getRequestNo()).setResParams(String.valueOf(response.getResult())).setResCode(response.getRespCode());
+                .setReqUrl(response.getUrl())
+                .setRequestNo(response.getRequestNo())
+                .setResParams(String.valueOf(response.getResult()))
+                .setResCode(response.effectiveCode());
+
+        if (response.processing()) {
+            result.setSuccess(true);
+            result.setResult(String.valueOf(response.getResult()));
+            log.setBizStatus(ChannelGatewayLog.BizStatus.PROCESS.getCode());
+            return;
+        }
 
         if (Boolean.TRUE.equals(response.getSuccess())) {
             result.setSuccess(true);
+            result.setResult(String.valueOf(response.getResult()));
             log.setBizStatus(ChannelGatewayLog.BizStatus.SUCCESS.getCode());
-        } else {
-            result.setSuccess(false);
-            log.setBizStatus(ChannelGatewayLog.BizStatus.SUCCESS.getCode())
-                    .setErrorCode(response.getRespCode()).setErrorMsg(response.getErrorMsg());
+            return;
         }
+
+        result.setSuccess(false);
+        result.setErrorMsg(response.effectiveErrorMsg());
+        log.setBizStatus(ChannelGatewayLog.BizStatus.FAIL.getCode())
+                .setErrorCode(response.effectiveCode())
+                .setErrorMsg(response.effectiveErrorMsg());
     }
 }

@@ -6,6 +6,7 @@ import com.baosight.payment.channel.enums.ChannelCode;
 import com.baosight.payment.channel.enums.ChannelEventType;
 import com.baosight.payment.channel.error.ChannelError;
 import com.baosight.payment.channel.handler.notify.ChannelNotifyRequest;
+import com.baosight.payment.channel.handler.notify.ChannelNotifyRoute;
 import com.baosight.payment.channel.handler.notify.IChannelNotifyRule;
 import com.baosight.payment.channel.pojo.dao.ChannelGatewayLogDAO;
 import com.baosight.payment.channel.pojo.dao.UnifiedPayNotifyDTO;
@@ -68,8 +69,8 @@ public class ChannelNotifyServiceImpl implements ChannelNotifyService {
         String response = "FAIL";
         boolean save = true;
         try {
-            String key = channel + "_" + event;
-            IChannelNotifyRule rule = notifyRules.stream().filter(item -> item.support(notifyRequest, key))
+            ChannelNotifyRoute route = ChannelNotifyRoute.parse(channel, event);
+            IChannelNotifyRule rule = notifyRules.stream().filter(item -> item.support(notifyRequest, route))
                     .findFirst().orElse(null);
 
             if (rule == null) {
@@ -77,12 +78,16 @@ public class ChannelNotifyServiceImpl implements ChannelNotifyService {
             }
             // 解析请求参数
             UnifiedPayNotifyDTO dto = rule.parse(notifyRequest);
+            validateRoute(route, dto);
+            dto.setBizId(bizId)
+                    .setChannelCode(route.channelCode())
+                    .setEventType(route.eventType());
 
             // 补充日志信息
-            log.setBizId(bizId).setBizType(rule.eventType().code())
-                    .setBizTypeName(rule.eventType().desc()).setChannelCode(channel).setOutTradeNo(dto.getOutTradeNo());
+            log.setBizId(bizId).setBizType(route.eventType().code())
+                    .setBizTypeName(route.eventType().desc()).setChannelCode(route.channelCode().code()).setOutTradeNo(dto.getOutTradeNo());
 
-            if (!existsSuccessLog(dto.getOutTradeNo(), rule.channelCode(), rule.eventType())) {
+            if (!existsSuccessLog(dto.getOutTradeNo(), route.channelCode(), route.eventType())) {
                 Boolean processResult = rule.process(dto);
                 log.setBizStatus(Boolean.TRUE.equals(processResult)
                         ? ChannelGatewayLog.BizStatus.SUCCESS.getCode()
@@ -105,6 +110,18 @@ public class ChannelNotifyServiceImpl implements ChannelNotifyService {
         }
 
         return response;
+    }
+
+    private void validateRoute(ChannelNotifyRoute route, UnifiedPayNotifyDTO dto) {
+        if (dto == null) {
+            throw new ApiException(ChannelError.CALLBACK_RULE_NOT_FOUND);
+        }
+        if (dto.getChannelCode() != null && !route.channelCode().equals(dto.getChannelCode())) {
+            throw new ApiException(ChannelError.CALLBACK_CHANNEL_NOT_MATCH);
+        }
+        if (dto.getEventType() != null && !route.eventType().equals(dto.getEventType())) {
+            throw new ApiException(ChannelError.CALLBACK_EVENT_TYPE_NOT_MATCH);
+        }
     }
 
 

@@ -160,26 +160,43 @@ public class AllInPayClient {
         assert result != null;
         Response response = new Response();
         response.setRequest(requestJson);
-        response.setRequestNo(response.requestNo);
+        response.setRequestNo(requestId);
         response.setUrl(url + "?transCode=" + transCode);
         JsonNode jsonNode = JsonUtil.readTree(result);
-        if ("00000".equals(jsonNode.get("code").asText())) {
+        String gatewayCode = jsonNode.path("code").asText();
+        response.setGatewayCode(gatewayCode);
+        response.setGatewayMsg(resolveMessage(jsonNode));
+        if (AllInGatewayCode.SUCCESS.matches(gatewayCode)) {
             JsonNode bizData = JsonUtil.readTree(jsonNode.get("bizData").asText());
-            String respCode = bizData.get("respCode").asText();
-            if (Arrays.asList("00000", "66666", "66667").contains(respCode)) {
-                response.setSuccess(Boolean.TRUE);
-            } else {
+            String respCode = bizData.path("respCode").asText();
+            String respMsg = bizData.path("respMsg").asText();
+            response.setRespCode(respCode);
+            response.setRespMsg(respMsg);
+            response.setSuccess(AllInBusinessCode.isAccepted(respCode));
+            if (!Boolean.TRUE.equals(response.getSuccess())) {
                 log.error("通联接口调用失败 request_code:{}   response:{}", requestId, bizData);
-                response.setSuccess(Boolean.FALSE);
-                response.setErrorMsg(bizData.get("respMsg").asText());
+                response.setErrorMsg(respMsg);
             }
-            response.setRespCode(bizData.get("respCode").asText());
             response.setResult(bizData);
         } else {
             response.setSuccess(Boolean.FALSE);
             response.setResult(jsonNode);
+            response.setErrorMsg(response.getGatewayMsg());
         }
         return response;
+    }
+
+    private String resolveMessage(JsonNode jsonNode) {
+        if (jsonNode == null) {
+            return null;
+        }
+        if (jsonNode.hasNonNull("message")) {
+            return jsonNode.get("message").asText();
+        }
+        if (jsonNode.hasNonNull("msg")) {
+            return jsonNode.get("msg").asText();
+        }
+        return null;
     }
 
 
@@ -235,6 +252,18 @@ public class AllInPayClient {
          */
         private String respCode;
         /**
+         * 机构响应信息
+         */
+        private String respMsg;
+        /**
+         * 通联网关响应编号
+         */
+        private String gatewayCode;
+        /**
+         * 通联网关响应信息
+         */
+        private String gatewayMsg;
+        /**
          * 请求流水号
          */
         private Long requestNo;
@@ -258,8 +287,79 @@ public class AllInPayClient {
             return success;
         }
 
+        public boolean processing() {
+            return AllInBusinessCode.isProcessing(respCode);
+        }
+
+        public String effectiveCode() {
+            return StringUtils.hasText(respCode) ? respCode : gatewayCode;
+        }
+
+        public String effectiveErrorMsg() {
+            if (StringUtils.hasText(errorMsg)) {
+                return errorMsg;
+            }
+            if (StringUtils.hasText(respMsg)) {
+                return respMsg;
+            }
+            return gatewayMsg;
+        }
+
         public JsonNode get(String param) {
             return result.get(param);
+        }
+    }
+
+    private enum AllInGatewayCode {
+
+        /**
+         * 通联网关成功。
+         */
+        SUCCESS("00000");
+
+        private final String code;
+
+        AllInGatewayCode(String code) {
+            this.code = code;
+        }
+
+        private boolean matches(String value) {
+            return code.equals(value);
+        }
+    }
+
+    private enum AllInBusinessCode {
+
+        /**
+         * 通联业务成功。
+         */
+        SUCCESS("00000"),
+        /**
+         * 通联业务处理中。
+         */
+        PROCESSING_ACCEPTED("66666"),
+        /**
+         * 通联业务等待处理。
+         */
+        PROCESSING_WAITING("66667");
+
+        private final String code;
+
+        AllInBusinessCode(String code) {
+            this.code = code;
+        }
+
+        private static boolean isSuccess(String value) {
+            return SUCCESS.code.equals(value);
+        }
+
+        private static boolean isProcessing(String value) {
+            return PROCESSING_ACCEPTED.code.equals(value)
+                    || PROCESSING_WAITING.code.equals(value);
+        }
+
+        private static boolean isAccepted(String value) {
+            return isSuccess(value) || isProcessing(value);
         }
     }
 

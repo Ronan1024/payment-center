@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
+ * 运营端渠道网关日志管理
  * @program: payment-center
  * @description: 运营端渠道网关日志管理
  * @author: L.J.Ran

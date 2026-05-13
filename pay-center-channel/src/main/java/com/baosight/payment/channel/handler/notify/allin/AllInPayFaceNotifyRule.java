@@ -1,14 +1,14 @@
-package com.baosight.payment.channel.handler.notify;
+package com.baosight.payment.channel.handler.notify.allin;
 
 import cn.hutool.core.date.DateUtil;
-import com.baosight.payment.channel.enums.ChannelEventType;
 import com.baosight.payment.channel.enums.CallbackHandleStatus;
 import com.baosight.payment.channel.enums.ChannelCode;
+import com.baosight.payment.channel.enums.ChannelEventType;
+import com.baosight.payment.channel.handler.notify.ChannelNotifyRequest;
+import com.baosight.payment.channel.handler.notify.IChannelNotifyRule;
 import com.baosight.payment.channel.pojo.dao.TongLianPayResultNotifyDTO;
 import com.baosight.payment.channel.pojo.dao.UnifiedPayNotifyDTO;
 import com.baosight.utils.json.JsonUtil;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 /**
@@ -17,9 +17,7 @@ import org.springframework.util.StringUtils;
  * @author L.J.Ran
  * @date 2026/04/21
  */
-@Component
-@Order(20)
-public class TongLianPayFaceNotifyRule implements IChannelNotifyRule {
+public abstract class AllInPayFaceNotifyRule implements IChannelNotifyRule {
 
     /**
      * 渠道编号
@@ -27,29 +25,6 @@ public class TongLianPayFaceNotifyRule implements IChannelNotifyRule {
     @Override
     public ChannelCode channelCode() {
         return ChannelCode.ALLIN_PAY;
-    }
-
-    /**
-     * 支持的回调事件类型。
-     *
-     * @return 回调事件类型
-     */
-    @Override
-    public ChannelEventType eventType() {
-        // TODO  处理通联收银宝事件类型
-        return null;
-    }
-
-    /**
-     * 判断是否为通联收银宝回调。
-     *
-     * @param request 渠道回调入站请求
-     * @param key
-     * @return true 表示通联收银宝回调
-     */
-    @Override
-    public boolean support(ChannelNotifyRequest request, String key) {
-        return request.getBody() != null && request.getBody().contains("bizseq");
     }
 
     /**
@@ -92,6 +67,10 @@ public class TongLianPayFaceNotifyRule implements IChannelNotifyRule {
     @Override
     public Boolean process(UnifiedPayNotifyDTO dto) {
         return null;
+    }
+
+    protected boolean isAllInPayFaceNotify(ChannelNotifyRequest request) {
+        return request.getBody() != null && request.getBody().contains("bizseq");
     }
 
     private ChannelEventType resolveEventType(TongLianPayResultNotifyDTO dto) {

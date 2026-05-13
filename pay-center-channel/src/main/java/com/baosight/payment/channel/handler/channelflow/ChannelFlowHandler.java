@@ -25,7 +25,7 @@ public class ChannelFlowHandler {
     private ApplicationEventPublisher publisher;
 
 
-    private final ConcurrentHashMap<String, IChannelFlowOption> CONTEXT = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, IChannelFlowOption> CONTEXT = new ConcurrentHashMap<>();
 
     public ChannelFlowHandler(List<IChannelFlowOption> channelFlowOption) {
         for (IChannelFlowOption option : channelFlowOption) {
@@ -44,7 +44,7 @@ public class ChannelFlowHandler {
     public Map<String, String> executeList(String channelCode) {
         return CONTEXT.values().stream()
                 .filter(e -> e.channelCode().code().equals(channelCode))
-                .collect(Collectors.toMap(e->e.eventType().code(), e->e.eventType().desc()));
+                .collect(Collectors.toMap(e -> e.eventType().code(), e -> e.eventType().desc()));
     }
 
     /**
@@ -52,7 +52,6 @@ public class ChannelFlowHandler {
      *
      * @param channelCode 渠道编号
      * @param stepType    执行器类型
-     * @return
      */
     public IChannelFlowOption getChannelFlowOption(String channelCode, String stepType) {
         return CONTEXT.get(channelCode + "-" + stepType);
@@ -70,7 +69,6 @@ public class ChannelFlowHandler {
     public void execute(String channelCode, String stepType, Long clientId, Integer clientType, String body) {
         IChannelFlowOption.ExecuteResult execute = getChannelFlowOption(channelCode, stepType)
                 .execute(clientId, clientType, body);
-
         // 通知已执行成功
         ChannelFlowExecuteResultListenerEvent daoInstance = new ChannelFlowExecuteResultListenerEvent();
         daoInstance.setChannelCode(channelCode);
