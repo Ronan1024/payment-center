@@ -1,7 +1,7 @@
 package com.baosight.payment.channel.handler.channel.ums;
 
-import com.baosight.payment.channel.enums.ChannelCode;
 import com.baosight.payment.channel.handler.channel.IChannel;
+import com.baosight.payment.enums.ChannelCode;
 import com.baosight.payment.enums.PayingAgency;
 import org.springframework.stereotype.Component;
 

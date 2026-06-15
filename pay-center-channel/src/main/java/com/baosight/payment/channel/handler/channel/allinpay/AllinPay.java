@@ -4,7 +4,8 @@ import com.baosight.payment.channel.handler.channel.IChannel;
 import com.baosight.payment.enums.PayingAgency;
 import org.springframework.stereotype.Component;
 
-import static com.baosight.payment.channel.enums.ChannelCode.ALLIN_PAY;
+import static com.baosight.payment.enums.ChannelCode.ALLIN_PAY;
+
 
 /**
  * @program: payment-center

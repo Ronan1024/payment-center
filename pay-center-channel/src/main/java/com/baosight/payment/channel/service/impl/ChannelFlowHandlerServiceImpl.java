@@ -1,6 +1,6 @@
 package com.baosight.payment.channel.service.impl;
 
-import com.baosight.payment.channel.handler.channelflow.ChannelFlowHandler;
+//import com.baosight.payment.channel.handler.channelflow.ChannelFlowHandler;
 import com.baosight.payment.channel.service.ChannelFlowHandlerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class ChannelFlowHandlerServiceImpl implements ChannelFlowHandlerService {
-    private final ChannelFlowHandler channelFlowHandler;
+//    private final ChannelFlowHandler channelFlowHandler;
 
     /**
      * 执行渠道流程列表
@@ -26,6 +26,7 @@ public class ChannelFlowHandlerServiceImpl implements ChannelFlowHandlerService 
      */
     @Override
     public Map<String, String> executeList(String channelCode) {
-        return channelFlowHandler.executeList(channelCode);
+//        return channelFlowHandler.executeList(channelCode);
+        return null;
     }
 }

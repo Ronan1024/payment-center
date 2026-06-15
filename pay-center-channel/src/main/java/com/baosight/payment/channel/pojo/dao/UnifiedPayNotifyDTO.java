@@ -1,8 +1,8 @@
 package com.baosight.payment.channel.pojo.dao;
 
-import com.baosight.payment.channel.enums.ChannelEventType;
 import com.baosight.payment.channel.enums.CallbackHandleStatus;
-import com.baosight.payment.channel.enums.ChannelCode;
+import com.baosight.payment.channel.enums.ChannelEventType;
+import com.baosight.payment.enums.ChannelCode;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

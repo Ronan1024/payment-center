@@ -14,6 +14,7 @@ public class AllInPayMchConfig {
      * 通联商户私钥
      */
     private String signNum;
+
     /**
      * 商户名称
      */

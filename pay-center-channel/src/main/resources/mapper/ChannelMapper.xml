@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baosight.payment.channel.dao.mapper.ChannelMapper">
+
+    <resultMap id="BaseResultMap" type="com.baosight.payment.channel.dao.entity.Channel">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="channelCode" column="channel_code" jdbcType="VARCHAR"/>
+            <result property="channelName" column="channel_name" jdbcType="VARCHAR"/>
+            <result property="channelType" column="channel_type" jdbcType="VARCHAR"/>
+            <result property="institutionName" column="institution_name" jdbcType="VARCHAR"/>
+            <result property="handlerFamily" column="handler_family" jdbcType="VARCHAR"/>
+            <result property="supportPayment" column="support_payment" jdbcType="BIT"/>
+            <result property="supportRefund" column="support_refund" jdbcType="BIT"/>
+            <result property="supportQuery" column="support_query" jdbcType="BIT"/>
+            <result property="supportClose" column="support_close" jdbcType="BIT"/>
+            <result property="supportBill" column="support_bill" jdbcType="BIT"/>
+            <result property="supportMember" column="support_member" jdbcType="BIT"/>
+            <result property="supportMerchantEntry" column="support_merchant_entry" jdbcType="BIT"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+            <result property="remark" column="remark" jdbcType="VARCHAR"/>
+            <result property="createdBy" column="created_by" jdbcType="BIGINT"/>
+            <result property="updatedBy" column="updated_by" jdbcType="BIGINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,channel_code,channel_name,
+        channel_type,institution_name,handler_family,
+        support_payment,support_refund,support_query,
+        support_close,support_bill,support_member,
+        support_merchant_entry,status,remark,
+        created_by,updated_by,create_time,
+        update_time
+    </sql>
+</mapper>

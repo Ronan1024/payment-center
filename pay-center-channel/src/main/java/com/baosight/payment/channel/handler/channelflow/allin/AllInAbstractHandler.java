@@ -15,7 +15,8 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Map;
 
-import static com.baosight.payment.channel.enums.ChannelCode.ALLIN_PAY;
+import static com.baosight.payment.enums.ChannelCode.ALLIN_PAY;
+
 
 /**
  * @program: payment-center

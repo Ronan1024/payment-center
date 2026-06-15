@@ -82,6 +82,11 @@
             <artifactId>payment-center-notify-api</artifactId>
             <version>${payment-center-api.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
 <!--    <dependencies>-->
 <!--        <dependency>-->
 <!--            <groupId>com.baosight.saas</groupId>-->

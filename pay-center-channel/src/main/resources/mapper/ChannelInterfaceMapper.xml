@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baosight.payment.channel.dao.mapper.ChannelInterfaceMapper">
+
+    <resultMap id="BaseResultMap" type="com.baosight.payment.channel.dao.entity.ChannelInterface">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="interfaceCode" column="interface_code" jdbcType="VARCHAR"/>
+            <result property="interfaceName" column="interface_name" jdbcType="VARCHAR"/>
+            <result property="channelCode" column="channel_code" jdbcType="VARCHAR"/>
+            <result property="modeCode" column="mode_code" jdbcType="VARCHAR"/>
+            <result property="capabilityType" column="capability_type" jdbcType="VARCHAR"/>
+            <result property="actionCode" column="action_code" jdbcType="VARCHAR"/>
+            <result property="payBrand" column="pay_brand" jdbcType="VARCHAR"/>
+            <result property="payScene" column="pay_scene" jdbcType="VARCHAR"/>
+            <result property="payProduct" column="pay_product" jdbcType="VARCHAR"/>
+            <result property="handlerKey" column="handler_key" jdbcType="VARCHAR"/>
+            <result property="supportNotify" column="support_notify" jdbcType="TINYINT"/>
+            <result property="supportTest" column="support_test" jdbcType="TINYINT"/>
+            <result property="minAmount" column="min_amount" jdbcType="BIGINT"/>
+            <result property="maxAmount" column="max_amount" jdbcType="BIGINT"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+            <result property="remark" column="remark" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,interface_code,interface_name,
+        channel_code,mode_code,capability_type,
+        action_code,pay_brand,pay_scene,
+        pay_product,handler_key,support_notify,
+        support_test,min_amount,max_amount,
+        status,remark,create_time,
+        update_time
+    </sql>
+
+    <select id="page" resultType="com.baosight.payment.channel.pojo.dto.resp.ChannelInterfacePageRespDTO">
+        select
+        id,
+        interface_code as interfaceCode,
+        interface_name as interfaceName,
+        channel_code as channelCode,
+        mode_code as modeCode,
+        handler_key as handlerKey,
+        capability_type as capabilityType,
+        action_code as actionCode,
+        pay_brand as payBrand,
+        pay_scene as payScene,
+        support_notify as supportNotify,
+        support_test as supportTest,
+        status
+        from channel_interface
+        <where>
+            <if test="req.keyword != null and req.keyword != ''">
+                and (
+                interface_code like concat('%', #{req.keyword}, '%')
+                or interface_name like concat('%', #{req.keyword}, '%')
+                )
+            </if>
+            <if test="req.channelCode != null and req.channelCode != ''">
+                and channel_code = #{req.channelCode}
+            </if>
+            <if test="req.handlerKey != null and req.handlerKey != ''">
+                and handler_key = #{req.handlerKey}
+            </if>
+            <if test="req.capabilityType != null and req.capabilityType != ''">
+                and capability_type = #{req.capabilityType}
+            </if>
+            <if test="req.actionCode != null and req.actionCode != ''">
+                and action_code = #{req.actionCode}
+            </if>
+            <if test="req.payBrand != null and req.payBrand != ''">
+                and pay_brand = #{req.payBrand}
+            </if>
+            <if test="req.payScene != null and req.payScene != ''">
+                and pay_scene = #{req.payScene}
+            </if>
+            <if test="req.modeCode != null and req.modeCode != ''">
+                and mode_code = #{req.modeCode}
+            </if>
+            <if test="req.status != null">
+                and status = #{req.status}
+            </if>
+        </where>
+        order by create_time desc, id desc
+    </select>
+</mapper>

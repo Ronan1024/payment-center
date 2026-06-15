@@ -22,8 +22,8 @@ public abstract class ChannelFlowAbstractHandler implements IChannelFlowOption {
     protected ChannelGatewayLogDAO channelGatewayLog(Long clientId, Integer clientType, ChannelGatewayLog.Operation operation, PayingAgency payingAgency) {
         ChannelGatewayLogDAO log = new ChannelGatewayLogDAO();
         log.setOperation(operation.getCode())
-                .setBizType(eventType().code())
-                .setBizTypeName(eventType().desc())
+//                .setBizType(eventType().code())
+//                .setBizTypeName(eventType().desc())
                 .setClientType(clientType)
                 .setClientId(clientId)
                 .setInstCode(payingAgency.code())

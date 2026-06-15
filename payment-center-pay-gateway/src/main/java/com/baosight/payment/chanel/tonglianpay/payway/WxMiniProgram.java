@@ -15,7 +15,6 @@ import com.baosight.payment.model.order.UnifiedOrder;
 import com.baosight.payment.order.api.dto.CreateOrderDTO;
 import com.baosight.payment.pojo.dto.WxMiniProgramDTO;
 import com.baosight.payment.pojo.vo.OrderChannelHandlerResult;
-import com.baosight.payment.vo.MchChannelCorrelationVO;
 import com.baosight.payment.vo.MchInfoVO;
 import com.baosight.utils.json.JsonUtil;
 import com.baosight.utils.utils.ObjectUtils;
@@ -72,14 +71,14 @@ public class WxMiniProgram implements IPaymentService {
         log.info("获取到请求参数：{}", unifiedOrder);
         TongLianIsvAndMchConfigDAO tongLianIsvAndMchConfigDAO = mchAppConfigApi.tongLianIsvAndMchConfig(mchInfo.getId(), createOrder.getIfCode(), mchInfo.getIsvId());
         WxMiniProgramDTO wxMiniProgramDTO = JsonUtil.parse(unifiedOrder.getChannelExtra(), WxMiniProgramDTO.class);
-        MchChannelCorrelationVO mchChannelCorrelationVO = mchChannelCorrelationApi.mchChannelCorrelation(mchInfo.getId(), ChannelType.WECHAT.code());
+//        MchChannelCorrelationVO mchChannelCorrelationVO = mchChannelCorrelationApi.mchChannelCorrelation(mchInfo.getId(), ChannelType.WECHAT.code());
         TongLianMchConfigDAO mchConfig = tongLianIsvAndMchConfigDAO.mchConfig();
         TongLianIsvConfigDAO isvConfig = tongLianIsvAndMchConfigDAO.isvConfig();
         Map<String, Object> payModel = new HashMap<>();
         Map<String, Object> wxMiniProgram = new HashMap<>();
         wxMiniProgram.put("vspCusid", mchConfig.getSignNum());
         wxMiniProgram.put("acct", wxMiniProgramDTO.getOpenId());
-        wxMiniProgram.put("subAppid", mchChannelCorrelationVO.getChannelId());
+//        wxMiniProgram.put("subAppid", mchChannelCorrelationVO.getChannelId());
         payModel.put("WECHATPAY_MINIPROGRAM", wxMiniProgram);
 
         Map<String, Object> map = new HashMap<>();

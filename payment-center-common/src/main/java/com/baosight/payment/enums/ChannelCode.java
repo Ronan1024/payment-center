@@ -1,10 +1,6 @@
-package com.baosight.payment.channel.enums;
+package com.baosight.payment.enums;
 
-import com.baosight.payment.channel.error.ChannelError;
-import com.baosight.web.core.exception.ApiException;
 import com.ronan.common.enums.IBaseEnum;
-
-import java.util.Optional;
 
 /**
  * @program: payment-center
@@ -34,11 +30,5 @@ public enum ChannelCode implements IBaseEnum<String> {
 
     ChannelCode(String channelCode, String channelName) {
         initEnum(channelCode, channelName);
-    }
-
-
-    public static ChannelCode fromCode(String code) {
-        ChannelCode result = IBaseEnum.getByCode(ChannelCode.class, code);
-        return Optional.ofNullable(result).orElseThrow(ApiException.supplier(ChannelError.CHANNEL_CODE_ERROR));
     }
 }

@@ -1,7 +1,8 @@
 package com.baosight.payment.channel.handler.notify;
 
-import com.baosight.payment.channel.enums.ChannelCode;
 import com.baosight.payment.channel.enums.ChannelEventType;
+import com.baosight.payment.enums.ChannelCode;
+import com.ronan.common.enums.IBaseEnum;
 
 /**
  * 渠道回调路由信息。
@@ -31,7 +32,7 @@ public record ChannelNotifyRoute(
         return new ChannelNotifyRoute(
                 rawChannel,
                 rawEvent,
-                ChannelCode.fromCode(rawChannel),
+                IBaseEnum.getByCode(ChannelCode.class, rawChannel),
                 ChannelEventType.fromCode(rawEvent)
         );
     }

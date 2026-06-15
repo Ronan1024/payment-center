@@ -1,6 +1,6 @@
 package com.baosight.payment.channel.handler.channelflow;
 
-import com.baosight.payment.channel.handler.BaseChannel;
+import com.baosight.payment.channel.handler.ChannelHandler;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
  * @author: L.J.Ran
  * @create: 2026/3/27
  */
-public interface IChannelFlowOption extends BaseChannel {
+public interface IChannelFlowOption extends ChannelHandler {
 
     /**
      * 渠道流程事件执行
