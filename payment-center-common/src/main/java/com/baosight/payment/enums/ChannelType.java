@@ -15,7 +15,7 @@ public enum ChannelType implements IBaseEnum<Integer> {
     /**
      * 官方支付渠道 例如微信、支付宝
      */
-    OFFICIAL(1, "官方"),
+    OFFICIAL(1, "官方支付渠道"),
 
     /**
      * 银行
@@ -25,7 +25,7 @@ public enum ChannelType implements IBaseEnum<Integer> {
     /**
      *  三方收单机构，例如通联、拉卡拉
      */
-    THIRD_PARTY(3, "第三方"),
+    THIRD_PARTY(3, "三方收单机构"),
 
     /**
      * 测试
